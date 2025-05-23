@@ -1,6 +1,6 @@
 # SkyBook
 
-SkyBook is a simple flight logbook mobile app built with React Native. It lets you quickly record flights and keep notes about each one. This is an MVP designed to work offline using AsyncStorage for persistence.
+SkyBook is a simple flight logbook mobile app built with Flutter. It lets you record flights and keep notes about each one. This is an MVP designed to work offline using `shared_preferences` for persistence.
 
 ## Features
 
@@ -10,14 +10,14 @@ SkyBook is a simple flight logbook mobile app built with React Native. It lets y
 
 ## Getting Started
 
-1. Install dependencies (requires Node.js):
+1. Install Flutter on your machine.
+2. Fetch dependencies:
    ```sh
-   npm install
+   flutter pub get
    ```
-2. Start the development server:
+3. Run the app:
    ```sh
-   npm start
+   flutter run
    ```
-   This uses Expo so you can run the app on an emulator or your mobile device.
 
-Since this repository does not include compiled dependencies, you will need to install them via `npm install` before running the app.
+Since this repository does not include compiled dependencies, you will need to install them via `flutter pub get` before running the app.
