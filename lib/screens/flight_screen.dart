@@ -7,14 +7,14 @@ import '../models/flight.dart';
 import '../widgets/flight_tile.dart';
 import 'add_flight_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class FlightScreen extends StatefulWidget {
+  const FlightScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<FlightScreen> createState() => _FlightScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _FlightScreenState extends State<FlightScreen> {
   List<Flight> _flights = [];
 
   @override
@@ -52,10 +52,39 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _editFlight(int index) async {
+    final updated = await Navigator.of(context).push<Flight>(
+      MaterialPageRoute(
+        builder: (_) => AddFlightScreen(flight: _flights[index]),
+      ),
+    );
+    if (updated != null) {
+      setState(() {
+        _flights[index] = updated;
+      });
+      _saveFlights();
+    }
+  }
+
+  void _toggleFavorite(int index) {
+    final flight = _flights[index];
+    setState(() {
+      _flights[index] = Flight(
+        id: flight.id,
+        date: flight.date,
+        aircraft: flight.aircraft,
+        duration: flight.duration,
+        notes: flight.notes,
+        isFavorite: !flight.isFavorite,
+      );
+    });
+    _saveFlights();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SkyBook')),
+      appBar: AppBar(title: const Text('Flights')),
       floatingActionButton: FloatingActionButton(
         onPressed: _addFlight,
         child: const Icon(Icons.add),
@@ -63,7 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView.builder(
         itemCount: _flights.length,
         itemBuilder: (context, index) {
-          return FlightTile(flight: _flights[index]);
+          return FlightTile(
+            flight: _flights[index],
+            onEdit: () => _editFlight(index),
+            onToggleFavorite: () => _toggleFavorite(index),
+          );
         },
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/flight_screen.dart';
 
 void main() {
   runApp(const SkyBookApp());
@@ -12,7 +12,7 @@ class SkyBookApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'SkyBook',
-      home: HomeScreen(),
+      home: FlightScreen(),
     );
   }
 }

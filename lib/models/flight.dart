@@ -4,6 +4,7 @@ class Flight {
   final String aircraft;
   final String duration;
   final String notes;
+  final bool isFavorite;
 
   Flight({
     required this.id,
@@ -11,6 +12,7 @@ class Flight {
     required this.aircraft,
     required this.duration,
     required this.notes,
+    this.isFavorite = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class Flight {
       'aircraft': aircraft,
       'duration': duration,
       'notes': notes,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -30,6 +33,7 @@ class Flight {
       aircraft: map['aircraft'] as String,
       duration: map['duration'] as String,
       notes: map['notes'] as String? ?? '',
+      isFavorite: map['isFavorite'] as bool? ?? false,
     );
   }
 }
