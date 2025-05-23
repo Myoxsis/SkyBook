@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/flight.dart';
+import '../models/flight_storage.dart';
 import '../widgets/flight_tile.dart';
 import 'add_flight_screen.dart';
 
@@ -24,20 +22,14 @@ class _FlightScreenState extends State<FlightScreen> {
   }
 
   Future<void> _loadFlights() async {
-    final prefs = await SharedPreferences.getInstance();
-    final stored = prefs.getString('flights');
-    if (stored != null) {
-      final List<dynamic> decoded = json.decode(stored);
-      setState(() {
-        _flights = decoded.map((e) => Flight.fromMap(e)).toList();
-      });
-    }
+    final flights = await FlightStorage.loadFlights();
+    setState(() {
+      _flights = flights;
+    });
   }
 
   Future<void> _saveFlights() async {
-    final prefs = await SharedPreferences.getInstance();
-    final encoded = json.encode(_flights.map((f) => f.toMap()).toList());
-    await prefs.setString('flights', encoded);
+    await FlightStorage.saveFlights(_flights);
   }
 
   Future<void> _addFlight() async {
