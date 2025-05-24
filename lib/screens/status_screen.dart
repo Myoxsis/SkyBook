@@ -66,7 +66,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topAircraft {
     final entries = _aircraftCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(10).toList();
+    return entries.take(3).toList();
   }
 
   Map<String, int> get _countryCount {
@@ -83,7 +83,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topCountries {
     final entries = _countryCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(10).toList();
+    return entries.take(3).toList();
   }
 
   @override
