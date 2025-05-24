@@ -4,9 +4,11 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../widgets/flight_tile.dart';
 import 'add_flight_screen.dart';
+import 'settings_screen.dart';
 
 class FlightScreen extends StatefulWidget {
-  const FlightScreen({super.key});
+  final VoidCallback onOpenSettings;
+  const FlightScreen({super.key, required this.onOpenSettings});
 
   @override
   State<FlightScreen> createState() => _FlightScreenState();
@@ -76,20 +78,40 @@ class _FlightScreenState extends State<FlightScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flights')),
+      appBar: AppBar(
+        title: const Text('Flights'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: widget.onOpenSettings,
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addFlight,
         child: const Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: _flights.length,
-        itemBuilder: (context, index) {
-          return FlightTile(
-            flight: _flights[index],
-            onEdit: () => _editFlight(index),
-            onToggleFavorite: () => _toggleFavorite(index),
-          );
-        },
+      body: Column(
+        children: [
+          Container(
+            height: 150,
+            color: Colors.grey.shade300,
+            alignment: Alignment.center,
+            child: const Text('Map placeholder'),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _flights.length,
+              itemBuilder: (context, index) {
+                return FlightTile(
+                  flight: _flights[index],
+                  onEdit: () => _editFlight(index),
+                  onToggleFavorite: () => _toggleFavorite(index),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
