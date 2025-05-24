@@ -177,9 +177,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         Text(a.title,
                             style: Theme.of(context).textTheme.bodyMedium),
                         const SizedBox(height: 2),
-                        LinearProgressIndicator(
-                          value: a.progress / a.target,
-                          minHeight: 6,
+                        Semantics(
+                          label:
+                              '${a.title} progress: ${a.progress} of ${a.target}',
+                          child: LinearProgressIndicator(
+                            value: a.progress / a.target,
+                            minHeight: 6,
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.12),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         Text('${a.progress}/${a.target}',
                             style: Theme.of(context).textTheme.labelSmall),
