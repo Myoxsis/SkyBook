@@ -102,6 +102,8 @@ class _FlightScreenState extends State<FlightScreen> {
           ),
         ],
       ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: _addFlight,
         child: const Icon(Icons.add),
