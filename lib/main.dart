@@ -48,6 +48,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
         useMaterial3: true,
       ),
       darkTheme: ThemeData.dark(useMaterial3: true),
+      debugShowCheckedModeBanner: false,
       themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
       home: HomeScreen(
         onToggleTheme: _toggleTheme,
