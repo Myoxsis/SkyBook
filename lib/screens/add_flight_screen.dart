@@ -21,6 +21,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _originController = TextEditingController();
   final _destinationController = TextEditingController();
   final _aircraftController = TextEditingController();
+  final _seatNumberController = TextEditingController();
+  String _travelClass = 'Economy';
+  String _seatLocation = 'Window';
 
   Aircraft? _selectedAircraft;
 
@@ -36,6 +39,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _notesController.text = flight.notes;
       _originController.text = flight.origin;
       _destinationController.text = flight.destination;
+      _travelClass = flight.travelClass.isNotEmpty ? flight.travelClass : 'Economy';
+      _seatNumberController.text = flight.seatNumber;
+      _seatLocation = flight.seatLocation.isNotEmpty ? flight.seatLocation : 'Window';
     } else {
       _selectedAircraft = aircrafts.first;
       _aircraftController.text = _selectedAircraft!.display;
@@ -75,6 +81,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       notes: _notesController.text,
       origin: _originController.text,
       destination: _destinationController.text,
+      travelClass: _travelClass,
+      seatNumber: _seatNumberController.text,
+      seatLocation: _seatLocation,
       isFavorite: widget.flight?.isFavorite ?? false,
     );
     Navigator.of(context).pop(flight);
@@ -191,6 +200,43 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               controller: _durationController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Duration (hrs)'),
+            ),
+            DropdownButtonFormField<String>(
+              value: _travelClass,
+              decoration: const InputDecoration(labelText: 'Class'),
+              items: const [
+                DropdownMenuItem(value: 'Economy', child: Text('Economy')),
+                DropdownMenuItem(value: 'Premium', child: Text('Premium')),
+                DropdownMenuItem(value: 'Business', child: Text('Business')),
+                DropdownMenuItem(value: 'First', child: Text('First')),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _travelClass = value;
+                  });
+                }
+              },
+            ),
+            TextField(
+              controller: _seatNumberController,
+              decoration: const InputDecoration(labelText: 'Seat Number'),
+            ),
+            DropdownButtonFormField<String>(
+              value: _seatLocation,
+              decoration: const InputDecoration(labelText: 'Seat Location'),
+              items: const [
+                DropdownMenuItem(value: 'Window', child: Text('Window')),
+                DropdownMenuItem(value: 'Middle', child: Text('Middle')),
+                DropdownMenuItem(value: 'Aisle', child: Text('Aisle')),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _seatLocation = value;
+                  });
+                }
+              },
             ),
             TextField(
               controller: _notesController,

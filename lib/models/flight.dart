@@ -7,6 +7,9 @@ class Flight {
   final String notes;
   final String origin;
   final String destination;
+  final String travelClass;
+  final String seatNumber;
+  final String seatLocation;
   final bool isFavorite;
 
   Flight({
@@ -18,6 +21,9 @@ class Flight {
     required this.notes,
     required this.origin,
     required this.destination,
+    required this.travelClass,
+    required this.seatNumber,
+    required this.seatLocation,
     this.isFavorite = false,
   });
 
@@ -31,6 +37,9 @@ class Flight {
       'notes': notes,
       'origin': origin,
       'destination': destination,
+      'travelClass': travelClass,
+      'seatNumber': seatNumber,
+      'seatLocation': seatLocation,
       'isFavorite': isFavorite,
     };
   }
@@ -45,6 +54,9 @@ class Flight {
       notes: map['notes'] as String? ?? '',
       origin: map['origin'] as String? ?? '',
       destination: map['destination'] as String? ?? '',
+      travelClass: map['travelClass'] as String? ?? '',
+      seatNumber: map['seatNumber'] as String? ?? '',
+      seatLocation: map['seatLocation'] as String? ?? '',
       isFavorite: map['isFavorite'] as bool? ?? false,
     );
   }
