@@ -35,15 +35,17 @@ class _SkyBookAppState extends State<SkyBookApp> {
   bool _darkMode = false;
   final ValueNotifier<List<Flight>> _flightsNotifier = ValueNotifier<List<Flight>>([]);
   final GlobalKey<ScaffoldMessengerState> _messengerKey = GlobalKey<ScaffoldMessengerState>();
-  final Set<String> _unlockedAchievements = {};
+  final Map<String, DateTime> _unlockedAchievements = {};
 
   void _updateAchievements() {
-    final newAchievements = calculateAchievements(_flightsNotifier.value);
-    bool updated = false;
+    final newAchievements =
+        calculateAchievements(_flightsNotifier.value, _unlockedAchievements);
     for (final a in newAchievements) {
-      if (a.achieved && !_unlockedAchievements.contains(a.id)) {
-        _unlockedAchievements.add(a.id);
-        updated = true;
+      if (a.achieved && !_unlockedAchievements.containsKey(a.id)) {
+        final now = DateTime.now();
+        _unlockedAchievements[a.id] = now;
+        AchievementStorage.saveUnlocked(a.id, now);
+
         final context = _messengerKey.currentContext;
         if (context != null) {
           showDialog(
@@ -68,7 +70,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
   @override
   void initState() {
     super.initState();
-    _loadFlights();
+    _loadAchievements().then((_) => _loadFlights());
     _loadTheme();
   }
 
@@ -80,6 +82,11 @@ class _SkyBookAppState extends State<SkyBookApp> {
       ..clear()
       ..addAll(achievements);
     _updateAchievements();
+  }
+
+  Future<void> _loadAchievements() async {
+    final loaded = await AchievementStorage.loadUnlocked();
+    _unlockedAchievements.addAll(loaded);
   }
 
   Future<void> _saveFlights() async {
@@ -119,6 +126,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
         darkMode: _darkMode,
         flightsNotifier: _flightsNotifier,
         onFlightsChanged: _saveFlights,
+        unlockedAchievements: _unlockedAchievements,
       ),
     );
   }
