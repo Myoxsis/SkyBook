@@ -3,6 +3,8 @@ class Flight {
   final String date;
   final String aircraft;
   final String manufacturer;
+  final String airline;
+  final String callsign;
   final String duration;
   final String notes;
   final String origin;
@@ -17,6 +19,8 @@ class Flight {
     required this.date,
     required this.aircraft,
     required this.manufacturer,
+    this.airline = '',
+    this.callsign = '',
     required this.duration,
     required this.notes,
     required this.origin,
@@ -33,6 +37,8 @@ class Flight {
       'date': date,
       'aircraft': aircraft,
       'manufacturer': manufacturer,
+      'airline': airline,
+      'callsign': callsign,
       'duration': duration,
       'notes': notes,
       'origin': origin,
@@ -50,6 +56,8 @@ class Flight {
       date: map['date'] as String,
       aircraft: map['aircraft'] as String,
       manufacturer: map['manufacturer'] as String? ?? _manufacturerFromAircraft(map['aircraft'] as String),
+      airline: map['airline'] as String? ?? '',
+      callsign: map['callsign'] as String? ?? '',
       duration: map['duration'] as String,
       notes: map['notes'] as String? ?? '',
       origin: map['origin'] as String? ?? '',

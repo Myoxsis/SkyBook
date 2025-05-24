@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../models/aircraft.dart';
 import '../models/airport.dart';
+import '../models/airline.dart';
 import '../data/airport_data.dart';
 import '../data/aircraft_data.dart';
+import '../data/airline_data.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -21,11 +23,13 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _originController = TextEditingController();
   final _destinationController = TextEditingController();
   final _aircraftController = TextEditingController();
+  final _airlineController = TextEditingController();
   final _seatNumberController = TextEditingController();
   String _travelClass = 'Economy';
   String _seatLocation = 'Window';
 
   Aircraft? _selectedAircraft;
+  Airline? _selectedAirline;
 
   @override
   void initState() {
@@ -35,6 +39,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _dateController.text = flight.date;
       _selectedAircraft = aircraftByDisplay[flight.aircraft];
       _aircraftController.text = flight.aircraft;
+      _selectedAirline = airlineByName[flight.airline];
+      _airlineController.text = flight.airline;
       _durationController.text = flight.duration;
       _notesController.text = flight.notes;
       _originController.text = flight.origin;
@@ -45,6 +51,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     } else {
       _selectedAircraft = aircrafts.first;
       _aircraftController.text = _selectedAircraft!.display;
+      _selectedAirline = airlines.first;
+      _airlineController.text = _selectedAirline!.name;
     }
   }
 
@@ -77,6 +85,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       date: _dateController.text,
       aircraft: _selectedAircraft?.display ?? _aircraftController.text,
       manufacturer: _selectedAircraft?.manufacturer ?? '',
+      airline: _selectedAirline?.name ?? _airlineController.text,
+      callsign: _selectedAirline?.callsign ?? '',
       duration: _durationController.text,
       notes: _notesController.text,
       origin: _originController.text,
@@ -177,6 +187,40 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     );
   }
 
+  Widget _buildAirlineField() {
+    return Autocomplete<Airline>(
+      optionsBuilder: (TextEditingValue value) {
+        if (value.text.isEmpty) {
+          return airlines;
+        }
+        return airlines.where(
+            (a) => a.name.toLowerCase().contains(value.text.toLowerCase()));
+      },
+      displayStringForOption: (a) => a.name,
+      onSelected: (a) {
+        setState(() {
+          _selectedAirline = a;
+          _airlineController.text = a.name;
+        });
+      },
+      fieldViewBuilder:
+          (context, textEditingController, focusNode, onFieldSubmitted) {
+        textEditingController.text = _airlineController.text;
+        textEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: textEditingController.text.length));
+        textEditingController.addListener(() {
+          _airlineController.text = textEditingController.text;
+        });
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: const InputDecoration(labelText: 'Airline'),
+          onSubmitted: (_) => onFieldSubmitted(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,6 +238,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               onTap: _pickDate,
             ),
             _buildAircraftField(),
+            _buildAirlineField(),
             _buildAirportField(_originController, 'Origin'),
             _buildAirportField(_destinationController, 'Destination'),
             TextField(
