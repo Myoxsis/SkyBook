@@ -106,14 +106,44 @@ class _ProgressScreenState extends State<ProgressScreen>
         .where((a) => selected == 'All' || a.category == selected)
         .toList();
 
-    List<Widget> items = filtered
-        .map(
-          (a) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: InkWell(
-              onTap: () {
-                showDialog(
-                  context: context,
+    final unlocked = filtered.where((a) => a.achieved).length;
+    final ratio = filtered.isEmpty ? 0.0 : unlocked / filtered.length;
+
+    final summaryCard = Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('$unlocked of \${filtered.length} Achievements unlocked',
+                style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 8),
+            Semantics(
+              label:
+                  '$unlocked of \${filtered.length} achievements unlocked',
+              child: LinearProgressIndicator(
+                value: ratio,
+                minHeight: 6,
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withOpacity(0.12),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final List<Widget> items = [summaryCard, const SizedBox(height: 8)]
+      ..addAll(filtered.map(
+        (a) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
                   builder: (context) => AlertDialog(
                     title: Text(a.title),
                     content: Text(a.description),
@@ -174,8 +204,8 @@ class _ProgressScreenState extends State<ProgressScreen>
               ),
             ),
           ),
-        )
-        .toList();
+        ),
+      ));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
