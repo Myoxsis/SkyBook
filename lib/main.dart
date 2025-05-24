@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'models/flight.dart';
 import 'models/flight_storage.dart';
 import 'models/theme_storage.dart';
+import 'models/achievement.dart';
+import 'utils/achievement_utils.dart';
 import 'screens/home_screen.dart';
 
 void main() {
@@ -18,6 +20,20 @@ class SkyBookApp extends StatefulWidget {
 class _SkyBookAppState extends State<SkyBookApp> {
   bool _darkMode = false;
   final ValueNotifier<List<Flight>> _flightsNotifier = ValueNotifier<List<Flight>>([]);
+  final GlobalKey<ScaffoldMessengerState> _messengerKey = GlobalKey<ScaffoldMessengerState>();
+  final Set<String> _unlockedAchievements = {};
+
+  void _updateAchievements() {
+    final newAchievements = calculateAchievements(_flightsNotifier.value);
+    for (final a in newAchievements) {
+      if (a.achieved && !_unlockedAchievements.contains(a.id)) {
+        _unlockedAchievements.add(a.id);
+        _messengerKey.currentState?.showSnackBar(
+          SnackBar(content: Text('Achievement unlocked: ${a.title}')),
+        );
+      }
+    }
+  }
 
   void _toggleTheme() {
     setState(() {
@@ -36,10 +52,12 @@ class _SkyBookAppState extends State<SkyBookApp> {
   Future<void> _loadFlights() async {
     final flights = await FlightStorage.loadFlights();
     _flightsNotifier.value = flights;
+    _updateAchievements();
   }
 
   Future<void> _saveFlights() async {
     await FlightStorage.saveFlights(_flightsNotifier.value);
+    _updateAchievements();
   }
 
   Future<void> _loadTheme() async {
@@ -54,6 +72,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: _messengerKey,
       title: 'SkyBook',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
