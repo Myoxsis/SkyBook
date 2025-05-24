@@ -4,8 +4,8 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 
 class StatusScreen extends StatefulWidget {
-  final VoidCallback onToggleTheme;
-  const StatusScreen({super.key, required this.onToggleTheme});
+  final VoidCallback onOpenSettings;
+  const StatusScreen({super.key, required this.onOpenSettings});
 
   @override
   State<StatusScreen> createState() => _StatusScreenState();
@@ -41,8 +41,8 @@ class _StatusScreenState extends State<StatusScreen> {
         title: const Text('Status'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.color_lens),
-            onPressed: widget.onToggleTheme,
+            icon: const Icon(Icons.settings),
+            onPressed: widget.onOpenSettings,
           ),
         ],
       ),

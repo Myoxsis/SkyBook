@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'flight_screen.dart';
 import 'status_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
-  const HomeScreen({super.key, required this.onToggleTheme});
+  final bool darkMode;
+  const HomeScreen({super.key, required this.onToggleTheme, required this.darkMode});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -14,15 +16,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  late final List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = [
-      const FlightScreen(),
-      StatusScreen(onToggleTheme: widget.onToggleTheme),
-    ];
+  void _openSettings() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SettingsScreen(
+          darkMode: widget.darkMode,
+          onToggleTheme: widget.onToggleTheme,
+        ),
+      ),
+    );
   }
 
   void _onItemTapped(int index) {
@@ -33,8 +35,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      FlightScreen(onOpenSettings: _openSettings),
+      StatusScreen(onOpenSettings: _openSettings),
+    ];
+
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: _pages),
+      body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

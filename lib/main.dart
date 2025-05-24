@@ -31,7 +31,10 @@ class _SkyBookAppState extends State<SkyBookApp> {
       ),
       darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
-      home: HomeScreen(onToggleTheme: _toggleTheme),
+      home: HomeScreen(
+        onToggleTheme: _toggleTheme,
+        darkMode: _darkMode,
+      ),
     );
   }
 }
