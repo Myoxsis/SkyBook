@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'dart:math' as math;
 
 import '../models/flight.dart';
+import '../models/airport.dart';
 import '../data/airport_data.dart';
 
 class MapScreen extends StatefulWidget {
@@ -26,6 +27,47 @@ class _MapScreenState extends State<MapScreen> {
   final MapController _controller = MapController();
   LatLng _center = LatLng(20, 0);
   double _zoom = 2;
+
+  void _showAirportInfo(Airport airport) {
+    final related = _flights
+        .where((f) => f.origin == airport.code || f.destination == airport.code)
+        .toList();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(airport.display,
+                    style: Theme.of(context).textTheme.titleMedium),
+                Text(airport.country,
+                    style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 12),
+                if (related.isNotEmpty) ...[
+                  Text('Flights',
+                      style: Theme.of(context).textTheme.titleSmall),
+                  const SizedBox(height: 8),
+                  for (final f in related)
+                    ListTile(
+                      dense: true,
+                      title: Text('${f.origin} → ${f.destination}'),
+                      subtitle: Text('${f.date} • ${f.aircraft}'),
+                    ),
+                ] else
+                  const Text('No flights for this airport'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   List<LatLng> _arcPoints(LatLng start, LatLng end) {
     const steps = 50;
@@ -93,7 +135,10 @@ class _MapScreenState extends State<MapScreen> {
           point: LatLng(airport.latitude, airport.longitude),
           width: 30,
           height: 30,
-          builder: (_) => const Icon(Icons.location_on, color: Colors.purple),
+          builder: (_) => GestureDetector(
+            onTap: () => _showAirportInfo(airport),
+            child: const Icon(Icons.location_on, color: Colors.purple),
+          ),
         ),
       );
     }
