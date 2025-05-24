@@ -19,14 +19,26 @@ class ProgressScreen extends StatefulWidget {
   State<ProgressScreen> createState() => _ProgressScreenState();
 }
 
-class _ProgressScreenState extends State<ProgressScreen> {
+class _ProgressScreenState extends State<ProgressScreen>
+    with SingleTickerProviderStateMixin {
   List<Flight> _flights = [];
   late VoidCallback _listener;
+  late TabController _tabController;
+  final List<String> _categories = const [
+    'All',
+    'Flights',
+    'Distance',
+    'Destinations',
+  ];
 
   @override
   void initState() {
     super.initState();
     _flights = widget.flightsNotifier.value;
+    _tabController = TabController(length: _categories.length, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) setState(() {});
+    });
     _listener = () {
       setState(() {
         _flights = widget.flightsNotifier.value;
@@ -38,6 +50,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   void dispose() {
     widget.flightsNotifier.removeListener(_listener);
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -52,6 +65,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Progress'),
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: true,
+          tabs: _categories.map((c) => Tab(text: c)).toList(),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -78,8 +96,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
     }
 
     final achievements = calculateAchievements(_flights);
+    final selected = _categories[_tabController.index];
+    final filtered = achievements
+        .where((a) => selected == 'All' || a.category == selected)
+        .toList();
 
-    List<Widget> items = achievements
+    List<Widget> items = filtered
         .map(
           (a) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
