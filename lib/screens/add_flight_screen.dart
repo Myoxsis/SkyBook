@@ -199,7 +199,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                   final Airport option = options.elementAt(index);
                   return ListTile(
                     title: Text(option.display),
-                    onTap: () => onSelected(option),
+                    onTap: () {
+                      onSelected(option);
+                      focusNode.unfocus();
+                    },
                   );
                 },
               ),
@@ -254,7 +257,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                   final Aircraft option = options.elementAt(index);
                   return ListTile(
                     title: Text(option.display),
-                    onTap: () => onSelected(option),
+                    onTap: () {
+                      onSelected(option);
+                      _aircraftFocusNode.unfocus();
+                    },
                   );
                 },
               ),
