@@ -52,6 +52,21 @@ class FlightTile extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
+            if (flight.travelClass.isNotEmpty ||
+                flight.seatNumber.isNotEmpty ||
+                flight.seatLocation.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Center(
+                child: Text(
+                  [
+                    flight.travelClass,
+                    flight.seatNumber,
+                    flight.seatLocation
+                  ].where((e) => e.isNotEmpty).join(' • '),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ],
             if (notes.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(notes),
