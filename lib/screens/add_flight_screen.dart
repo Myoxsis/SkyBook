@@ -229,7 +229,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: ListView(
           children: [
             TextField(
               controller: _dateController,
