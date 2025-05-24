@@ -4,6 +4,7 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../data/airport_data.dart';
 import '../widgets/class_pie_chart.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -116,8 +117,8 @@ class _StatusScreenState extends State<StatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Status'),
+      appBar: SkyBookAppBar(
+        title: 'Status',
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),

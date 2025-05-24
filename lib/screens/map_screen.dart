@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import '../models/flight.dart';
 import '../models/airport.dart';
 import '../data/airport_data.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class MapScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -177,8 +178,8 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map'),
+      appBar: SkyBookAppBar(
+        title: 'Map',
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
