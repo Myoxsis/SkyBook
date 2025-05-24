@@ -145,30 +145,54 @@ class _ProgressScreenState extends State<ProgressScreen> {
         .map(
           (a) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(a.title,
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      const SizedBox(height: 2),
-                      LinearProgressIndicator(
-                        value: a.progress / a.target,
-                        minHeight: 6,
+            child: InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(a.title),
+                    content: Text(a.description),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('OK'),
                       ),
-                      Text('${a.progress}/${a.target}',
-                          style: Theme.of(context).textTheme.labelSmall),
                     ],
                   ),
-                ),
-                if (a.achieved)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Icon(Icons.check, color: Colors.green),
+                );
+              },
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Icon(
+                      Icons.emoji_events,
+                      color: a.achieved ? Colors.amber : Colors.grey,
+                    ),
                   ),
-              ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(a.title,
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        const SizedBox(height: 2),
+                        LinearProgressIndicator(
+                          value: a.progress / a.target,
+                          minHeight: 6,
+                        ),
+                        Text('${a.progress}/${a.target}',
+                            style: Theme.of(context).textTheme.labelSmall),
+                      ],
+                    ),
+                  ),
+                  if (a.achieved)
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Icon(Icons.check, color: Colors.green),
+                    ),
+                ],
+              ),
             ),
           ),
         )
