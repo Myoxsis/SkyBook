@@ -55,14 +55,18 @@ class _FlightScreenState extends State<FlightScreen> {
   }
 
   Future<void> _editFlight(int index) async {
-    final updated = await Navigator.of(context).push<Flight>(
+    final result = await Navigator.of(context).push<dynamic>(
       MaterialPageRoute(
         builder: (_) => AddFlightScreen(flight: _flights[index]),
       ),
     );
-    if (updated != null) {
+    if (result is Flight) {
       final list = List<Flight>.from(_flights);
-      list[index] = updated;
+      list[index] = result;
+      widget.flightsNotifier.value = list;
+      await widget.onFlightsChanged();
+    } else if (result == 'delete') {
+      final list = List<Flight>.from(_flights)..removeAt(index);
       widget.flightsNotifier.value = list;
       await widget.onFlightsChanged();
     }

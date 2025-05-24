@@ -80,6 +80,30 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     Navigator.of(context).pop(flight);
   }
 
+  Future<void> _delete() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Flight'),
+        content: const Text('Are you sure you want to delete this flight?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      Navigator.of(context).pop('delete');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +147,17 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               onPressed: _submit,
               child: Text(widget.flight == null ? 'Add Flight' : 'Save Changes'),
             ),
+            if (widget.flight != null) ...[
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _delete,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: Theme.of(context).colorScheme.onError,
+                ),
+                child: const Text('Delete Flight'),
+              ),
+            ],
           ],
         ),
       ),
