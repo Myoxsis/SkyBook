@@ -60,16 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
+      MapScreen(
+        key: const PageStorageKey('map'),
+        onOpenSettings: _openSettings,
+        flightsNotifier: widget.flightsNotifier,
+      ),
       FlightScreen(
         key: _flightScreenKey,
         onOpenSettings: _openSettings,
         flightsNotifier: widget.flightsNotifier,
         onFlightsChanged: widget.onFlightsChanged,
-      ),
-      MapScreen(
-        key: const PageStorageKey('map'),
-        onOpenSettings: _openSettings,
-        flightsNotifier: widget.flightsNotifier,
       ),
       ProgressScreen(
         onOpenSettings: _openSettings,
@@ -91,8 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor:
             Theme.of(context).colorScheme.onSurfaceVariant,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.flight), label: 'Flights'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(icon: Icon(Icons.flight), label: 'Flights'),
           BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: 'Progress'),
           BottomNavigationBarItem(icon: Icon(Icons.assessment), label: 'Status'),
         ],
