@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/flight.dart';
 import 'flight_screen.dart';
+import 'map_screen.dart';
 import 'status_screen.dart';
 import 'progress_screen.dart';
 import 'settings_screen.dart';
@@ -65,6 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
         flightsNotifier: widget.flightsNotifier,
         onFlightsChanged: widget.onFlightsChanged,
       ),
+      MapScreen(
+        onOpenSettings: _openSettings,
+        flightsNotifier: widget.flightsNotifier,
+      ),
       ProgressScreen(
         onOpenSettings: _openSettings,
         flightsNotifier: widget.flightsNotifier,
@@ -83,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.flight), label: 'Flights'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: 'Progress'),
           BottomNavigationBarItem(icon: Icon(Icons.assessment), label: 'Status'),
         ],

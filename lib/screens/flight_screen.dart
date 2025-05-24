@@ -106,27 +106,15 @@ class _FlightScreenState extends State<FlightScreen> {
         onPressed: _addFlight,
         child: const Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 150,
-            color: Colors.grey.shade300,
-            alignment: Alignment.center,
-            child: const Text('Map placeholder'),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _flights.length,
-              itemBuilder: (context, index) {
-                return FlightTile(
-                  flight: _flights[index],
-                  onEdit: () => _editFlight(index),
-                  onToggleFavorite: () => _toggleFavorite(index),
-                );
-              },
-            ),
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: _flights.length,
+        itemBuilder: (context, index) {
+          return FlightTile(
+            flight: _flights[index],
+            onEdit: () => _editFlight(index),
+            onToggleFavorite: () => _toggleFavorite(index),
+          );
+        },
       ),
     );
   }
