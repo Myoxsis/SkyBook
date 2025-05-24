@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models/flight.dart';
 import 'models/flight_storage.dart';
+import 'models/theme_storage.dart';
 import 'screens/home_screen.dart';
 
 void main() {
@@ -22,12 +23,14 @@ class _SkyBookAppState extends State<SkyBookApp> {
     setState(() {
       _darkMode = !_darkMode;
     });
+    ThemeStorage.saveDarkMode(_darkMode);
   }
 
   @override
   void initState() {
     super.initState();
     _loadFlights();
+    _loadTheme();
   }
 
   Future<void> _loadFlights() async {
@@ -37,6 +40,15 @@ class _SkyBookAppState extends State<SkyBookApp> {
 
   Future<void> _saveFlights() async {
     await FlightStorage.saveFlights(_flightsNotifier.value);
+  }
+
+  Future<void> _loadTheme() async {
+    final saved = await ThemeStorage.loadDarkMode();
+    if (mounted) {
+      setState(() {
+        _darkMode = saved;
+      });
+    }
   }
 
   @override
