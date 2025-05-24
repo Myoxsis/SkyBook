@@ -28,11 +28,31 @@ class FlightTile extends StatelessWidget {
     }
   }
 
+  Widget _buildAirlineLogo() {
+    if (flight.callsign.length >= 2) {
+      final code = flight.callsign.substring(0, 2).toUpperCase();
+      final url = 'https://pics.avs.io/60/60/' + code + '.png';
+      return Image.network(
+        url,
+        width: 32,
+        height: 32,
+        errorBuilder: (context, error, stackTrace) =>
+            const Icon(Icons.flight, size: 32),
+      );
+    }
+    return const Icon(Icons.flight, size: 32);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       color: _colorForClass(context),
       margin: const EdgeInsets.symmetric(vertical: 4),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -41,20 +61,26 @@ class FlightTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  flight.date,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                IconButton(
-                  icon: Icon(
-                    flight.isFavorite ? Icons.star : Icons.star_border,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      _buildAirlineLogo(),
+                      const SizedBox(width: 8),
+                      Text(
+                        flight.date,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ],
                   ),
-                  onPressed: onToggleFavorite,
-                ),
-              ],
-            ),
+                  IconButton(
+                    icon: Icon(
+                      flight.isFavorite ? Icons.star : Icons.star_border,
+                    ),
+                    onPressed: onToggleFavorite,
+                  ),
+                ],
+              ),
             const SizedBox(height: 6),
             Center(
               child: Text(
