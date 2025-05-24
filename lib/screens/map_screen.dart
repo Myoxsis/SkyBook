@@ -24,7 +24,7 @@ class _MapScreenState extends State<MapScreen> {
   List<Flight> _flights = [];
   late VoidCallback _listener;
   final MapController _controller = MapController();
-  LatLng _center = const LatLng(20, 0);
+  LatLng _center = LatLng(20, 0);
   double _zoom = 2;
 
   List<LatLng> _arcPoints(LatLng start, LatLng end) {
@@ -108,7 +108,7 @@ class _MapScreenState extends State<MapScreen> {
       }
     }
 
-    if (_center == const LatLng(20, 0) && markers.isNotEmpty) {
+    if (_center == LatLng(20, 0) && markers.isNotEmpty) {
       _center = markers.first.point;
     }
 
