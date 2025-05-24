@@ -21,9 +21,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _developerMode = false;
 
   Future<void> _clearData() async {
+    widget.onClearData?.call();
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    widget.onClearData?.call();
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Local data cleared')),

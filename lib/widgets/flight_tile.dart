@@ -38,8 +38,13 @@ class FlightTile extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
+            Text(
+              '${flight.origin} → ${flight.destination}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
             Text(flight.aircraft,
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.bodyMedium),
             if (notes.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(notes),
