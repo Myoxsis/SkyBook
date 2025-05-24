@@ -6,6 +6,7 @@ import 'models/theme_storage.dart';
 import 'models/achievement.dart';
 import 'utils/achievement_utils.dart';
 import 'screens/home_screen.dart';
+import 'widgets/achievement_dialog.dart';
 
 const Color _brandPrimary = Color(0xFF0A73B1);
 const Color _brandSecondary = Color(0xFFEF6C00);
@@ -40,9 +41,13 @@ class _SkyBookAppState extends State<SkyBookApp> {
     for (final a in newAchievements) {
       if (a.achieved && !_unlockedAchievements.contains(a.id)) {
         _unlockedAchievements.add(a.id);
-        _messengerKey.currentState?.showSnackBar(
-          SnackBar(content: Text('Achievement unlocked: ${a.title}')),
-        );
+        final context = _messengerKey.currentContext;
+        if (context != null) {
+          showDialog(
+            context: context,
+            builder: (_) => AchievementDialog(title: a.title),
+          );
+        }
       }
     }
   }
