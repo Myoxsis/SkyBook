@@ -7,7 +7,7 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
 - Add flights with date, aircraft, duration and optional notes
 - View a list of all recorded flights
 - View overall stats like total flights and hours
-- Track progress with simple achievements
+- Track progress with detailed achievements for flight counts, distance and destinations
 - Switch between light and dark themes
 - Enable a developer section with an option to clear local data
 - Data is stored locally on the device
