@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'dart:math' as math;
 
 import '../models/flight.dart';
 import '../data/airport_data.dart';
@@ -25,6 +26,29 @@ class _MapScreenState extends State<MapScreen> {
   final MapController _controller = MapController();
   LatLng _center = const LatLng(20, 0);
   double _zoom = 2;
+
+  List<LatLng> _arcPoints(LatLng start, LatLng end) {
+    const steps = 50;
+    final latDiff = end.latitude - start.latitude;
+    final lonDiff = end.longitude - start.longitude;
+    final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
+    final perpLat = -lonDiff;
+    final perpLon = latDiff;
+    final norm = math.sqrt(perpLat * perpLat + perpLon * perpLon);
+    final offsetLat = perpLat / norm;
+    final offsetLon = perpLon / norm;
+    final amp = distance * 0.2;
+
+    final pts = <LatLng>[];
+    for (var i = 0; i <= steps; i++) {
+      final t = i / steps;
+      final curve = math.sin(math.pi * t);
+      final lat = start.latitude + latDiff * t + offsetLat * amp * curve;
+      final lon = start.longitude + lonDiff * t + offsetLon * amp * curve;
+      pts.add(LatLng(lat, lon));
+    }
+    return pts;
+  }
 
   @override
   void initState() {
@@ -55,27 +79,24 @@ class _MapScreenState extends State<MapScreen> {
     final markers = <Marker>[];
     final lines = <Polyline>[];
 
+    for (final airport in airports) {
+      markers.add(
+        Marker(
+          point: LatLng(airport.latitude, airport.longitude),
+          width: 30,
+          height: 30,
+          builder: (_) => const Icon(Icons.location_on, color: Colors.purple),
+        ),
+      );
+    }
+
     for (final f in _flights) {
       final origin = airportByCode[f.origin];
       final dest = airportByCode[f.destination];
       if (origin != null && dest != null) {
         final start = LatLng(origin.latitude, origin.longitude);
         final end = LatLng(dest.latitude, dest.longitude);
-        markers.addAll([
-          Marker(
-            point: start,
-            width: 30,
-            height: 30,
-            builder: (_) => const Icon(Icons.flight_takeoff, color: Colors.blue),
-          ),
-          Marker(
-            point: end,
-            width: 30,
-            height: 30,
-            builder: (_) => const Icon(Icons.flight_land, color: Colors.red),
-          ),
-        ]);
-        lines.add(Polyline(points: [start, end], color: Colors.blue, strokeWidth: 2));
+        lines.add(Polyline(points: _arcPoints(start, end), color: Colors.blue, strokeWidth: 2));
       }
     }
 
