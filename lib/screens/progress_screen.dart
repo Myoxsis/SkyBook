@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../models/flight.dart';
 import '../models/flight_storage.dart';
-import '../models/achievement.dart';
 import '../utils/achievement_utils.dart';
 import 'package:intl/intl.dart';
 import '../widgets/skybook_app_bar.dart';
@@ -34,6 +33,12 @@ class _ProgressScreenState extends State<ProgressScreen>
     'Distance',
     'Destinations',
   ];
+  final List<String> _statusOptions = const [
+    'All',
+    'Unlocked',
+    'In Progress',
+  ];
+  String _statusFilter = 'All';
 
   @override
   void initState() {
@@ -63,6 +68,34 @@ class _ProgressScreenState extends State<ProgressScreen>
     widget.flightsNotifier.value = flights;
   }
 
+  Widget _buildStatusMenu() {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.filter_list),
+      tooltip: 'Filter achievements',
+      onSelected: (value) {
+        setState(() {
+          _statusFilter = value;
+        });
+      },
+      itemBuilder: (context) {
+        return _statusOptions.map((s) {
+          return PopupMenuItem<String>(
+            value: s,
+            child: Row(
+              children: [
+                if (_statusFilter == s) ...[
+                  const Icon(Icons.check, size: 16),
+                  const SizedBox(width: 8),
+                ],
+                Text(s),
+              ],
+            ),
+          );
+        }).toList();
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +108,7 @@ class _ProgressScreenState extends State<ProgressScreen>
           tabs: _categories.map((c) => Tab(text: c)).toList(),
         ),
         actions: [
+          _buildStatusMenu(),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: widget.onOpenSettings,
@@ -104,6 +138,11 @@ class _ProgressScreenState extends State<ProgressScreen>
     final selected = _categories[_tabController.index];
     final filtered = achievements
         .where((a) => selected == 'All' || a.category == selected)
+        .where((a) {
+          if (_statusFilter == 'Unlocked') return a.achieved;
+          if (_statusFilter == 'In Progress') return !a.achieved;
+          return true;
+        })
         .toList();
 
     final unlocked = filtered.where((a) => a.achieved).length;
