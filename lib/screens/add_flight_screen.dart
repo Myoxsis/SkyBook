@@ -169,9 +169,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             a.name.toLowerCase().contains(value.text.toLowerCase()));
       },
       displayStringForOption: (a) => a.display,
-      onSelected: (a) {
-        controller.text = a.code;
-      },
       fieldViewBuilder:
           (context, textEditingController, fieldFocusNode, onFieldSubmitted) {
         return TextFormField(
@@ -187,6 +184,31 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           },
         );
       },
+      optionsViewBuilder:
+          (context, AutocompleteOnSelected<Airport> onSelected, options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            child: SizedBox(
+              height: 200,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: options.length,
+                itemBuilder: (context, index) {
+                  final Airport option = options.elementAt(index);
+                  return ListTile(
+                    title: Text(option.display),
+                    onTap: () => onSelected(option),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+      onSelected: (a) {
+        controller.text = a.code;
+      },
     );
   }
 
@@ -198,15 +220,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         if (value.text.isEmpty) {
           return aircrafts;
         }
-        return aircrafts.where((a) => a.display.toLowerCase().contains(value.text.toLowerCase()));
+        return aircrafts.where(
+            (a) => a.display.toLowerCase().contains(value.text.toLowerCase()));
       },
       displayStringForOption: (a) => a.display,
-      onSelected: (a) {
-        setState(() {
-          _selectedAircraft = a;
-          _aircraftController.text = a.display;
-        });
-      },
       fieldViewBuilder:
           (context, textEditingController, focusNode, onFieldSubmitted) {
         return TextFormField(
@@ -221,6 +238,34 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             return null;
           },
         );
+      },
+      optionsViewBuilder:
+          (context, AutocompleteOnSelected<Aircraft> onSelected, options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            child: SizedBox(
+              height: 200,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: options.length,
+                itemBuilder: (context, index) {
+                  final Aircraft option = options.elementAt(index);
+                  return ListTile(
+                    title: Text(option.display),
+                    onTap: () => onSelected(option),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+      onSelected: (a) {
+        setState(() {
+          _selectedAircraft = a;
+          _aircraftController.text = a.display;
+        });
       },
     );
   }
