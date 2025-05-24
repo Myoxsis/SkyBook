@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'flight_screen.dart';
 import 'status_screen.dart';
+import 'progress_screen.dart';
 import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final pages = [
       FlightScreen(onOpenSettings: _openSettings),
+      ProgressScreen(onOpenSettings: _openSettings),
       StatusScreen(onOpenSettings: _openSettings),
     ];
 
@@ -47,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.flight), label: 'Flights'),
+          BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: 'Progress'),
           BottomNavigationBarItem(icon: Icon(Icons.assessment), label: 'Status'),
         ],
       ),
