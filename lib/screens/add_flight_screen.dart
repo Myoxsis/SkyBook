@@ -342,5 +342,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         ),
       ),
     );
+    );
   }
 }
