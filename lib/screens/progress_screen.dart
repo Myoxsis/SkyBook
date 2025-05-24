@@ -4,16 +4,19 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../models/achievement.dart';
 import '../utils/achievement_utils.dart';
+import 'package:intl/intl.dart';
 import '../widgets/skybook_app_bar.dart';
 
 class ProgressScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
   final ValueNotifier<List<Flight>> flightsNotifier;
+  final Map<String, DateTime> unlockedAchievements;
 
   const ProgressScreen({
     super.key,
     required this.onOpenSettings,
     required this.flightsNotifier,
+    required this.unlockedAchievements,
   });
 
   @override
@@ -96,7 +99,8 @@ class _ProgressScreenState extends State<ProgressScreen>
       return const SizedBox.shrink();
     }
 
-    final achievements = calculateAchievements(_flights);
+    final achievements =
+        calculateAchievements(_flights, widget.unlockedAchievements);
     final selected = _categories[_tabController.index];
     final filtered = achievements
         .where((a) => selected == 'All' || a.category == selected)
@@ -137,6 +141,11 @@ class _ProgressScreenState extends State<ProgressScreen>
                       children: [
                         Text(a.title,
                             style: Theme.of(context).textTheme.bodyMedium),
+                        if (a.unlockedAt != null)
+                          Text(
+                            DateFormat.yMMMd().format(a.unlockedAt!),
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
                         const SizedBox(height: 2),
                         Semantics(
                           label:

@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
   final bool darkMode;
   final ValueNotifier<List<Flight>> flightsNotifier;
   final Future<void> Function() onFlightsChanged;
+  final Map<String, DateTime> unlockedAchievements;
 
   const HomeScreen({
     super.key,
@@ -19,6 +20,7 @@ class HomeScreen extends StatefulWidget {
     required this.darkMode,
     required this.flightsNotifier,
     required this.onFlightsChanged,
+    required this.unlockedAchievements,
   });
 
   @override
@@ -74,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ProgressScreen(
         onOpenSettings: _openSettings,
         flightsNotifier: widget.flightsNotifier,
+        unlockedAchievements: widget.unlockedAchievements,
       ),
       StatusScreen(
         key: _statusScreenKey,

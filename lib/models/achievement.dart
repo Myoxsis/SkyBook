@@ -6,6 +6,7 @@ class Achievement {
   final int target;
   final int progress;
   final bool achieved;
+  final DateTime? unlockedAt;
 
   const Achievement({
     required this.id,
@@ -15,6 +16,7 @@ class Achievement {
     required this.target,
     required this.progress,
     required this.achieved,
+    this.unlockedAt,
   });
 }
 
