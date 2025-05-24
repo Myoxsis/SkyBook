@@ -70,7 +70,7 @@ class _MapScreenState extends State<MapScreen> {
       }
     }
 
-    final center = markers.isNotEmpty ? markers.first.point : const LatLng(20, 0);
+    final center = markers.isNotEmpty ? markers.first.point : LatLng(20, 0);
 
     return Scaffold(
       appBar: AppBar(
