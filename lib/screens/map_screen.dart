@@ -143,7 +143,14 @@ class _MapScreenState extends State<MapScreen> {
           height: 30,
           builder: (_) => GestureDetector(
             onTap: () => _showAirportInfo(airport),
-            child: const Icon(Icons.location_on, color: Colors.purple),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(4),
+              child: const Icon(Icons.flight, size: 16, color: Colors.white),
+            ),
           ),
         ),
       );
@@ -155,7 +162,13 @@ class _MapScreenState extends State<MapScreen> {
       if (origin != null && dest != null) {
         final start = LatLng(origin.latitude, origin.longitude);
         final end = LatLng(dest.latitude, dest.longitude);
-        lines.add(Polyline(points: _arcPoints(start, end), color: Colors.blue, strokeWidth: 2));
+        lines.add(
+          Polyline(
+            points: _arcPoints(start, end),
+            color: Theme.of(context).colorScheme.secondary,
+            strokeWidth: 3,
+          ),
+        );
       }
     }
 
