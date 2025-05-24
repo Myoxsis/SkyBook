@@ -16,6 +16,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  Key _flightScreenKey = UniqueKey();
+  Key _statusScreenKey = UniqueKey();
+
+  void _handleDataCleared() {
+    setState(() {
+      _flightScreenKey = UniqueKey();
+      _statusScreenKey = UniqueKey();
+    });
+  }
 
   void _openSettings() {
     Navigator.of(context).push(
@@ -23,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (_) => SettingsScreen(
           darkMode: widget.darkMode,
           onToggleTheme: widget.onToggleTheme,
+          onClearData: _handleDataCleared,
         ),
       ),
     );
