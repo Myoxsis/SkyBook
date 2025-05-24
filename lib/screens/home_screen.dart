@@ -15,6 +15,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  Key _flightScreenKey = UniqueKey();
+  Key _statusScreenKey = UniqueKey();
+
+  void _handleDataCleared() {
+    setState(() {
+      _flightScreenKey = UniqueKey();
+      _statusScreenKey = UniqueKey();
+    });
+  }
 
   void _openSettings() {
     Navigator.of(context).push(
@@ -22,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (_) => SettingsScreen(
           darkMode: widget.darkMode,
           onToggleTheme: widget.onToggleTheme,
+          onClearData: _handleDataCleared,
         ),
       ),
     );
@@ -36,8 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      FlightScreen(onOpenSettings: _openSettings),
-      StatusScreen(onOpenSettings: _openSettings),
+      FlightScreen(key: _flightScreenKey, onOpenSettings: _openSettings),
+      StatusScreen(key: _statusScreenKey, onOpenSettings: _openSettings),
     ];
 
     return Scaffold(

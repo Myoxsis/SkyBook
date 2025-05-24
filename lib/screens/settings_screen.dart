@@ -4,11 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
   final VoidCallback onToggleTheme;
+  final VoidCallback? onClearData;
 
   const SettingsScreen({
     super.key,
     required this.darkMode,
     required this.onToggleTheme,
+    this.onClearData,
   });
 
   @override
@@ -21,6 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _clearData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+    widget.onClearData?.call();
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Local data cleared')),
