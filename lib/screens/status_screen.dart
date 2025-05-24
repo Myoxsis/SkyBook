@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/flight.dart';
 import '../models/flight_storage.dart';
+import '../data/airport_data.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -68,6 +69,23 @@ class _StatusScreenState extends State<StatusScreen> {
     return entries.take(10).toList();
   }
 
+  Map<String, int> get _countryCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      final origin = airportByCode[f.origin]?.country;
+      final dest = airportByCode[f.destination]?.country;
+      if (origin != null) counts[origin] = (counts[origin] ?? 0) + 1;
+      if (dest != null) counts[dest] = (counts[dest] ?? 0) + 1;
+    }
+    return counts;
+  }
+
+  List<MapEntry<String, int>> get _topCountries {
+    final entries = _countryCount.entries.toList();
+    entries.sort((a, b) => b.value.compareTo(a.value));
+    return entries.take(10).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +126,7 @@ class _StatusScreenState extends State<StatusScreen> {
             const SizedBox(height: 24),
             _buildAircraftChart(),
             const SizedBox(height: 24),
-            _buildProgressSection(),
+            _buildCountryChart(),
           ],
         ),
       ),
@@ -163,24 +181,50 @@ class _StatusScreenState extends State<StatusScreen> {
     );
   }
 
-  Widget _buildProgressSection() {
+  Widget _buildCountryChart() {
     if (_flights.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final achievements = <String>[];
-    if (_flights.length >= 1) achievements.add('1st flight logged');
-    if (_flights.length >= 10) achievements.add('10 flights logged');
+    final top = _topCountries;
+    final maxCount = top.isNotEmpty ? top.first.value : 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Progress', style: Theme.of(context).textTheme.titleMedium),
+        Text('Top Countries',
+            style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        ...achievements.map((a) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Text('• $a'),
-            )),
+        ...top.map((e) {
+          final barWidth = e.value / maxCount;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                SizedBox(width: 100, child: Text(e.key)),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 20,
+                        color: Colors.grey.shade300,
+                      ),
+                      FractionallySizedBox(
+                        widthFactor: barWidth,
+                        child: Container(
+                          height: 20,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(e.value.toString()),
+              ],
+            ),
+          );
+        })
       ],
     );
   }
