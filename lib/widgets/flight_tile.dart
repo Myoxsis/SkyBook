@@ -100,6 +100,7 @@ class FlightTile extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
