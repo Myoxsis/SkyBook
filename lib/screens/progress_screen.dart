@@ -4,6 +4,7 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../models/achievement.dart';
 import '../utils/achievement_utils.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class ProgressScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;

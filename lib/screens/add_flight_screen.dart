@@ -6,6 +6,7 @@ import '../models/airline.dart';
 import '../data/airport_data.dart';
 import '../data/aircraft_data.dart';
 import '../data/airline_data.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -294,8 +295,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.flight == null ? 'Add Flight' : 'Edit Flight'),
+      appBar: SkyBookAppBar(
+        title: widget.flight == null ? 'Add Flight' : 'Edit Flight',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

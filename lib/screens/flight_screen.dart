@@ -5,6 +5,7 @@ import '../widgets/flight_tile.dart';
 import 'add_flight_screen.dart';
 import 'settings_screen.dart';
 import 'flight_detail_screen.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class FlightScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -117,8 +118,8 @@ class _FlightScreenState extends State<FlightScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flights'),
+      appBar: SkyBookAppBar(
+        title: 'Flights',
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
@@ -34,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: const SkyBookAppBar(title: 'Settings'),
       body: ListView(
         children: [
           SwitchListTile(
