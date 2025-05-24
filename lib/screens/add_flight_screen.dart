@@ -160,7 +160,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           controller: textEditingController,
           focusNode: focusNode,
           decoration: InputDecoration(labelText: label),
-          onSubmitted: (_) => onFieldSubmitted(),
+          onFieldSubmitted: (_) => onFieldSubmitted(),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Please enter $label';
@@ -199,7 +199,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           controller: textEditingController,
           focusNode: focusNode,
           decoration: const InputDecoration(labelText: 'Aircraft'),
-          onSubmitted: (_) => onFieldSubmitted(),
+          onFieldSubmitted: (_) => onFieldSubmitted(),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Please enter Aircraft';
