@@ -45,6 +45,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
         final now = DateTime.now();
         _unlockedAchievements[a.id] = now;
         AchievementStorage.saveUnlocked(a.id, now);
+
         final context = _messengerKey.currentContext;
         if (context != null) {
           showDialog(
@@ -53,6 +54,9 @@ class _SkyBookAppState extends State<SkyBookApp> {
           );
         }
       }
+    }
+    if (updated) {
+      AchievementStorage.saveUnlocked(_unlockedAchievements);
     }
   }
 
@@ -72,7 +76,11 @@ class _SkyBookAppState extends State<SkyBookApp> {
 
   Future<void> _loadFlights() async {
     final flights = await FlightStorage.loadFlights();
+    final achievements = await AchievementStorage.loadUnlocked();
     _flightsNotifier.value = flights;
+    _unlockedAchievements
+      ..clear()
+      ..addAll(achievements);
     _updateAchievements();
   }
 
