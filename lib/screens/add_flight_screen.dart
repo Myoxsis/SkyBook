@@ -15,11 +15,18 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _durationController = TextEditingController();
   final _notesController = TextEditingController();
 
+  // List of aircraft types operated by the airline.
   final List<String> _aircraftOptions = [
-    'Cessna 172',
-    'Piper PA-28',
-    'Diamond DA40',
+    'Airbus A320',
+    'Airbus A321',
+    'Airbus A330',
+    'Airbus A350',
     'Boeing 737',
+    'Boeing 747',
+    'Boeing 757',
+    'Boeing 767',
+    'Boeing 777',
+    'Boeing 787',
   ];
 
   String? _selectedAircraft;
