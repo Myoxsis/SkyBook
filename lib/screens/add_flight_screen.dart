@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../models/aircraft.dart';
+import '../models/airport.dart';
 import '../data/airport_data.dart';
 import '../data/aircraft_data.dart';
 
