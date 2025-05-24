@@ -14,6 +14,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _dateController = TextEditingController();
   final _durationController = TextEditingController();
   final _notesController = TextEditingController();
+  final _originController = TextEditingController();
+  final _destinationController = TextEditingController();
 
   // List of aircraft types operated by the airline.
   final List<String> _aircraftOptions = [
@@ -40,6 +42,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _selectedAircraft = flight.aircraft;
       _durationController.text = flight.duration;
       _notesController.text = flight.notes;
+      _originController.text = flight.origin;
+      _destinationController.text = flight.destination;
     } else {
       _selectedAircraft = _aircraftOptions.first;
     }
@@ -75,6 +79,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       aircraft: _selectedAircraft ?? '',
       duration: _durationController.text,
       notes: _notesController.text,
+      origin: _originController.text,
+      destination: _destinationController.text,
       isFavorite: widget.flight?.isFavorite ?? false,
     );
     Navigator.of(context).pop(flight);
@@ -131,6 +137,14 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 });
               },
               decoration: const InputDecoration(labelText: 'Aircraft'),
+            ),
+            TextField(
+              controller: _originController,
+              decoration: const InputDecoration(labelText: 'Origin'),
+            ),
+            TextField(
+              controller: _destinationController,
+              decoration: const InputDecoration(labelText: 'Destination'),
             ),
             TextField(
               controller: _durationController,

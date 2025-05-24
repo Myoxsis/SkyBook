@@ -4,6 +4,8 @@ class Flight {
   final String aircraft;
   final String duration;
   final String notes;
+  final String origin;
+  final String destination;
   final bool isFavorite;
 
   Flight({
@@ -12,6 +14,8 @@ class Flight {
     required this.aircraft,
     required this.duration,
     required this.notes,
+    required this.origin,
+    required this.destination,
     this.isFavorite = false,
   });
 
@@ -22,6 +26,8 @@ class Flight {
       'aircraft': aircraft,
       'duration': duration,
       'notes': notes,
+      'origin': origin,
+      'destination': destination,
       'isFavorite': isFavorite,
     };
   }
@@ -33,6 +39,8 @@ class Flight {
       aircraft: map['aircraft'] as String,
       duration: map['duration'] as String,
       notes: map['notes'] as String? ?? '',
+      origin: map['origin'] as String? ?? '',
+      destination: map['destination'] as String? ?? '',
       isFavorite: map['isFavorite'] as bool? ?? false,
     );
   }
