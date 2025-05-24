@@ -26,11 +26,30 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _aircraftController = TextEditingController();
   final _flightNumberController = TextEditingController();
   final _seatNumberController = TextEditingController();
+  final _originFocusNode = FocusNode();
+  final _destinationFocusNode = FocusNode();
+  final _aircraftFocusNode = FocusNode();
   String _travelClass = 'Economy';
   String _seatLocation = 'Window';
 
   Aircraft? _selectedAircraft;
   Airline? _selectedAirline;
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    _durationController.dispose();
+    _notesController.dispose();
+    _originController.dispose();
+    _destinationController.dispose();
+    _aircraftController.dispose();
+    _flightNumberController.dispose();
+    _seatNumberController.dispose();
+    _originFocusNode.dispose();
+    _destinationFocusNode.dispose();
+    _aircraftFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -134,10 +153,13 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     }
   }
 
-  Widget _buildAirportField(TextEditingController controller, String label,
+  Widget _buildAirportField(
+      TextEditingController controller, FocusNode focusNode, String label,
       {Key? key}) {
-    return Autocomplete<Airport>(
+    return RawAutocomplete<Airport>(
       key: key,
+      textEditingController: controller,
+      focusNode: focusNode,
       optionsBuilder: (TextEditingValue value) {
         if (value.text.isEmpty) {
           return const Iterable<Airport>.empty();
@@ -151,16 +173,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         controller.text = a.code;
       },
       fieldViewBuilder:
-          (context, textEditingController, focusNode, onFieldSubmitted) {
-        textEditingController.text = controller.text;
-        textEditingController.selection = TextSelection.fromPosition(
-            TextPosition(offset: textEditingController.text.length));
-        textEditingController.addListener(() {
-          controller.text = textEditingController.text;
-        });
+          (context, textEditingController, fieldFocusNode, onFieldSubmitted) {
         return TextFormField(
           controller: textEditingController,
-          focusNode: focusNode,
+          focusNode: fieldFocusNode,
           decoration: InputDecoration(labelText: label),
           onFieldSubmitted: (_) => onFieldSubmitted(),
           validator: (value) {
@@ -175,7 +191,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   Widget _buildAircraftField() {
-    return Autocomplete<Aircraft>(
+    return RawAutocomplete<Aircraft>(
+      textEditingController: _aircraftController,
+      focusNode: _aircraftFocusNode,
       optionsBuilder: (TextEditingValue value) {
         if (value.text.isEmpty) {
           return aircrafts;
@@ -191,12 +209,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       },
       fieldViewBuilder:
           (context, textEditingController, focusNode, onFieldSubmitted) {
-        textEditingController.text = _aircraftController.text;
-        textEditingController.selection = TextSelection.fromPosition(
-            TextPosition(offset: textEditingController.text.length));
-        textEditingController.addListener(() {
-          _aircraftController.text = textEditingController.text;
-        });
         return TextFormField(
           controller: textEditingController,
           focusNode: focusNode,
@@ -265,9 +277,11 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text('Airline: ${_selectedAirline!.name}'),
               ),
-            _buildAirportField(_originController, 'Origin',
+            _buildAirportField(
+                _originController, _originFocusNode, 'Origin',
                 key: const ValueKey('origin')),
-            _buildAirportField(_destinationController, 'Destination',
+            _buildAirportField(
+                _destinationController, _destinationFocusNode, 'Destination',
                 key: const ValueKey('destination')),
             TextFormField(
               controller: _durationController,
@@ -345,7 +359,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           ],
         ),
       ),
-    );
     );
   }
 }
