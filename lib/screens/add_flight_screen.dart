@@ -17,6 +17,7 @@ class AddFlightScreen extends StatefulWidget {
 }
 
 class _AddFlightScreenState extends State<AddFlightScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _dateController = TextEditingController();
   final _durationController = TextEditingController();
   final _notesController = TextEditingController();
@@ -81,6 +82,14 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   void _submit() {
+    if (!_formKey.currentState!.validate()) return;
+    if (_originController.text.trim().toUpperCase() ==
+        _destinationController.text.trim().toUpperCase()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Origin and destination cannot be the same')),
+      );
+      return;
+    }
     _updateAirline(_flightNumberController.text);
     final flight = Flight(
       id: widget.flight?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
@@ -147,11 +156,17 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         textEditingController.addListener(() {
           controller.text = textEditingController.text;
         });
-        return TextField(
+        return TextFormField(
           controller: textEditingController,
           focusNode: focusNode,
           decoration: InputDecoration(labelText: label),
           onSubmitted: (_) => onFieldSubmitted(),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Please enter $label';
+            }
+            return null;
+          },
         );
       },
     );
@@ -172,18 +187,25 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           _aircraftController.text = a.display;
         });
       },
-      fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+      fieldViewBuilder:
+          (context, textEditingController, focusNode, onFieldSubmitted) {
         textEditingController.text = _aircraftController.text;
         textEditingController.selection = TextSelection.fromPosition(
             TextPosition(offset: textEditingController.text.length));
         textEditingController.addListener(() {
           _aircraftController.text = textEditingController.text;
         });
-        return TextField(
+        return TextFormField(
           controller: textEditingController,
           focusNode: focusNode,
           decoration: const InputDecoration(labelText: 'Aircraft'),
           onSubmitted: (_) => onFieldSubmitted(),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Please enter Aircraft';
+            }
+            return null;
+          },
         );
       },
     );
@@ -203,7 +225,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   Widget _buildFlightNumberField() {
-    return TextField(
+    return TextFormField(
       controller: _flightNumberController,
       decoration: const InputDecoration(labelText: 'Flight Number'),
       onChanged: _updateAirline,
@@ -218,13 +240,21 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            TextField(
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+            TextFormField(
               controller: _dateController,
               readOnly: true,
               decoration: const InputDecoration(labelText: 'Date'),
               onTap: _pickDate,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please select a date';
+                }
+                return null;
+              },
             ),
             _buildAircraftField(),
             _buildFlightNumberField(),
@@ -235,10 +265,20 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               ),
             _buildAirportField(_originController, 'Origin'),
             _buildAirportField(_destinationController, 'Destination'),
-            TextField(
+            TextFormField(
               controller: _durationController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Duration (hrs)'),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter duration';
+                }
+                final d = double.tryParse(value);
+                if (d == null || d <= 0) {
+                  return 'Enter a valid duration';
+                }
+                return null;
+              },
             ),
             DropdownButtonFormField<String>(
               value: _travelClass,
