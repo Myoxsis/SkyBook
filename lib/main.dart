@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'models/flight.dart';
 import 'models/flight_storage.dart';
 import 'models/theme_storage.dart';
 import 'models/achievement.dart';
 import 'utils/achievement_utils.dart';
 import 'screens/home_screen.dart';
+
+const Color _brandPrimary = Color(0xFF0A73B1);
+const Color _brandSecondary = Color(0xFFEF6C00);
+
+final ColorScheme _lightColorScheme =
+    ColorScheme.fromSeed(seedColor: _brandPrimary, brightness: Brightness.light)
+        .copyWith(secondary: _brandSecondary);
+
+final ColorScheme _darkColorScheme =
+    ColorScheme.fromSeed(seedColor: _brandPrimary, brightness: Brightness.dark)
+        .copyWith(secondary: _brandSecondary);
 
 void main() {
   runApp(const SkyBookApp());
@@ -75,10 +87,16 @@ class _SkyBookAppState extends State<SkyBookApp> {
       scaffoldMessengerKey: _messengerKey,
       title: 'SkyBook',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: _lightColorScheme,
+        textTheme: GoogleFonts.robotoTextTheme(),
         useMaterial3: true,
       ),
-      darkTheme: ThemeData.dark(useMaterial3: true),
+      darkTheme: ThemeData(
+        colorScheme: _darkColorScheme,
+        textTheme: GoogleFonts.robotoTextTheme(ThemeData.dark().textTheme),
+        useMaterial3: true,
+        brightness: Brightness.dark,
+      ),
       debugShowCheckedModeBanner: false,
       themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
       home: HomeScreen(
