@@ -5,12 +5,14 @@ class FlightTile extends StatelessWidget {
   final Flight flight;
   final VoidCallback onEdit;
   final VoidCallback onToggleFavorite;
+  final VoidCallback? onTap;
 
   const FlightTile({
     super.key,
     required this.flight,
     required this.onEdit,
     required this.onToggleFavorite,
+    this.onTap,
   });
 
   Color _colorForClass(BuildContext context) {
@@ -31,12 +33,14 @@ class FlightTile extends StatelessWidget {
     return Card(
       color: _colorForClass(context),
       margin: const EdgeInsets.symmetric(vertical: 4),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
