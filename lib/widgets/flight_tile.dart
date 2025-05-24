@@ -13,13 +13,26 @@ class FlightTile extends StatelessWidget {
     required this.onToggleFavorite,
   });
 
+  Color _colorForClass(BuildContext context) {
+    switch (flight.travelClass) {
+      case 'Premium':
+        return Colors.indigo.shade50;
+      case 'Business':
+        return Colors.teal.shade50;
+      case 'First':
+        return Colors.amber.shade50;
+      default:
+        return Theme.of(context).cardColor;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final notes = flight.notes;
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      color: _colorForClass(context),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -66,10 +79,6 @@ class FlightTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
-            ],
-            if (notes.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text(notes),
             ],
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
