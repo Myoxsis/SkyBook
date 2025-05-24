@@ -67,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onFlightsChanged: widget.onFlightsChanged,
       ),
       MapScreen(
+        key: const PageStorageKey('map'),
         onOpenSettings: _openSettings,
         flightsNotifier: widget.flightsNotifier,
       ),
