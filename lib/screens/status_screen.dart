@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../data/airport_data.dart';
+import '../widgets/class_pie_chart.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -102,6 +103,16 @@ class _StatusScreenState extends State<StatusScreen> {
     return entries.take(3).toList();
   }
 
+  Map<String, int> get _classCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      if (f.travelClass.isNotEmpty) {
+        counts[f.travelClass] = (counts[f.travelClass] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +156,8 @@ class _StatusScreenState extends State<StatusScreen> {
             _buildAirlineChart(),
             const SizedBox(height: 24),
             _buildCountryChart(),
+            const SizedBox(height: 24),
+            _buildClassChart(),
           ],
         ),
       ),
@@ -213,6 +226,22 @@ class _StatusScreenState extends State<StatusScreen> {
             final barWidth = e.value / maxCount;
             return _buildBarRow(e.key, e.value, barWidth);
           })
+      ],
+    );
+  }
+
+  Widget _buildClassChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Class Distribution',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        ClassPieChart(counts: _classCount),
       ],
     );
   }
