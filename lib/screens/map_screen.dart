@@ -79,7 +79,15 @@ class _MapScreenState extends State<MapScreen> {
     final markers = <Marker>[];
     final lines = <Polyline>[];
 
-    for (final airport in airports) {
+    final usedCodes = <String>{};
+    for (final f in _flights) {
+      if (f.origin.isNotEmpty) usedCodes.add(f.origin);
+      if (f.destination.isNotEmpty) usedCodes.add(f.destination);
+    }
+
+    for (final code in usedCodes) {
+      final airport = airportByCode[code];
+      if (airport == null) continue;
       markers.add(
         Marker(
           point: LatLng(airport.latitude, airport.longitude),
