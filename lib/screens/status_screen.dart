@@ -34,6 +34,9 @@ class _StatusScreenState extends State<StatusScreen> {
     });
   }
 
+  int get _favoriteCount =>
+      _flights.where((f) => f.isFavorite).length;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,14 +51,58 @@ class _StatusScreenState extends State<StatusScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: refresh,
-        child: ListView(
+        child: GridView.count(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
           children: [
-            Text('Total flights: ${_flights.length}', style: Theme.of(context).textTheme.headlineSmall),
+            _StatusTile(
+              icon: Icons.flight,
+              label: 'Total flights',
+              value: _flights.length.toString(),
+            ),
+            _StatusTile(
+              icon: Icons.schedule,
+              label: 'Total duration',
+              value: '${_totalDuration.toStringAsFixed(1)} hrs',
+            ),
+            _StatusTile(
+              icon: Icons.star,
+              label: 'Favorites',
+              value: _favoriteCount.toString(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _StatusTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 32),
             const SizedBox(height: 8),
-            Text('Total duration: ${_totalDuration.toStringAsFixed(1)} hrs', style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 8),
-            Text('Favorites: ${_flights.where((f) => f.isFavorite).length}', style: Theme.of(context).textTheme.headlineSmall),
+            Text(value, style: Theme.of(context).textTheme.headlineSmall),
+            Text(label, style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ),
