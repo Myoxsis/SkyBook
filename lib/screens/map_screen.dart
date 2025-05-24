@@ -74,9 +74,15 @@ class _MapScreenState extends State<MapScreen> {
     final latDiff = end.latitude - start.latitude;
     final lonDiff = end.longitude - start.longitude;
     final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
+    if (distance == 0) {
+      return [start, end];
+    }
     final perpLat = -lonDiff;
     final perpLon = latDiff;
     final norm = math.sqrt(perpLat * perpLat + perpLon * perpLon);
+    if (norm == 0) {
+      return [start, end];
+    }
     final offsetLat = perpLat / norm;
     final offsetLon = perpLon / norm;
     final amp = distance * 0.2;
