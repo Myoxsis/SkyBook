@@ -156,8 +156,8 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final top = _topAircraft;
-    final maxCount = top.isNotEmpty ? top.first.value : 1;
+      final top = _topAircraft;
+      final maxCount = top.isNotEmpty ? top.first.value : 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,36 +165,10 @@ class _StatusScreenState extends State<StatusScreen> {
         Text('Top Aircraft',
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        ...top.map((e) {
-          final barWidth = e.value / maxCount;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                SizedBox(width: 100, child: Text(e.key)),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 20,
-                        color: Colors.grey.shade300,
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: barWidth,
-                        child: Container(
-                          height: 20,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(e.value.toString()),
-              ],
-            ),
-          );
-        })
+          ...top.map((e) {
+            final barWidth = e.value / maxCount;
+            return _buildBarRow(e.key, e.value, barWidth);
+          })
       ],
     );
   }
@@ -204,8 +178,8 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final top = _topAirlines;
-    final maxCount = top.isNotEmpty ? top.first.value : 1;
+      final top = _topAirlines;
+      final maxCount = top.isNotEmpty ? top.first.value : 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,36 +187,10 @@ class _StatusScreenState extends State<StatusScreen> {
         Text('Top Airlines',
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        ...top.map((e) {
-          final barWidth = e.value / maxCount;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                SizedBox(width: 100, child: Text(e.key)),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 20,
-                        color: Colors.grey.shade300,
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: barWidth,
-                        child: Container(
-                          height: 20,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(e.value.toString()),
-              ],
-            ),
-          );
-        })
+          ...top.map((e) {
+            final barWidth = e.value / maxCount;
+            return _buildBarRow(e.key, e.value, barWidth);
+          })
       ],
     );
   }
@@ -252,8 +200,8 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final top = _topCountries;
-    final maxCount = top.isNotEmpty ? top.first.value : 1;
+      final top = _topCountries;
+      final maxCount = top.isNotEmpty ? top.first.value : 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,37 +209,47 @@ class _StatusScreenState extends State<StatusScreen> {
         Text('Top Countries',
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        ...top.map((e) {
-          final barWidth = e.value / maxCount;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                SizedBox(width: 100, child: Text(e.key)),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 20,
-                        color: Colors.grey.shade300,
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: barWidth,
-                        child: Container(
-                          height: 20,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(e.value.toString()),
-              ],
-            ),
-          );
-        })
+          ...top.map((e) {
+            final barWidth = e.value / maxCount;
+            return _buildBarRow(e.key, e.value, barWidth);
+          })
       ],
+    );
+  }
+
+  Widget _buildBarRow(String label, int value, double fraction) {
+    final barColor = Theme.of(context).colorScheme.primary;
+    final backgroundColor =
+        Theme.of(context).colorScheme.onSurface.withOpacity(0.12);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Semantics(
+        label: '$label: $value',
+        child: Row(
+          children: [
+            SizedBox(width: 100, child: Text(label)),
+            Expanded(
+              child: Stack(
+                children: [
+                  Container(
+                    height: 20,
+                    color: backgroundColor,
+                  ),
+                  FractionallySizedBox(
+                    widthFactor: fraction,
+                    child: Container(
+                      height: 20,
+                      color: barColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(value.toString()),
+          ],
+        ),
+      ),
     );
   }
 }
