@@ -22,11 +22,20 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   List<Flight> _flights = [];
   late VoidCallback _listener;
+  final MapController _controller = MapController();
+  LatLng _center = const LatLng(20, 0);
+  double _zoom = 2;
 
   @override
   void initState() {
     super.initState();
     _flights = widget.flightsNotifier.value;
+    if (_flights.isNotEmpty) {
+      final origin = airportByCode[_flights.first.origin];
+      if (origin != null) {
+        _center = LatLng(origin.latitude, origin.longitude);
+      }
+    }
     _listener = () {
       setState(() {
         _flights = widget.flightsNotifier.value;
@@ -70,7 +79,9 @@ class _MapScreenState extends State<MapScreen> {
       }
     }
 
-    final center = markers.isNotEmpty ? markers.first.point : LatLng(20, 0);
+    if (_center == const LatLng(20, 0) && markers.isNotEmpty) {
+      _center = markers.first.point;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +94,15 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
       body: FlutterMap(
-        options: MapOptions(center: center, zoom: 2),
+        mapController: _controller,
+        options: MapOptions(
+          center: _center,
+          zoom: _zoom,
+          onPositionChanged: (pos, _) {
+            _center = pos.center ?? _center;
+            _zoom = pos.zoom ?? _zoom;
+          },
+        ),
         children: [
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -91,6 +110,28 @@ class _MapScreenState extends State<MapScreen> {
           ),
           PolylineLayer(polylines: lines),
           MarkerLayer(markers: markers),
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            heroTag: 'mapZoomIn',
+            mini: true,
+            onPressed: () {
+              _controller.move(_controller.center, _controller.zoom + 1);
+            },
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(height: 8),
+          FloatingActionButton(
+            heroTag: 'mapZoomOut',
+            mini: true,
+            onPressed: () {
+              _controller.move(_controller.center, _controller.zoom - 1);
+            },
+            child: const Icon(Icons.remove),
+          ),
         ],
       ),
     );
