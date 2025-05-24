@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/flight.dart';
 import 'add_flight_screen.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
@@ -58,8 +59,8 @@ class FlightDetailScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flight Details'),
+      appBar: SkyBookAppBar(
+        title: 'Flight Details',
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),

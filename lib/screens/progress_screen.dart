@@ -4,6 +4,7 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../models/achievement.dart';
 import '../utils/achievement_utils.dart';
+import '../widgets/skybook_app_bar.dart';
 
 class ProgressScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -50,8 +51,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Progress'),
+      appBar: SkyBookAppBar(
+        title: 'Progress',
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
