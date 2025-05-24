@@ -2,6 +2,7 @@ class Flight {
   final String id;
   final String date;
   final String aircraft;
+  final String manufacturer;
   final String duration;
   final String notes;
   final String origin;
@@ -12,6 +13,7 @@ class Flight {
     required this.id,
     required this.date,
     required this.aircraft,
+    required this.manufacturer,
     required this.duration,
     required this.notes,
     required this.origin,
@@ -24,6 +26,7 @@ class Flight {
       'id': id,
       'date': date,
       'aircraft': aircraft,
+      'manufacturer': manufacturer,
       'duration': duration,
       'notes': notes,
       'origin': origin,
@@ -37,11 +40,18 @@ class Flight {
       id: map['id'] as String,
       date: map['date'] as String,
       aircraft: map['aircraft'] as String,
+      manufacturer: map['manufacturer'] as String? ?? _manufacturerFromAircraft(map['aircraft'] as String),
       duration: map['duration'] as String,
       notes: map['notes'] as String? ?? '',
       origin: map['origin'] as String? ?? '',
       destination: map['destination'] as String? ?? '',
       isFavorite: map['isFavorite'] as bool? ?? false,
     );
+  }
+
+  static String _manufacturerFromAircraft(String aircraft) {
+    if (aircraft.startsWith('Airbus')) return 'Airbus';
+    if (aircraft.startsWith('Boeing')) return 'Boeing';
+    return '';
   }
 }
