@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/flight.dart';
+import '../models/aircraft.dart';
 import '../data/airport_data.dart';
+import '../data/aircraft_data.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -17,22 +19,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _notesController = TextEditingController();
   final _originController = TextEditingController();
   final _destinationController = TextEditingController();
+  final _aircraftController = TextEditingController();
 
-  // List of aircraft types operated by the airline.
-  final List<String> _aircraftOptions = [
-    'Airbus A320',
-    'Airbus A321',
-    'Airbus A330',
-    'Airbus A350',
-    'Boeing 737',
-    'Boeing 747',
-    'Boeing 757',
-    'Boeing 767',
-    'Boeing 777',
-    'Boeing 787',
-  ];
-
-  String? _selectedAircraft;
+  Aircraft? _selectedAircraft;
 
   @override
   void initState() {
@@ -40,13 +29,15 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     final flight = widget.flight;
     if (flight != null) {
       _dateController.text = flight.date;
-      _selectedAircraft = flight.aircraft;
+      _selectedAircraft = aircraftByDisplay[flight.aircraft];
+      _aircraftController.text = flight.aircraft;
       _durationController.text = flight.duration;
       _notesController.text = flight.notes;
       _originController.text = flight.origin;
       _destinationController.text = flight.destination;
     } else {
-      _selectedAircraft = _aircraftOptions.first;
+      _selectedAircraft = aircrafts.first;
+      _aircraftController.text = _selectedAircraft!.display;
     }
   }
 
@@ -77,7 +68,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     final flight = Flight(
       id: widget.flight?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
       date: _dateController.text,
-      aircraft: _selectedAircraft ?? '',
+      aircraft: _selectedAircraft?.display ?? _aircraftController.text,
+      manufacturer: _selectedAircraft?.manufacturer ?? '',
       duration: _durationController.text,
       notes: _notesController.text,
       origin: _originController.text,
@@ -143,6 +135,38 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     );
   }
 
+  Widget _buildAircraftField() {
+    return Autocomplete<Aircraft>(
+      optionsBuilder: (TextEditingValue value) {
+        if (value.text.isEmpty) {
+          return aircrafts;
+        }
+        return aircrafts.where((a) => a.display.toLowerCase().contains(value.text.toLowerCase()));
+      },
+      displayStringForOption: (a) => a.display,
+      onSelected: (a) {
+        setState(() {
+          _selectedAircraft = a;
+          _aircraftController.text = a.display;
+        });
+      },
+      fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+        textEditingController.text = _aircraftController.text;
+        textEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: textEditingController.text.length));
+        textEditingController.addListener(() {
+          _aircraftController.text = textEditingController.text;
+        });
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: const InputDecoration(labelText: 'Aircraft'),
+          onSubmitted: (_) => onFieldSubmitted(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,18 +183,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               decoration: const InputDecoration(labelText: 'Date'),
               onTap: _pickDate,
             ),
-            DropdownButtonFormField<String>(
-              value: _selectedAircraft,
-              items: _aircraftOptions
-                  .map((a) => DropdownMenuItem(value: a, child: Text(a)))
-                  .toList(),
-              onChanged: (val) {
-                setState(() {
-                  _selectedAircraft = val;
-                });
-              },
-              decoration: const InputDecoration(labelText: 'Aircraft'),
-            ),
+            _buildAircraftField(),
             _buildAirportField(_originController, 'Origin'),
             _buildAirportField(_destinationController, 'Destination'),
             TextField(

@@ -78,6 +78,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
     if (_flights.length >= 1) achievements.add('1st flight logged');
     if (_flights.length >= 10) achievements.add('10 flights logged');
 
+    final manufacturerCounts = <String, int>{};
+    for (final f in _flights) {
+      final m = f.manufacturer;
+      if (m.isEmpty) continue;
+      manufacturerCounts[m] = (manufacturerCounts[m] ?? 0) + 1;
+    }
+    if ((manufacturerCounts['Airbus'] ?? 0) >= 10) {
+      achievements.add('10 flights on Airbus');
+    }
+    if ((manufacturerCounts['Boeing'] ?? 0) >= 10) {
+      achievements.add('10 flights on Boeing');
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
