@@ -4,6 +4,7 @@ import '../models/flight.dart';
 import '../widgets/flight_tile.dart';
 import 'add_flight_screen.dart';
 import 'settings_screen.dart';
+import 'flight_detail_screen.dart';
 
 class FlightScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -95,6 +96,24 @@ class _FlightScreenState extends State<FlightScreen> {
     widget.onFlightsChanged();
   }
 
+  Future<void> _viewFlight(int index) async {
+    final result = await Navigator.of(context).push<dynamic>(
+      MaterialPageRoute(
+        builder: (_) => FlightDetailScreen(flight: _flights[index]),
+      ),
+    );
+    if (result is Flight) {
+      final list = List<Flight>.from(_flights);
+      list[index] = result;
+      widget.flightsNotifier.value = list;
+      await widget.onFlightsChanged();
+    } else if (result == 'delete') {
+      final list = List<Flight>.from(_flights)..removeAt(index);
+      widget.flightsNotifier.value = list;
+      await widget.onFlightsChanged();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,6 +139,7 @@ class _FlightScreenState extends State<FlightScreen> {
             flight: _flights[index],
             onEdit: () => _editFlight(index),
             onToggleFavorite: () => _toggleFavorite(index),
+            onTap: () => _viewFlight(index),
           );
         },
       ),
