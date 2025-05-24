@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'models/flight.dart';
+import 'models/flight_storage.dart';
 import 'screens/home_screen.dart';
 
 void main() {
@@ -14,11 +16,27 @@ class SkyBookApp extends StatefulWidget {
 
 class _SkyBookAppState extends State<SkyBookApp> {
   bool _darkMode = false;
+  final ValueNotifier<List<Flight>> _flightsNotifier = ValueNotifier<List<Flight>>([]);
 
   void _toggleTheme() {
     setState(() {
       _darkMode = !_darkMode;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFlights();
+  }
+
+  Future<void> _loadFlights() async {
+    final flights = await FlightStorage.loadFlights();
+    _flightsNotifier.value = flights;
+  }
+
+  Future<void> _saveFlights() async {
+    await FlightStorage.saveFlights(_flightsNotifier.value);
   }
 
   @override
@@ -34,6 +52,8 @@ class _SkyBookAppState extends State<SkyBookApp> {
       home: HomeScreen(
         onToggleTheme: _toggleTheme,
         darkMode: _darkMode,
+        flightsNotifier: _flightsNotifier,
+        onFlightsChanged: _saveFlights,
       ),
     );
   }

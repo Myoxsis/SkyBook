@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/flight.dart';
 import 'flight_screen.dart';
 import 'status_screen.dart';
 import 'progress_screen.dart';
@@ -8,7 +9,16 @@ import 'settings_screen.dart';
 class HomeScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
   final bool darkMode;
-  const HomeScreen({super.key, required this.onToggleTheme, required this.darkMode});
+  final ValueNotifier<List<Flight>> flightsNotifier;
+  final Future<void> Function() onFlightsChanged;
+
+  const HomeScreen({
+    super.key,
+    required this.onToggleTheme,
+    required this.darkMode,
+    required this.flightsNotifier,
+    required this.onFlightsChanged,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -23,7 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _flightScreenKey = UniqueKey();
       _statusScreenKey = UniqueKey();
+      widget.flightsNotifier.value = [];
     });
+    widget.onFlightsChanged();
   }
 
   void _openSettings() {
@@ -47,9 +59,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      FlightScreen(onOpenSettings: _openSettings),
-      ProgressScreen(onOpenSettings: _openSettings),
-      StatusScreen(onOpenSettings: _openSettings),
+      FlightScreen(
+        key: _flightScreenKey,
+        onOpenSettings: _openSettings,
+        flightsNotifier: widget.flightsNotifier,
+        onFlightsChanged: widget.onFlightsChanged,
+      ),
+      ProgressScreen(
+        onOpenSettings: _openSettings,
+        flightsNotifier: widget.flightsNotifier,
+      ),
+      StatusScreen(
+        key: _statusScreenKey,
+        onOpenSettings: _openSettings,
+        flightsNotifier: widget.flightsNotifier,
+      ),
     ];
 
     return Scaffold(

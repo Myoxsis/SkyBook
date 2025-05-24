@@ -5,7 +5,13 @@ import '../models/flight_storage.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
-  const StatusScreen({super.key, required this.onOpenSettings});
+  final ValueNotifier<List<Flight>> flightsNotifier;
+
+  const StatusScreen({
+    super.key,
+    required this.onOpenSettings,
+    required this.flightsNotifier,
+  });
 
   @override
   State<StatusScreen> createState() => _StatusScreenState();
@@ -13,18 +19,29 @@ class StatusScreen extends StatefulWidget {
 
 class _StatusScreenState extends State<StatusScreen> {
   List<Flight> _flights = [];
+  late VoidCallback _listener;
 
   @override
   void initState() {
     super.initState();
-    refresh();
+    _flights = widget.flightsNotifier.value;
+    _listener = () {
+      setState(() {
+        _flights = widget.flightsNotifier.value;
+      });
+    };
+    widget.flightsNotifier.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    widget.flightsNotifier.removeListener(_listener);
+    super.dispose();
   }
 
   Future<void> refresh() async {
     final flights = await FlightStorage.loadFlights();
-    setState(() {
-      _flights = flights;
-    });
+    widget.flightsNotifier.value = flights;
   }
 
   double get _totalDuration {

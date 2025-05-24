@@ -5,7 +5,13 @@ import '../models/flight_storage.dart';
 
 class ProgressScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
-  const ProgressScreen({super.key, required this.onOpenSettings});
+  final ValueNotifier<List<Flight>> flightsNotifier;
+
+  const ProgressScreen({
+    super.key,
+    required this.onOpenSettings,
+    required this.flightsNotifier,
+  });
 
   @override
   State<ProgressScreen> createState() => _ProgressScreenState();
@@ -13,18 +19,29 @@ class ProgressScreen extends StatefulWidget {
 
 class _ProgressScreenState extends State<ProgressScreen> {
   List<Flight> _flights = [];
+  late VoidCallback _listener;
 
   @override
   void initState() {
     super.initState();
-    _loadFlights();
+    _flights = widget.flightsNotifier.value;
+    _listener = () {
+      setState(() {
+        _flights = widget.flightsNotifier.value;
+      });
+    };
+    widget.flightsNotifier.addListener(_listener);
   }
 
-  Future<void> _loadFlights() async {
+  @override
+  void dispose() {
+    widget.flightsNotifier.removeListener(_listener);
+    super.dispose();
+  }
+
+  Future<void> _reloadFromStorage() async {
     final flights = await FlightStorage.loadFlights();
-    setState(() {
-      _flights = flights;
-    });
+    widget.flightsNotifier.value = flights;
   }
 
   @override
@@ -40,7 +57,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _loadFlights,
+        onRefresh: _reloadFromStorage,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
