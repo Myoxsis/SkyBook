@@ -243,16 +243,29 @@ class _StatusTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 32),
+            Icon(icon, size: 32, color: colors.primary),
             const SizedBox(height: 8),
-            Text(value, style: Theme.of(context).textTheme.headlineSmall),
-            Text(label, style: Theme.of(context).textTheme.bodyMedium),
+            Text(
+              value,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: colors.onSurface),
+            ),
+            Text(
+              label,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: colors.onSurface),
+            ),
           ],
         ),
       ),
