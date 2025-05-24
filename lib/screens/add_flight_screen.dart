@@ -134,8 +134,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     }
   }
 
-  Widget _buildAirportField(TextEditingController controller, String label) {
+  Widget _buildAirportField(TextEditingController controller, String label,
+      {Key? key}) {
     return Autocomplete<Airport>(
+      key: key,
       optionsBuilder: (TextEditingValue value) {
         if (value.text.isEmpty) {
           return const Iterable<Airport>.empty();
@@ -263,8 +265,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text('Airline: ${_selectedAirline!.name}'),
               ),
-            _buildAirportField(_originController, 'Origin'),
-            _buildAirportField(_destinationController, 'Destination'),
+            _buildAirportField(_originController, 'Origin',
+                key: const ValueKey('origin')),
+            _buildAirportField(_destinationController, 'Destination',
+                key: const ValueKey('destination')),
             TextFormField(
               controller: _durationController,
               keyboardType: TextInputType.number,
