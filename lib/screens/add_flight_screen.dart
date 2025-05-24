@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/flight.dart';
+import '../data/airport_data.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -110,6 +111,38 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     }
   }
 
+  Widget _buildAirportField(TextEditingController controller, String label) {
+    return Autocomplete<Airport>(
+      optionsBuilder: (TextEditingValue value) {
+        if (value.text.isEmpty) {
+          return const Iterable<Airport>.empty();
+        }
+        return airports.where((a) =>
+            a.code.toLowerCase().contains(value.text.toLowerCase()) ||
+            a.name.toLowerCase().contains(value.text.toLowerCase()));
+      },
+      displayStringForOption: (a) => a.display,
+      onSelected: (a) {
+        controller.text = a.code;
+      },
+      fieldViewBuilder:
+          (context, textEditingController, focusNode, onFieldSubmitted) {
+        textEditingController.text = controller.text;
+        textEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: textEditingController.text.length));
+        textEditingController.addListener(() {
+          controller.text = textEditingController.text;
+        });
+        return TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: InputDecoration(labelText: label),
+          onSubmitted: (_) => onFieldSubmitted(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,14 +171,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               },
               decoration: const InputDecoration(labelText: 'Aircraft'),
             ),
-            TextField(
-              controller: _originController,
-              decoration: const InputDecoration(labelText: 'Origin'),
-            ),
-            TextField(
-              controller: _destinationController,
-              decoration: const InputDecoration(labelText: 'Destination'),
-            ),
+            _buildAirportField(_originController, 'Origin'),
+            _buildAirportField(_destinationController, 'Destination'),
             TextField(
               controller: _durationController,
               keyboardType: TextInputType.number,
