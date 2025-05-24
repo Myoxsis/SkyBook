@@ -80,6 +80,8 @@ class _FlightScreenState extends State<FlightScreen> {
       date: flight.date,
       aircraft: flight.aircraft,
       manufacturer: flight.manufacturer,
+      airline: flight.airline,
+      callsign: flight.callsign,
       origin: flight.origin,
       destination: flight.destination,
       duration: flight.duration,
