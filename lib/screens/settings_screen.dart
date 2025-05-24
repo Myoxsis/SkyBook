@@ -58,6 +58,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: const Icon(Icons.delete),
               onTap: _clearData,
             ),
+          const Divider(),
+          const ListTile(
+            title: Text('About'),
+            subtitle:
+                Text('Developed by Myoxsis - Maxime Alain & some fortunate help'),
+          ),
         ],
       ),
     );
