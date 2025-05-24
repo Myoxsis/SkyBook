@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   final bool darkMode;
   final VoidCallback onToggleTheme;
 
@@ -11,6 +12,23 @@ class SettingsScreen extends StatelessWidget {
   });
 
   @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _developerMode = false;
+
+  Future<void> _clearData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Local data cleared')),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -18,9 +36,25 @@ class SettingsScreen extends StatelessWidget {
         children: [
           SwitchListTile(
             title: const Text('Dark Mode'),
-            value: darkMode,
-            onChanged: (_) => onToggleTheme(),
+            value: widget.darkMode,
+            onChanged: (_) => widget.onToggleTheme(),
           ),
+          SwitchListTile(
+            title: const Text('Developer section'),
+            value: _developerMode,
+            onChanged: (val) {
+              setState(() {
+                _developerMode = val;
+              });
+            },
+          ),
+          if (_developerMode)
+            ListTile(
+              title: const Text('Remove local data'),
+              subtitle: const Text('Used for debugging'),
+              trailing: const Icon(Icons.delete),
+              onTap: _clearData,
+            ),
         ],
       ),
     );
