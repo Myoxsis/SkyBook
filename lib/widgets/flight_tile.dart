@@ -30,9 +30,9 @@ class FlightTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: _colorForClass(context),
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -51,22 +51,25 @@ class FlightTile extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Center(
               child: Text(
                 '${flight.origin} → ${flight.destination}',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Center(
               child: Text(
                 flight.aircraft,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
-            if (flight.callsign.isNotEmpty) ...[
-              const SizedBox(height: 4),
+            if (flight.travelClass.isNotEmpty || 
+                flight.callsign.isNotEmpty ||
+                flight.seatNumber.isNotEmpty ||
+                flight.seatLocation.isNotEmpty) ...[
+              const SizedBox(height: 2),
               Center(
                 child: Text(
                   flight.callsign,
