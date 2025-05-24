@@ -4,6 +4,7 @@ import 'models/flight.dart';
 import 'models/flight_storage.dart';
 import 'models/theme_storage.dart';
 import 'models/achievement.dart';
+import 'models/achievement_storage.dart';
 import 'utils/achievement_utils.dart';
 import 'screens/home_screen.dart';
 import 'widgets/achievement_dialog.dart';
@@ -38,9 +39,11 @@ class _SkyBookAppState extends State<SkyBookApp> {
 
   void _updateAchievements() {
     final newAchievements = calculateAchievements(_flightsNotifier.value);
+    bool updated = false;
     for (final a in newAchievements) {
       if (a.achieved && !_unlockedAchievements.contains(a.id)) {
         _unlockedAchievements.add(a.id);
+        updated = true;
         final context = _messengerKey.currentContext;
         if (context != null) {
           showDialog(
@@ -49,6 +52,9 @@ class _SkyBookAppState extends State<SkyBookApp> {
           );
         }
       }
+    }
+    if (updated) {
+      AchievementStorage.saveUnlocked(_unlockedAchievements);
     }
   }
 
@@ -68,7 +74,11 @@ class _SkyBookAppState extends State<SkyBookApp> {
 
   Future<void> _loadFlights() async {
     final flights = await FlightStorage.loadFlights();
+    final achievements = await AchievementStorage.loadUnlocked();
     _flightsNotifier.value = flights;
+    _unlockedAchievements
+      ..clear()
+      ..addAll(achievements);
     _updateAchievements();
   }
 
