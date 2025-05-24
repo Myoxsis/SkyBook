@@ -26,37 +26,45 @@ class FlightTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(flight.date,
-                    style: Theme.of(context).textTheme.bodyLarge),
+                Text(
+                  flight.date,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                IconButton(
+                  icon: Icon(
+                    flight.isFavorite ? Icons.star : Icons.star_border,
+                  ),
+                  onPressed: onToggleFavorite,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Center(
+              child: Text(
+                '${flight.origin} → ${flight.destination}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Center(
+              child: Text(
+                flight.aircraft,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            if (notes.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(notes),
+            ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Row(
                   children: [
                     const Icon(Icons.schedule, size: 16),
                     const SizedBox(width: 4),
                     Text('${flight.duration}h'),
                   ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${flight.origin} → ${flight.destination}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(flight.aircraft,
-                style: Theme.of(context).textTheme.bodyMedium),
-            if (notes.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text(notes),
-            ],
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    flight.isFavorite ? Icons.star : Icons.star_border,
-                  ),
-                  onPressed: onToggleFavorite,
                 ),
                 IconButton(
                   icon: const Icon(Icons.edit),
