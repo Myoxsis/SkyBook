@@ -55,9 +55,6 @@ class _SkyBookAppState extends State<SkyBookApp> {
         }
       }
     }
-    if (updated) {
-      AchievementStorage.saveUnlocked(_unlockedAchievements);
-    }
   }
 
   void _toggleTheme() {
