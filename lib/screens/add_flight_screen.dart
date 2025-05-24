@@ -23,7 +23,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _originController = TextEditingController();
   final _destinationController = TextEditingController();
   final _aircraftController = TextEditingController();
-  final _airlineController = TextEditingController();
+  final _flightNumberController = TextEditingController();
   final _seatNumberController = TextEditingController();
   String _travelClass = 'Economy';
   String _seatLocation = 'Window';
@@ -39,8 +39,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _dateController.text = flight.date;
       _selectedAircraft = aircraftByDisplay[flight.aircraft];
       _aircraftController.text = flight.aircraft;
-      _selectedAirline = airlineByName[flight.airline];
-      _airlineController.text = flight.airline;
+      _flightNumberController.text = flight.callsign;
+      if (flight.callsign.length >= 2) {
+        _selectedAirline = airlineByCode[flight.callsign.substring(0, 2).toUpperCase()];
+      }
       _durationController.text = flight.duration;
       _notesController.text = flight.notes;
       _originController.text = flight.origin;
@@ -51,8 +53,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     } else {
       _selectedAircraft = aircrafts.first;
       _aircraftController.text = _selectedAircraft!.display;
-      _selectedAirline = airlines.first;
-      _airlineController.text = _selectedAirline!.name;
+      _selectedAirline = null;
     }
   }
 
@@ -80,13 +81,14 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   void _submit() {
+    _updateAirline(_flightNumberController.text);
     final flight = Flight(
       id: widget.flight?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
       date: _dateController.text,
       aircraft: _selectedAircraft?.display ?? _aircraftController.text,
       manufacturer: _selectedAircraft?.manufacturer ?? '',
-      airline: _selectedAirline?.name ?? _airlineController.text,
-      callsign: _selectedAirline?.callsign ?? '',
+      airline: _selectedAirline?.name ?? '',
+      callsign: _flightNumberController.text,
       duration: _durationController.text,
       notes: _notesController.text,
       origin: _originController.text,
@@ -187,37 +189,24 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     );
   }
 
-  Widget _buildAirlineField() {
-    return Autocomplete<Airline>(
-      optionsBuilder: (TextEditingValue value) {
-        if (value.text.isEmpty) {
-          return airlines;
-        }
-        return airlines.where(
-            (a) => a.name.toLowerCase().contains(value.text.toLowerCase()));
-      },
-      displayStringForOption: (a) => a.name,
-      onSelected: (a) {
-        setState(() {
-          _selectedAirline = a;
-          _airlineController.text = a.name;
-        });
-      },
-      fieldViewBuilder:
-          (context, textEditingController, focusNode, onFieldSubmitted) {
-        textEditingController.text = _airlineController.text;
-        textEditingController.selection = TextSelection.fromPosition(
-            TextPosition(offset: textEditingController.text.length));
-        textEditingController.addListener(() {
-          _airlineController.text = textEditingController.text;
-        });
-        return TextField(
-          controller: textEditingController,
-          focusNode: focusNode,
-          decoration: const InputDecoration(labelText: 'Airline'),
-          onSubmitted: (_) => onFieldSubmitted(),
-        );
-      },
+  void _updateAirline(String value) {
+    if (value.length >= 2) {
+      setState(() {
+        _selectedAirline =
+            airlineByCode[value.substring(0, 2).toUpperCase()];
+      });
+    } else {
+      setState(() {
+        _selectedAirline = null;
+      });
+    }
+  }
+
+  Widget _buildFlightNumberField() {
+    return TextField(
+      controller: _flightNumberController,
+      decoration: const InputDecoration(labelText: 'Flight Number'),
+      onChanged: _updateAirline,
     );
   }
 
@@ -238,7 +227,12 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               onTap: _pickDate,
             ),
             _buildAircraftField(),
-            _buildAirlineField(),
+            _buildFlightNumberField(),
+            if (_selectedAirline != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text('Airline: ${_selectedAirline!.name}'),
+              ),
             _buildAirportField(_originController, 'Origin'),
             _buildAirportField(_destinationController, 'Destination'),
             TextField(

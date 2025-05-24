@@ -69,6 +69,22 @@ class _StatusScreenState extends State<StatusScreen> {
     return entries.take(3).toList();
   }
 
+  Map<String, int> get _airlineCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      if (f.airline.isNotEmpty) {
+        counts[f.airline] = (counts[f.airline] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
+  List<MapEntry<String, int>> get _topAirlines {
+    final entries = _airlineCount.entries.toList();
+    entries.sort((a, b) => b.value.compareTo(a.value));
+    return entries.take(3).toList();
+  }
+
   Map<String, int> get _countryCount {
     final counts = <String, int>{};
     for (final f in _flights) {
@@ -126,6 +142,8 @@ class _StatusScreenState extends State<StatusScreen> {
             const SizedBox(height: 24),
             _buildAircraftChart(),
             const SizedBox(height: 24),
+            _buildAirlineChart(),
+            const SizedBox(height: 24),
             _buildCountryChart(),
           ],
         ),
@@ -145,6 +163,54 @@ class _StatusScreenState extends State<StatusScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Top Aircraft',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        ...top.map((e) {
+          final barWidth = e.value / maxCount;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                SizedBox(width: 100, child: Text(e.key)),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 20,
+                        color: Colors.grey.shade300,
+                      ),
+                      FractionallySizedBox(
+                        widthFactor: barWidth,
+                        child: Container(
+                          height: 20,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(e.value.toString()),
+              ],
+            ),
+          );
+        })
+      ],
+    );
+  }
+
+  Widget _buildAirlineChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final top = _topAirlines;
+    final maxCount = top.isNotEmpty ? top.first.value : 1;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Top Airlines',
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         ...top.map((e) {
