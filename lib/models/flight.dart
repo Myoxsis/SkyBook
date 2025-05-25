@@ -56,6 +56,44 @@ class Flight {
     };
   }
 
+  Flight copyWith({
+    String? id,
+    String? date,
+    String? aircraft,
+    String? manufacturer,
+    String? airline,
+    String? callsign,
+    String? duration,
+    String? notes,
+    String? origin,
+    String? destination,
+    String? travelClass,
+    String? seatNumber,
+    String? seatLocation,
+    double? distanceKm,
+    double? carbonKg,
+    bool? isFavorite,
+  }) {
+    return Flight(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      aircraft: aircraft ?? this.aircraft,
+      manufacturer: manufacturer ?? this.manufacturer,
+      airline: airline ?? this.airline,
+      callsign: callsign ?? this.callsign,
+      duration: duration ?? this.duration,
+      notes: notes ?? this.notes,
+      origin: origin ?? this.origin,
+      destination: destination ?? this.destination,
+      travelClass: travelClass ?? this.travelClass,
+      seatNumber: seatNumber ?? this.seatNumber,
+      seatLocation: seatLocation ?? this.seatLocation,
+      distanceKm: distanceKm ?? this.distanceKm,
+      carbonKg: carbonKg ?? this.carbonKg,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
+
   factory Flight.fromMap(Map<String, dynamic> map) {
     return Flight(
       id: map['id'] as String,
