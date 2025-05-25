@@ -154,12 +154,12 @@ class _ProgressScreenState extends State<ProgressScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$unlocked of \${filtered.length} Achievements unlocked',
+            Text('$unlocked of ${filtered.length} Achievements unlocked',
                 style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 8),
             Semantics(
               label:
-                  '$unlocked of \${filtered.length} achievements unlocked',
+                  '$unlocked of ${filtered.length} achievements unlocked',
               child: LinearProgressIndicator(
                 value: ratio,
                 minHeight: 6,
