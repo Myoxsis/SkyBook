@@ -25,13 +25,13 @@ class Achievement {
     required this.achieved,
     this.unlockedAt,
     this.tier = 1,
-  }) : assert(icon != null || iconAsset != null,
-            'Either icon or iconAsset must be provided');
+  }) : assert(icon != null || assetPath != null,
+            'Either icon or assetPath must be provided');
 
   Widget buildIcon({Color? color, double? size}) {
-    if (iconAsset != null) {
+    if (assetPath != null) {
       return Image.asset(
-        iconAsset!,
+        assetPath!,
         width: size,
         height: size,
         color: color,
