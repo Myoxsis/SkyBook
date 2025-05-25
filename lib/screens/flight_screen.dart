@@ -10,12 +10,14 @@ import '../widgets/skybook_app_bar.dart';
 class FlightScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
   final ValueNotifier<List<Flight>> flightsNotifier;
+  final ValueNotifier<bool> premiumNotifier;
   final Future<void> Function() onFlightsChanged;
 
   const FlightScreen({
     super.key,
     required this.onOpenSettings,
     required this.flightsNotifier,
+    required this.premiumNotifier,
     required this.onFlightsChanged,
   });
 
@@ -85,7 +87,10 @@ class _FlightScreenState extends State<FlightScreen> {
   Future<void> _viewFlight(int index) async {
     final result = await Navigator.of(context).push<dynamic>(
       MaterialPageRoute(
-        builder: (_) => FlightDetailScreen(flight: _flights[index]),
+        builder: (_) => FlightDetailScreen(
+          flight: _flights[index],
+          premiumNotifier: widget.premiumNotifier,
+        ),
       ),
     );
     if (result is Flight) {

@@ -8,6 +8,7 @@ import 'models/achievement_storage.dart';
 import 'utils/achievement_utils.dart';
 import 'screens/home_screen.dart';
 import 'widgets/achievement_dialog.dart';
+import 'models/premium_storage.dart';
 
 const Color _brandPrimary = Color(0xFF0A73B1);
 const Color _brandSecondary = Color(0xFFEF6C00);
@@ -34,6 +35,7 @@ class SkyBookApp extends StatefulWidget {
 class _SkyBookAppState extends State<SkyBookApp> {
   bool _darkMode = false;
   final ValueNotifier<List<Flight>> _flightsNotifier = ValueNotifier<List<Flight>>([]);
+  final ValueNotifier<bool> _premiumNotifier = ValueNotifier<bool>(false);
   final GlobalKey<ScaffoldMessengerState> _messengerKey = GlobalKey<ScaffoldMessengerState>();
   final Map<String, DateTime> _unlockedAchievements = {};
 
@@ -69,6 +71,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
     super.initState();
     _loadAchievements().then((_) => _loadFlights());
     _loadTheme();
+    _loadPremium();
   }
 
   Future<void> _loadFlights() async {
@@ -100,6 +103,11 @@ class _SkyBookAppState extends State<SkyBookApp> {
     }
   }
 
+  Future<void> _loadPremium() async {
+    final saved = await PremiumStorage.loadPremium();
+    _premiumNotifier.value = saved;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -122,6 +130,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
         onToggleTheme: _toggleTheme,
         darkMode: _darkMode,
         flightsNotifier: _flightsNotifier,
+        premiumNotifier: _premiumNotifier,
         onFlightsChanged: _saveFlights,
         unlockedAchievements: _unlockedAchievements,
       ),

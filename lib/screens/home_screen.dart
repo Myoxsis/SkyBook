@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
   final bool darkMode;
   final ValueNotifier<List<Flight>> flightsNotifier;
+  final ValueNotifier<bool> premiumNotifier;
   final Future<void> Function() onFlightsChanged;
   final Map<String, DateTime> unlockedAchievements;
 
@@ -19,6 +20,7 @@ class HomeScreen extends StatefulWidget {
     required this.onToggleTheme,
     required this.darkMode,
     required this.flightsNotifier,
+    required this.premiumNotifier,
     required this.onFlightsChanged,
     required this.unlockedAchievements,
   });
@@ -51,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           darkMode: widget.darkMode,
           onToggleTheme: widget.onToggleTheme,
           onClearData: _handleDataCleared,
+          premiumNotifier: widget.premiumNotifier,
         ),
       ),
     );
@@ -74,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         key: _flightScreenKey,
         onOpenSettings: _openSettings,
         flightsNotifier: widget.flightsNotifier,
+        premiumNotifier: widget.premiumNotifier,
         onFlightsChanged: widget.onFlightsChanged,
       ),
       ProgressScreen(
@@ -86,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
         key: _statusScreenKey,
         onOpenSettings: _openSettings,
         flightsNotifier: widget.flightsNotifier,
+        premiumNotifier: widget.premiumNotifier,
       ),
     ];
 

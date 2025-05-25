@@ -8,11 +8,16 @@ import '../data/airport_data.dart';
 import 'add_flight_screen.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/info_row.dart';
-import '../models/premium_storage.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
-  const FlightDetailScreen({super.key, required this.flight});
+  final ValueNotifier<bool> premiumNotifier;
+
+  const FlightDetailScreen({
+    super.key,
+    required this.flight,
+    required this.premiumNotifier,
+  });
 
   Future<void> _edit(BuildContext context) async {
     final result = await Navigator.of(context).push<dynamic>(
@@ -138,10 +143,9 @@ class FlightDetailScreen extends StatelessWidget {
     }
     if (flight.carbonKg > 0) {
       items.add(
-        FutureBuilder<bool>(
-          future: PremiumStorage.loadPremium(),
-          builder: (context, snapshot) {
-            final premium = snapshot.data ?? false;
+        ValueListenableBuilder<bool>(
+          valueListenable: premiumNotifier,
+          builder: (context, premium, _) {
             if (!premium) return const SizedBox.shrink();
             return InfoRow(
               title: 'CO₂ per passenger',

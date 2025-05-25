@@ -6,16 +6,17 @@ import '../data/airport_data.dart';
 import '../widgets/class_pie_chart.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/flight_line_chart.dart';
-import '../models/premium_storage.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
   final ValueNotifier<List<Flight>> flightsNotifier;
+  final ValueNotifier<bool> premiumNotifier;
 
   const StatusScreen({
     super.key,
     required this.onOpenSettings,
     required this.flightsNotifier,
+    required this.premiumNotifier,
   });
 
   @override
@@ -26,12 +27,21 @@ class _StatusScreenState extends State<StatusScreen> {
   List<Flight> _flights = [];
   late VoidCallback _listener;
   bool _premium = false;
+  late VoidCallback _premiumListener;
 
   @override
   void initState() {
     super.initState();
     _flights = widget.flightsNotifier.value;
-    _loadPremium();
+    _premium = widget.premiumNotifier.value;
+    _premiumListener = () {
+      if (mounted) {
+        setState(() {
+          _premium = widget.premiumNotifier.value;
+        });
+      }
+    };
+    widget.premiumNotifier.addListener(_premiumListener);
     _listener = () {
       setState(() {
         _flights = widget.flightsNotifier.value;
@@ -43,16 +53,8 @@ class _StatusScreenState extends State<StatusScreen> {
   @override
   void dispose() {
     widget.flightsNotifier.removeListener(_listener);
+    widget.premiumNotifier.removeListener(_premiumListener);
     super.dispose();
-  }
-
-  Future<void> _loadPremium() async {
-    final saved = await PremiumStorage.loadPremium();
-    if (mounted) {
-      setState(() {
-        _premium = saved;
-      });
-    }
   }
 
   Future<void> refresh() async {
