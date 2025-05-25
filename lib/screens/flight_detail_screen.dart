@@ -7,6 +7,7 @@ import '../models/flight.dart';
 import '../data/airport_data.dart';
 import 'add_flight_screen.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../widgets/info_row.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
@@ -21,12 +22,6 @@ class FlightDetailScreen extends StatelessWidget {
     }
   }
 
-  Widget _tile(String title, String value) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(value),
-    );
-  }
 
   List<LatLng> _arcPoints(LatLng start, LatLng end) {
     const steps = 50;
@@ -59,10 +54,30 @@ class FlightDetailScreen extends StatelessWidget {
 
     final start = LatLng(origin.latitude, origin.longitude);
     final end = LatLng(dest.latitude, dest.longitude);
+    final routePoints = _arcPoints(start, end);
+
+    double minLat = routePoints.first.latitude;
+    double maxLat = routePoints.first.latitude;
+    double minLon = routePoints.first.longitude;
+    double maxLon = routePoints.first.longitude;
+    for (final p in routePoints) {
+      if (p.latitude < minLat) minLat = p.latitude;
+      if (p.latitude > maxLat) maxLat = p.latitude;
+      if (p.longitude < minLon) minLon = p.longitude;
+      if (p.longitude > maxLon) maxLon = p.longitude;
+    }
+
     final center = LatLng(
-      (start.latitude + end.latitude) / 2,
-      (start.longitude + end.longitude) / 2,
+      (minLat + maxLat) / 2,
+      (minLon + maxLon) / 2,
     );
+
+    final diffLat = (maxLat - minLat).abs();
+    final diffLon = (maxLon - minLon).abs();
+    final diff = math.max(diffLat, diffLon);
+    var zoom = (math.log(360 / diff) / math.ln2) + 1;
+    if (zoom.isNaN || zoom.isInfinite) zoom = 3;
+    zoom = zoom.clamp(2.0, 16.0);
 
     final markers = [
       Marker(
@@ -95,7 +110,7 @@ class FlightDetailScreen extends StatelessWidget {
 
     final lines = [
       Polyline(
-        points: _arcPoints(start, end),
+        points: routePoints,
         color: Theme.of(context).colorScheme.secondary,
         strokeWidth: 3,
       )
@@ -106,12 +121,14 @@ class FlightDetailScreen extends StatelessWidget {
       child: FlutterMap(
         options: MapOptions(
           center: center,
-          zoom: 3,
+          zoom: zoom,
           interactiveFlags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
         ),
         children: [
           TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            urlTemplate:
+                'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+            subdomains: const ['a', 'b', 'c', 'd'],
             userAgentPackageName: 'com.example.app',
           ),
           PolylineLayer(polylines: lines),
@@ -126,33 +143,33 @@ class FlightDetailScreen extends StatelessWidget {
     final items = <Widget>[
       _buildMap(context),
       const SizedBox(height: 16),
-      _tile('Date', flight.date),
-      _tile('From', flight.origin),
-      _tile('To', flight.destination),
-      _tile('Aircraft', flight.aircraft),
+      InfoRow(title: 'Date', value: flight.date, icon: Icons.calendar_today),
+      InfoRow(title: 'From', value: flight.origin, icon: Icons.flight_takeoff),
+      InfoRow(title: 'To', value: flight.destination, icon: Icons.flight_land),
+      InfoRow(title: 'Aircraft', value: flight.aircraft, icon: Icons.flight),
     ];
 
     if (flight.airline.isNotEmpty) {
-      items.add(_tile('Airline', flight.airline));
+      items.add(InfoRow(title: 'Airline', value: flight.airline, icon: Icons.airlines));
     }
     if (flight.callsign.isNotEmpty) {
-      items.add(_tile('Flight No.', flight.callsign));
+      items.add(InfoRow(title: 'Flight No.', value: flight.callsign, icon: Icons.confirmation_number));
     }
     if (flight.duration.isNotEmpty) {
-      items.add(_tile('Duration', '${flight.duration}h'));
+      items.add(InfoRow(title: 'Duration', value: '${flight.duration}h', icon: Icons.schedule));
     }
     if (flight.distanceKm > 0) {
-      items.add(_tile('Distance', '${flight.distanceKm.round()} km'));
+      items.add(InfoRow(title: 'Distance', value: '${flight.distanceKm.round()} km', icon: Icons.straighten));
     }
     if (flight.carbonKg > 0) {
-      items.add(_tile('Carbon', '${flight.carbonKg.round()} kg CO₂'));
+      items.add(InfoRow(title: 'Carbon', value: '${flight.carbonKg.round()} kg CO₂', icon: Icons.cloud));
     }
     if (flight.travelClass.isNotEmpty) {
-      items.add(_tile('Class', flight.travelClass));
+      items.add(InfoRow(title: 'Class', value: flight.travelClass, icon: Icons.chair));
     }
     if (flight.seatNumber.isNotEmpty || flight.seatLocation.isNotEmpty) {
       final seat = [flight.seatNumber, flight.seatLocation].where((e) => e.isNotEmpty).join(' ');
-      items.add(_tile('Seat', seat));
+      items.add(InfoRow(title: 'Seat', value: seat, icon: Icons.event_seat));
     }
     if (flight.notes.isNotEmpty) {
       items.add(
