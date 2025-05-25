@@ -1,14 +1,9 @@
 import 'dart:math' as math;
 
-/// Default emission factors in kilograms CO₂ per kilometer for some aircraft.
-/// These are simplified values for demonstration purposes.
-const Map<String, double> aircraftFactors = {
-  'Airbus A320': 0.09,
-  'Airbus A321': 0.09,
-  'Boeing 737': 0.09,
-  'Boeing 777': 0.11,
-  'Boeing 787': 0.10,
-};
+import '../data/aircraft_data.dart';
+
+/// CO₂ produced per kilogram of jet fuel burned.
+const double co2PerKgFuel = 3.16;
 
 /// Adjustment multipliers based on travel class.
 const Map<String, double> classFactors = {
@@ -22,12 +17,23 @@ const Map<String, double> classFactors = {
 ///
 /// [distanceKm] is the flight distance in kilometers, [aircraft] is the
 /// aircraft model, and [travelClass] is the passenger class such as
-/// Economy or Business. If the aircraft or class is not found in the maps,
-/// default factors are used.
+/// Economy or Business. If the aircraft or class is not found, a generic
+/// estimate is used.
 double estimateEmissions(
     double distanceKm, String aircraft, String travelClass) {
-  final aircraftFactor =
-      aircraftFactors[aircraft] ?? aircraftFactors.values.first;
+  final info = aircraftByDisplay[aircraft];
+  if (info == null) {
+    // Fallback generic factor per km when aircraft data is missing.
+    const genericFactor = 0.09; // kg CO₂ per km per passenger
+    final classFactor = classFactors[travelClass] ?? 1.0;
+    return distanceKm * genericFactor * classFactor;
+  }
+
+  final totalFuel = info.fuelBurnPerKm * distanceKm; // kg fuel
+  final totalCo2 = totalFuel * co2PerKgFuel;
+  final seatCount =
+      info.classConfig.values.fold<int>(0, (a, b) => a + b); // total seats
+  final basePerSeat = totalCo2 / math.max(1, seatCount);
   final classFactor = classFactors[travelClass] ?? 1.0;
-  return distanceKm * aircraftFactor * classFactor;
+  return basePerSeat * classFactor;
 }
