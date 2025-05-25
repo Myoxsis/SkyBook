@@ -19,6 +19,7 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
 - Data is stored locally on the device
 - View your routes on an interactive map
 - Quickly access Map, Flights, Progress and Status using the bottom navigation bar
+- Custom badge images are included under `assets/badges` for achievements
 
 ## Getting Started
 

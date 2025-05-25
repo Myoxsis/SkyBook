@@ -5,8 +5,8 @@ class Achievement {
   final String title;
   final String description;
   final String category;
-  final IconData? icon;
-  final String? iconAsset;
+  final IconData icon;
+  final String? assetPath;
   final int target;
   final int progress;
   final bool achieved;
@@ -18,8 +18,8 @@ class Achievement {
     required this.title,
     required this.description,
     required this.category,
-    this.icon,
-    this.iconAsset,
+    required this.icon,
+    this.assetPath,
     required this.target,
     required this.progress,
     required this.achieved,

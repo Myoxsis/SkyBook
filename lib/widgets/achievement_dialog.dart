@@ -28,8 +28,17 @@ class _AchievementDialogState extends State<AchievementDialog>
         children: [
           ScaleTransition(
             scale: _animation,
-            child: widget.achievement
-                .buildIcon(color: Theme.of(context).colorScheme.secondary, size: 48),
+            child: widget.achievement.assetPath != null
+                ? Image.asset(
+                    widget.achievement.assetPath!,
+                    width: 48,
+                    height: 48,
+                  )
+                : Icon(
+                    widget.achievement.icon,
+                    color: Theme.of(context).colorScheme.secondary,
+                    size: 48,
+                  ),
           ),
           const SizedBox(width: 16),
           Expanded(
