@@ -12,6 +12,7 @@ class Flight {
   final String travelClass;
   final String seatNumber;
   final String seatLocation;
+  final double distanceKm;
   final bool isFavorite;
 
   Flight({
@@ -28,6 +29,7 @@ class Flight {
     required this.travelClass,
     required this.seatNumber,
     required this.seatLocation,
+    this.distanceKm = 0,
     this.isFavorite = false,
   });
 
@@ -46,6 +48,7 @@ class Flight {
       'travelClass': travelClass,
       'seatNumber': seatNumber,
       'seatLocation': seatLocation,
+      'distanceKm': distanceKm,
       'isFavorite': isFavorite,
     };
   }
@@ -65,6 +68,7 @@ class Flight {
       travelClass: map['travelClass'] as String? ?? '',
       seatNumber: map['seatNumber'] as String? ?? '',
       seatLocation: map['seatLocation'] as String? ?? '',
+      distanceKm: (map['distanceKm'] as num?)?.toDouble() ?? 0,
       isFavorite: map['isFavorite'] as bool? ?? false,
     );
   }
