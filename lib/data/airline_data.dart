@@ -9,6 +9,20 @@ const List<Airline> airlines = [
   Airline(name: 'American Airlines', callsign: 'AAL', code: 'AA'),
   Airline(name: 'United Airlines', callsign: 'UAL', code: 'UA'),
   Airline(name: 'Qantas', callsign: 'QFA', code: 'QF'),
+  // North America
+  Airline(name: 'Air Canada', callsign: 'ACA', code: 'AC'),
+  Airline(name: 'Alaska Airlines', callsign: 'ASA', code: 'AS'),
+  Airline(name: 'JetBlue', callsign: 'JBU', code: 'B6'),
+  Airline(name: 'Southwest Airlines', callsign: 'SWA', code: 'WN'),
+  // Europe
+  Airline(name: 'KLM', callsign: 'KLM', code: 'KL'),
+  Airline(name: 'Swiss', callsign: 'SWR', code: 'LX'),
+  Airline(name: 'Turkish Airlines', callsign: 'THY', code: 'TK'),
+  // Asia & Oceania
+  Airline(name: 'Singapore Airlines', callsign: 'SIA', code: 'SQ'),
+  Airline(name: 'All Nippon Airways', callsign: 'ANA', code: 'NH'),
+  Airline(name: 'Air New Zealand', callsign: 'ANZ', code: 'NZ'),
+  Airline(name: 'Qatar Airways', callsign: 'QTR', code: 'QR'),
 ];
 
 final Map<String, Airline> airlineByName = {
