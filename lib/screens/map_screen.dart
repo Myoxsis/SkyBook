@@ -159,15 +159,15 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
-      body: FlutterMap(
-        mapController: _controller,
-        options: MapOptions(
-          center: _center,
-          zoom: _zoom,
-          onPositionChanged: (pos, _) {
-            _center = pos.center ?? _center;
-            _zoom = pos.zoom ?? _zoom;
-          },
+        body: FlutterMap(
+          mapController: _controller,
+          options: MapOptions(
+            initialCenter: _center,
+            initialZoom: _zoom,
+            onPositionChanged: (pos, _) {
+              _center = pos.center ?? _center;
+              _zoom = pos.zoom ?? _zoom;
+            },
         ),
         children: [
           TileLayer(
