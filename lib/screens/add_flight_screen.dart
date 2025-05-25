@@ -336,6 +336,28 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       appBar: SkyBookAppBar(
         title: widget.flight == null ? 'Add Flight' : 'Edit Flight',
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _submit,
+        child: const Icon(Icons.save),
+      ),
+      bottomNavigationBar: widget.flight != null
+          ? SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: _delete,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.error,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onError,
+                  ),
+                  child: const Text('Delete Flight'),
+                ),
+              ),
+            )
+          : null,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -437,22 +459,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               decoration: const InputDecoration(labelText: 'Notes'),
               maxLines: 3,
             ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: _submit,
-              child: Text(widget.flight == null ? 'Add Flight' : 'Save Changes'),
-            ),
-            if (widget.flight != null) ...[
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: _delete,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  foregroundColor: Theme.of(context).colorScheme.onError,
-                ),
-                child: const Text('Delete Flight'),
-              ),
-            ],
+            const SizedBox(height: 80),
           ],
         ),
       ),
