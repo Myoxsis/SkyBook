@@ -83,5 +83,33 @@ void main() {
       expect(airports.progress, 9);
       expect(airports.achieved, isFalse);
     });
+
+    test('flight count tiers unlock progressively', () {
+      final flights = List.generate(
+          30, (i) => _flight('${i + 1}', 'JFK', 'LAX', 4000));
+
+      final achievements = calculateAchievements(flights);
+      final tier10 = achievements.firstWhere((a) => a.id == 'frequentFlyer10');
+      final tier25 = achievements.firstWhere((a) => a.id == 'frequentFlyer25');
+      final tier50 = achievements.firstWhere((a) => a.id == 'frequentFlyer50');
+
+      expect(tier10.achieved, isTrue);
+      expect(tier25.achieved, isTrue);
+      expect(tier50.achieved, isFalse);
+    });
+
+    test('all flight tiers unlock at higher counts', () {
+      final flights = List.generate(
+          60, (i) => _flight('${i + 1}', 'JFK', 'LAX', 4000));
+
+      final achievements = calculateAchievements(flights);
+      final tier10 = achievements.firstWhere((a) => a.id == 'frequentFlyer10');
+      final tier25 = achievements.firstWhere((a) => a.id == 'frequentFlyer25');
+      final tier50 = achievements.firstWhere((a) => a.id == 'frequentFlyer50');
+
+      expect(tier10.achieved, isTrue);
+      expect(tier25.achieved, isTrue);
+      expect(tier50.achieved, isTrue);
+    });
   });
 }
