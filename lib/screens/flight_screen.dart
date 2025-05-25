@@ -77,24 +77,7 @@ class _FlightScreenState extends State<FlightScreen> {
   void _toggleFavorite(int index) {
     final flight = _flights[index];
     final list = List<Flight>.from(_flights);
-    list[index] = Flight(
-      id: flight.id,
-      date: flight.date,
-      aircraft: flight.aircraft,
-      manufacturer: flight.manufacturer,
-      airline: flight.airline,
-      callsign: flight.callsign,
-      origin: flight.origin,
-      destination: flight.destination,
-      duration: flight.duration,
-      notes: flight.notes,
-      travelClass: flight.travelClass,
-      seatNumber: flight.seatNumber,
-      seatLocation: flight.seatLocation,
-      distanceKm: flight.distanceKm,
-      carbonKg: flight.carbonKg,
-      isFavorite: !flight.isFavorite,
-    );
+    list[index] = flight.copyWith(isFavorite: !flight.isFavorite);
     widget.flightsNotifier.value = list;
     widget.onFlightsChanged();
   }
