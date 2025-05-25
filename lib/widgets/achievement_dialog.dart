@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../models/achievement.dart';
+import 'app_dialog.dart';
 
 class AchievementDialog extends StatefulWidget {
   final Achievement achievement;
@@ -22,7 +23,7 @@ class _AchievementDialogState extends State<AchievementDialog>
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return AppDialog(
       title: const Text('Achievement Unlocked!'),
       content: Row(
         children: [

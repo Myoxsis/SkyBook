@@ -6,6 +6,7 @@ import '../utils/achievement_utils.dart';
 import 'package:intl/intl.dart';
 import '../widgets/skybook_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
+import '../widgets/app_dialog.dart';
 
 class ProgressScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -184,7 +185,7 @@ class _ProgressScreenState extends State<ProgressScreen>
             onTap: () {
               showDialog(
                 context: context,
-                  builder: (context) => AlertDialog(
+                  builder: (context) => AppDialog(
                     title: Text(a.title),
                     content: Text(a.description),
                     actions: [
