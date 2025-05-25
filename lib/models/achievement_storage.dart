@@ -19,10 +19,11 @@ class AchievementStorage {
 
   static Future<void> saveUnlocked(String id, DateTime time) async {
     final prefs = await SharedPreferences.getInstance();
-    final current = await loadUnlocked();
-    current[id] = time;
-    final encoded = json.encode(
-        current.map((key, value) => MapEntry(key, value.toIso8601String())));
+    final stored = prefs.getString(_key);
+    final Map<String, dynamic> decoded =
+        stored != null ? json.decode(stored) as Map<String, dynamic> : {};
+    decoded[id] = time.toIso8601String();
+    final encoded = json.encode(decoded);
     await prefs.setString(_key, encoded);
   }
 }
