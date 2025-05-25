@@ -199,7 +199,10 @@ class FlightDetailScreen extends StatelessWidget {
       items.add(InfoRow(title: 'Distance', value: '${flight.distanceKm.round()} km', icon: Icons.straighten));
     }
     if (flight.carbonKg > 0) {
-      items.add(InfoRow(title: 'Carbon', value: '${flight.carbonKg.round()} kg CO₂', icon: Icons.cloud));
+      items.add(InfoRow(
+          title: 'CO₂ per passenger',
+          value: '${flight.carbonKg.round()} kg',
+          icon: Icons.cloud));
     }
     if (flight.travelClass.isNotEmpty) {
       items.add(InfoRow(title: 'Class', value: flight.travelClass, icon: Icons.chair));

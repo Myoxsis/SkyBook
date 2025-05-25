@@ -54,6 +54,13 @@ class _StatusScreenState extends State<StatusScreen> {
     });
   }
 
+  double get _totalCarbon {
+    return _flights.fold(0.0, (previousValue, element) {
+      final carbon = element.carbonKg;
+      return previousValue + (carbon.isNaN ? 0 : carbon);
+    });
+  }
+
   int get _favoriteCount =>
       _flights.where((f) => f.isFavorite).length;
 
@@ -148,6 +155,11 @@ class _StatusScreenState extends State<StatusScreen> {
                   icon: Icons.schedule,
                   label: 'Total duration',
                   value: '${_totalDuration.toStringAsFixed(1)} hrs',
+                ),
+                _StatusTile(
+                  icon: Icons.cloud,
+                  label: 'Total CO₂',
+                  value: '${_totalCarbon.round()} kg',
                 ),
               ],
             ),
