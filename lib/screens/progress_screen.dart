@@ -5,6 +5,7 @@ import '../models/flight_storage.dart';
 import '../utils/achievement_utils.dart';
 import 'package:intl/intl.dart';
 import '../widgets/skybook_app_bar.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProgressScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -187,6 +188,11 @@ class _ProgressScreenState extends State<ProgressScreen>
                     title: Text(a.title),
                     content: Text(a.description),
                     actions: [
+                      if (a.achieved)
+                        TextButton(
+                          onPressed: () => Share.share(a.description),
+                          child: const Text('Share'),
+                        ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
                         child: const Text('OK'),
