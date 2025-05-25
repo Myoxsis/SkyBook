@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'dart:math' as math;
 import '../models/flight.dart';
 import '../models/aircraft.dart';
 import '../models/airport.dart';
@@ -8,6 +11,7 @@ import '../data/airport_data.dart';
 import '../data/aircraft_data.dart';
 import '../data/airline_data.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../utils/text_formatters.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -36,6 +40,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
 
   double? _distanceKm;
 
+  LatLng? _originLatLng;
+  LatLng? _destinationLatLng;
+
   Aircraft? _selectedAircraft;
   Airline? _selectedAirline;
 
@@ -52,12 +59,45 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           LatLng(dest.latitude, dest.longitude));
       setState(() {
         _distanceKm = km;
+        _originLatLng = LatLng(origin.latitude, origin.longitude);
+        _destinationLatLng = LatLng(dest.latitude, dest.longitude);
       });
     } else {
       setState(() {
         _distanceKm = null;
+        _originLatLng = null;
+        _destinationLatLng = null;
       });
     }
+  }
+
+  List<LatLng> _arcPoints(LatLng start, LatLng end) {
+    const steps = 50;
+    final latDiff = end.latitude - start.latitude;
+    final lonDiff = end.longitude - start.longitude;
+    final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
+    if (distance == 0) {
+      return [start, end];
+    }
+    final perpLat = -lonDiff;
+    final perpLon = latDiff;
+    final norm = math.sqrt(perpLat * perpLat + perpLon * perpLon);
+    if (norm == 0) {
+      return [start, end];
+    }
+    final offsetLat = perpLat / norm;
+    final offsetLon = perpLon / norm;
+    final amp = distance * 0.2;
+
+    final pts = <LatLng>[];
+    for (var i = 0; i <= steps; i++) {
+      final t = i / steps;
+      final curve = math.sin(math.pi * t);
+      final lat = start.latitude + latDiff * t + offsetLat * amp * curve;
+      final lon = start.longitude + lonDiff * t + offsetLon * amp * curve;
+      pts.add(LatLng(lat, lon));
+    }
+    return pts;
   }
 
   @override
@@ -205,6 +245,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         return TextFormField(
           controller: textEditingController,
           focusNode: fieldFocusNode,
+          inputFormatters: const [
+            LengthLimitingTextInputFormatter(3),
+            UpperCaseTextFormatter(),
+          ],
           decoration: InputDecoration(labelText: label),
           onFieldSubmitted: (_) => onFieldSubmitted(),
           onChanged: onChanged,
@@ -265,7 +309,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         return TextFormField(
           controller: textEditingController,
           focusNode: focusNode,
-          decoration: const InputDecoration(labelText: 'Aircraft'),
+          decoration: const InputDecoration(
+            labelText: 'Aircraft',
+            prefixIcon: Icon(Icons.airplanemode_active),
+          ),
           onFieldSubmitted: (_) => onFieldSubmitted(),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
@@ -325,11 +372,13 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Widget _buildFlightNumberField() {
     return TextFormField(
       controller: _flightNumberController,
-      decoration: const InputDecoration(labelText: 'Flight Number'),
+      decoration: const InputDecoration(
+        labelText: 'Flight Number',
+        prefixIcon: Icon(Icons.flight),
+      ),
       onChanged: _updateAirline,
     );
   }
-
   Widget _buildFlightInfoCard() {
     return Card(
       child: Padding(
@@ -343,7 +392,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             TextFormField(
               controller: _dateController,
               readOnly: true,
-              decoration: const InputDecoration(labelText: 'Date'),
+              decoration: const InputDecoration(
+                labelText: 'Date',
+                suffixIcon: Icon(Icons.calendar_today),
+              ),
               onTap: _pickDate,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -357,7 +409,19 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             if (_selectedAirline != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text('Airline: ${_selectedAirline!.name}'),
+                child: Row(
+                  children: [
+                    Image.network(
+                      'https://pics.avs.io/60/60/${_selectedAirline!.code}.png',
+                      width: 32,
+                      height: 32,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.flight, size: 32),
+                    ),
+                    const SizedBox(width: 8),
+                    Text('Airline: ${_selectedAirline!.name}'),
+                  ],
+                ),
               ),
           ],
         ),
