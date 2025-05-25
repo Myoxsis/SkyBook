@@ -34,6 +34,25 @@ const List<Airline> airlines = [
   Airline(name: 'EVA Air', callsign: 'EVA', code: 'BR'),
   Airline(name: 'Etihad Airways', callsign: 'ETD', code: 'EY'),
   Airline(name: 'Ethiopian Airlines', callsign: 'ETH', code: 'ET'),
+  // South America
+  Airline(name: 'LATAM Airlines', callsign: 'LAN', code: 'LA'),
+  Airline(name: 'Aerol\u00edneas Argentinas', callsign: 'ARG', code: 'AR'),
+  Airline(name: 'Aerom\u00e9xico', callsign: 'AMX', code: 'AM'),
+  // Middle East
+  Airline(name: 'Saudia', callsign: 'SVA', code: 'SV'),
+  // Africa
+  Airline(name: 'South African Airways', callsign: 'SAA', code: 'SA'),
+  Airline(name: 'Kenya Airways', callsign: 'KQA', code: 'KQ'),
+  // Europe (additional)
+  Airline(name: 'Virgin Atlantic', callsign: 'VIR', code: 'VS'),
+  Airline(name: 'Iberia', callsign: 'IBE', code: 'IB'),
+  Airline(name: 'Finnair', callsign: 'FIN', code: 'AY'),
+  Airline(name: 'Scandinavian Airlines', callsign: 'SAS', code: 'SK'),
+  // Asia (additional)
+  Airline(name: 'Air China', callsign: 'CCA', code: 'CA'),
+  Airline(name: 'Korean Air', callsign: 'KAL', code: 'KE'),
+  Airline(name: 'AirAsia', callsign: 'AXM', code: 'AK'),
+  Airline(name: 'Philippine Airlines', callsign: 'PAL', code: 'PR'),
 ];
 
 final Map<String, Airline> airlineByName = {
