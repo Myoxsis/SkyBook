@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math' as math;
 
+import '../utils/map_utils.dart';
 import '../models/flight.dart';
 import '../data/airport_data.dart';
 import 'add_flight_screen.dart';
@@ -23,40 +24,6 @@ class FlightDetailScreen extends StatelessWidget {
   }
 
 
-  List<LatLng> _arcPoints(LatLng start, LatLng end) {
-    const steps = 50;
-    var startLon = start.longitude;
-    var endLon = end.longitude;
-    if ((endLon - startLon).abs() > 180) {
-      if (startLon > endLon) {
-        endLon += 360;
-      } else {
-        startLon += 360;
-      }
-    }
-    final latDiff = end.latitude - start.latitude;
-    final lonDiff = endLon - startLon;
-    final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
-    if (distance == 0) return [start, end];
-    final perpLat = -lonDiff;
-    final perpLon = latDiff;
-    final norm = math.sqrt(perpLat * perpLat + perpLon * perpLon);
-    if (norm == 0) return [start, end];
-    final offsetLat = perpLat / norm;
-    final offsetLon = perpLon / norm;
-    final amp = distance * 0.2;
-    final pts = <LatLng>[];
-    for (var i = 0; i <= steps; i++) {
-      final t = i / steps;
-      final curve = math.sin(math.pi * t);
-      final lat = start.latitude + latDiff * t + offsetLat * amp * curve;
-      var lon = startLon + lonDiff * t + offsetLon * amp * curve;
-      if (lon > 180) lon -= 360;
-      if (lon < -180) lon += 360;
-      pts.add(LatLng(lat, lon));
-    }
-    return pts;
-  }
 
   Widget _buildMap(BuildContext context) {
     final origin = airportByCode[flight.origin];
@@ -65,7 +32,7 @@ class FlightDetailScreen extends StatelessWidget {
 
     final start = LatLng(origin.latitude, origin.longitude);
     final end = LatLng(dest.latitude, dest.longitude);
-    final routePoints = _arcPoints(start, end);
+    final routePoints = MapUtils.arcPoints(start, end);
 
     double minLat = routePoints.first.latitude;
     double maxLat = routePoints.first.latitude;
