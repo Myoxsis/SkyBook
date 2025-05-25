@@ -141,7 +141,8 @@ class _FlightScreenState extends State<FlightScreen> {
 
   Future<void> _addFlight() async {
     final newFlight = await Navigator.of(context).push<Flight>(
-      MaterialPageRoute(builder: (_) => const AddFlightScreen()),
+      MaterialPageRoute(
+          builder: (_) => AddFlightScreen(flights: _allFlights)),
     );
     if (newFlight != null) {
       _allFlights = List<Flight>.from(_allFlights)..add(newFlight);
@@ -156,7 +157,10 @@ class _FlightScreenState extends State<FlightScreen> {
   Future<void> _editFlight(int index) async {
     final result = await Navigator.of(context).push<dynamic>(
       MaterialPageRoute(
-        builder: (_) => AddFlightScreen(flight: _flights[index]),
+        builder: (_) => AddFlightScreen(
+          flight: _flights[index],
+          flights: _allFlights,
+        ),
       ),
     );
     if (result is Flight) {
@@ -197,6 +201,7 @@ class _FlightScreenState extends State<FlightScreen> {
         builder: (_) => FlightDetailScreen(
           flight: _flights[index],
           premiumNotifier: widget.premiumNotifier,
+          flights: _allFlights,
         ),
       ),
     );

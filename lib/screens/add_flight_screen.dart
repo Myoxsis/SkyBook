@@ -14,8 +14,9 @@ import '../utils/carbon_utils.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
+  final List<Flight> flights;
 
-  const AddFlightScreen({super.key, this.flight});
+  const AddFlightScreen({super.key, this.flight, required this.flights});
 
   @override
   State<AddFlightScreen> createState() => _AddFlightScreenState();
@@ -45,6 +46,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
 
   Aircraft? _selectedAircraft;
   Airline? _selectedAirline;
+  late final Set<String> _flightAirportCodes;
 
   void _computeDistance() {
     final origin =
@@ -119,6 +121,12 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _aircraftController.text = _selectedAircraft!.display;
       _selectedAirline = null;
     }
+    _flightAirportCodes = {
+      for (final f in widget.flights) ...[
+        f.origin.toUpperCase(),
+        f.destination.toUpperCase(),
+      ]
+    };
     _computeDistance();
   }
 
@@ -213,7 +221,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       focusNode: focusNode,
       optionsBuilder: (TextEditingValue value) {
         if (value.text.isEmpty) {
-          return const Iterable<Airport>.empty();
+          // When no text is entered show only airports that are already
+          // part of the registered flights so the list is manageable.
+          return airports
+              .where((a) => _flightAirportCodes.contains(a.code));
         }
         return airports.where((a) =>
             a.code.toLowerCase().contains(value.text.toLowerCase()) ||
