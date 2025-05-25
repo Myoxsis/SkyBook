@@ -102,8 +102,8 @@ class _ProgressScreenState extends State<ProgressScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Progress'),
+      appBar: SkyBookAppBar(
+        title: 'Progress',
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
