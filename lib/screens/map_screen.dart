@@ -185,7 +185,7 @@ class _MapScreenState extends State<MapScreen> {
             heroTag: 'mapZoomIn',
             mini: true,
             onPressed: () {
-              _controller.move(_controller.center, _controller.zoom + 1);
+              _controller.move(_center, _zoom + 1);
             },
             child: const Icon(Icons.add),
           ),
@@ -194,7 +194,7 @@ class _MapScreenState extends State<MapScreen> {
             heroTag: 'mapZoomOut',
             mini: true,
             onPressed: () {
-              _controller.move(_controller.center, _controller.zoom - 1);
+              _controller.move(_center, _zoom - 1);
             },
             child: const Icon(Icons.remove),
           ),
