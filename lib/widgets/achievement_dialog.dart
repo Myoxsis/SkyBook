@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../models/achievement.dart';
 
 class AchievementDialog extends StatefulWidget {
-  final String title;
-  const AchievementDialog({super.key, required this.title});
+  final Achievement achievement;
+  const AchievementDialog({super.key, required this.achievement});
 
   @override
   State<AchievementDialog> createState() => _AchievementDialogState();
@@ -34,13 +37,18 @@ class _AchievementDialogState extends State<AchievementDialog>
           const SizedBox(width: 16),
           Expanded(
             child: Text(
-              widget.title,
+              widget.achievement.title,
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
         ],
       ),
       actions: [
+        TextButton(
+          onPressed: () => Share.share(
+              'I just unlocked the "${widget.achievement.title}" achievement in SkyBook!'),
+          child: const Text('Share'),
+        ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('OK'),
