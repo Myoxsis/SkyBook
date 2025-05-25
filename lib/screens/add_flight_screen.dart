@@ -265,7 +265,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         return TextFormField(
           controller: textEditingController,
           focusNode: focusNode,
-          decoration: const InputDecoration(labelText: 'Aircraft'),
+          decoration: const InputDecoration(
+            labelText: 'Aircraft',
+            prefixIcon: Icon(Icons.airplanemode_active),
+          ),
           onFieldSubmitted: (_) => onFieldSubmitted(),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
@@ -325,7 +328,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Widget _buildFlightNumberField() {
     return TextFormField(
       controller: _flightNumberController,
-      decoration: const InputDecoration(labelText: 'Flight Number'),
+      decoration: const InputDecoration(
+        labelText: 'Flight Number',
+        prefixIcon: Icon(Icons.flight),
+      ),
       onChanged: _updateAirline,
     );
   }
@@ -345,7 +351,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             TextFormField(
               controller: _dateController,
               readOnly: true,
-              decoration: const InputDecoration(labelText: 'Date'),
+              decoration: const InputDecoration(
+                labelText: 'Date',
+                suffixIcon: Icon(Icons.calendar_today),
+              ),
               onTap: _pickDate,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
