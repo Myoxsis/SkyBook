@@ -52,7 +52,7 @@ class MapUtils {
   static MapView viewForPoints(List<LatLng> points,
       {double minZoom = 2.0, double maxZoom = 16.0}) {
     if (points.isEmpty) {
-      return MapView(center: const LatLng(0, 0), zoom: 3);
+      return MapView(center: LatLng(0, 0), zoom: 3);
     }
 
     double minLat = points.first.latitude;
