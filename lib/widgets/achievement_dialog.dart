@@ -3,6 +3,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../models/achievement.dart';
 import 'app_dialog.dart';
+import 'confetti.dart';
 
 class AchievementDialog extends StatefulWidget {
   final Achievement achievement;
@@ -13,22 +14,33 @@ class AchievementDialog extends StatefulWidget {
 }
 
 class _AchievementDialogState extends State<AchievementDialog>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
+    with TickerProviderStateMixin {
+  late final AnimationController _iconController = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 600),
   )..forward();
-  late final Animation<double> _animation =
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
+  late final Animation<double> _iconAnimation =
+      CurvedAnimation(parent: _iconController, curve: Curves.elasticOut);
+  late final AnimationController _confettiController = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 2),
+  )..forward();
+
+  @override
+  void dispose() {
+    _iconController.dispose();
+    _confettiController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AppDialog(
+    final dialog = AppDialog(
       title: const Text('Achievement Unlocked!'),
       content: Row(
         children: [
           ScaleTransition(
-            scale: _animation,
+            scale: _iconAnimation,
             child: widget.achievement.assetPath != null
                 ? Image.asset(
                     widget.achievement.assetPath!,
@@ -59,6 +71,20 @@ class _AchievementDialogState extends State<AchievementDialog>
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('OK'),
+        ),
+      ],
+    );
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        dialog,
+        Positioned.fill(
+          child: Confetti(
+            controller: _confettiController,
+            duration: const Duration(seconds: 2),
+            key: const ValueKey('confetti'),
+          ),
         ),
       ],
     );
