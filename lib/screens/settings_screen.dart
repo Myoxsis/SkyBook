@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../models/developer_storage.dart';
 
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
@@ -20,6 +21,21 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _developerMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDeveloperMode();
+  }
+
+  Future<void> _loadDeveloperMode() async {
+    final saved = await DeveloperStorage.loadDeveloperMode();
+    if (mounted) {
+      setState(() {
+        _developerMode = saved;
+      });
+    }
+  }
 
   Future<void> _clearData() async {
     widget.onClearData?.call();
@@ -50,6 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               setState(() {
                 _developerMode = val;
               });
+              DeveloperStorage.saveDeveloperMode(val);
             },
           ),
           if (_developerMode)
