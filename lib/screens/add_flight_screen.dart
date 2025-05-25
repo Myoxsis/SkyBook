@@ -379,41 +379,16 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       onChanged: _updateAirline,
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: SkyBookAppBar(
-        title: widget.flight == null ? 'Add Flight' : 'Edit Flight',
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: _submit,
-        child: const Icon(Icons.save),
-      ),
-      bottomNavigationBar: widget.flight != null
-          ? SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                  onPressed: _delete,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.error,
-                    foregroundColor:
-                        Theme.of(context).colorScheme.onError,
-                  ),
-                  child: const Text('Delete Flight'),
-                ),
-              ),
-            )
-          : null,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
+  Widget _buildFlightInfoCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Flight Info',
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
             TextFormField(
               controller: _dateController,
               readOnly: true,
@@ -448,6 +423,22 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                   ],
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRouteDetailsCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Route Details',
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
             _buildAirportField(
               _originController,
               _originFocusNode,
@@ -467,93 +458,22 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text('Distance: ${_distanceKm!.round()} km'),
               ),
-            if (_distanceKm != null)
-              SizedBox(
-                height: 200,
-                child: Builder(
-                  builder: (context) {
-                    final markers = <Marker>[];
-                    if (_originLatLng != null) {
-                      markers.add(
-                        Marker(
-                          point: _originLatLng!,
-                          width: 30,
-                          height: 30,
-                          builder: (_) => Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              shape: BoxShape.circle,
-                            ),
-                            padding: const EdgeInsets.all(4),
-                            child: const Icon(
-                              Icons.flight_takeoff,
-                              size: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    if (_destinationLatLng != null) {
-                      markers.add(
-                        Marker(
-                          point: _destinationLatLng!,
-                          width: 30,
-                          height: 30,
-                          builder: (_) => Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              shape: BoxShape.circle,
-                            ),
-                            padding: const EdgeInsets.all(4),
-                            child: const Icon(
-                              Icons.flight_land,
-                              size: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
+          ],
+        ),
+      ),
+    );
+  }
 
-                    final lines = <Polyline>[];
-                    if (_originLatLng != null && _destinationLatLng != null) {
-                      lines.add(
-                        Polyline(
-                          points: _arcPoints(_originLatLng!, _destinationLatLng!),
-                          color: Theme.of(context).colorScheme.secondary,
-                          strokeWidth: 3,
-                        ),
-                      );
-                    }
-
-                    final center = _originLatLng != null && _destinationLatLng != null
-                        ? LatLng(
-                            (_originLatLng!.latitude + _destinationLatLng!.latitude) / 2,
-                            (_originLatLng!.longitude + _destinationLatLng!.longitude) / 2,
-                          )
-                        : _originLatLng ?? _destinationLatLng ?? LatLng(20, 0);
-
-                    return FlutterMap(
-                      options: MapOptions(
-                        center: center,
-                        zoom: 3,
-                        interactiveFlags: InteractiveFlag.pinchZoom |
-                            InteractiveFlag.drag |
-                            InteractiveFlag.doubleTapZoom,
-                      ),
-                      children: [
-                        TileLayer(
-                          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          userAgentPackageName: 'com.example.app',
-                        ),
-                        if (lines.isNotEmpty) PolylineLayer(polylines: lines),
-                        if (markers.isNotEmpty) MarkerLayer(markers: markers),
-                      ],
-                    );
-                  },
-                ),
-              ),
+  Widget _buildTravelDetailsCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Travel Details',
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
             TextFormField(
               controller: _durationController,
               keyboardType: TextInputType.number,
@@ -606,14 +526,69 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 }
               },
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotesCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Notes', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
             TextField(
               controller: _notesController,
               decoration: const InputDecoration(labelText: 'Notes'),
               maxLines: 3,
             ),
-            const SizedBox(height: 80),
           ],
         ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: SkyBookAppBar(
+        title: widget.flight == null ? 'Add Flight' : 'Edit Flight',
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              _buildFlightInfoCard(),
+              const SizedBox(height: 8),
+              _buildRouteDetailsCard(),
+              const SizedBox(height: 8),
+              _buildTravelDetailsCard(),
+              const SizedBox(height: 8),
+              _buildNotesCard(),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _submit,
+                child: Text(widget.flight == null ? 'Add Flight' : 'Save Changes'),
+              ),
+              if (widget.flight != null) ...[
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: _delete,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    foregroundColor: Theme.of(context).colorScheme.onError,
+                  ),
+                  child: const Text('Delete Flight'),
+                ),
+              ],
+            ],
+          ),
       ),
     );
   }
