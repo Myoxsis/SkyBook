@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'dart:math' as math;
 
+import '../utils/map_utils.dart';
 import '../models/flight.dart';
 import '../models/airport.dart';
 import '../data/airport_data.dart';
@@ -70,34 +70,6 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  List<LatLng> _arcPoints(LatLng start, LatLng end) {
-    const steps = 50;
-    final latDiff = end.latitude - start.latitude;
-    final lonDiff = end.longitude - start.longitude;
-    final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
-    if (distance == 0) {
-      return [start, end];
-    }
-    final perpLat = -lonDiff;
-    final perpLon = latDiff;
-    final norm = math.sqrt(perpLat * perpLat + perpLon * perpLon);
-    if (norm == 0) {
-      return [start, end];
-    }
-    final offsetLat = perpLat / norm;
-    final offsetLon = perpLon / norm;
-    final amp = distance * 0.2;
-
-    final pts = <LatLng>[];
-    for (var i = 0; i <= steps; i++) {
-      final t = i / steps;
-      final curve = math.sin(math.pi * t);
-      final lat = start.latitude + latDiff * t + offsetLat * amp * curve;
-      final lon = start.longitude + lonDiff * t + offsetLon * amp * curve;
-      pts.add(LatLng(lat, lon));
-    }
-    return pts;
-  }
 
   @override
   void initState() {
@@ -165,7 +137,7 @@ class _MapScreenState extends State<MapScreen> {
         final end = LatLng(dest.latitude, dest.longitude);
         lines.add(
           Polyline(
-            points: _arcPoints(start, end),
+            points: MapUtils.arcPoints(start, end),
             color: Theme.of(context).colorScheme.secondary,
             strokeWidth: 3,
           ),

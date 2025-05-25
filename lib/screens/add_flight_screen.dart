@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'dart:math' as math;
 import '../models/flight.dart';
 import '../models/aircraft.dart';
 import '../models/airport.dart';
@@ -79,34 +77,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     }
   }
 
-  List<LatLng> _arcPoints(LatLng start, LatLng end) {
-    const steps = 50;
-    final latDiff = end.latitude - start.latitude;
-    final lonDiff = end.longitude - start.longitude;
-    final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
-    if (distance == 0) {
-      return [start, end];
-    }
-    final perpLat = -lonDiff;
-    final perpLon = latDiff;
-    final norm = math.sqrt(perpLat * perpLat + perpLon * perpLon);
-    if (norm == 0) {
-      return [start, end];
-    }
-    final offsetLat = perpLat / norm;
-    final offsetLon = perpLon / norm;
-    final amp = distance * 0.2;
-
-    final pts = <LatLng>[];
-    for (var i = 0; i <= steps; i++) {
-      final t = i / steps;
-      final curve = math.sin(math.pi * t);
-      final lat = start.latitude + latDiff * t + offsetLat * amp * curve;
-      final lon = start.longitude + lonDiff * t + offsetLon * amp * curve;
-      pts.add(LatLng(lat, lon));
-    }
-    return pts;
-  }
 
   @override
   void dispose() {
