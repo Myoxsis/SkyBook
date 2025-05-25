@@ -31,12 +31,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   Key _flightScreenKey = UniqueKey();
   Key _statusScreenKey = UniqueKey();
+  Key _progressScreenKey = UniqueKey();
 
   void _handleDataCleared() {
     setState(() {
       _flightScreenKey = UniqueKey();
       _statusScreenKey = UniqueKey();
+      _progressScreenKey = UniqueKey();
       widget.flightsNotifier.value = [];
+      widget.unlockedAchievements.clear();
     });
     widget.onFlightsChanged();
   }
@@ -74,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onFlightsChanged: widget.onFlightsChanged,
       ),
       ProgressScreen(
+        key: _progressScreenKey,
         onOpenSettings: _openSettings,
         flightsNotifier: widget.flightsNotifier,
         unlockedAchievements: widget.unlockedAchievements,
