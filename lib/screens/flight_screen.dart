@@ -25,17 +25,33 @@ class FlightScreen extends StatefulWidget {
   State<FlightScreen> createState() => _FlightScreenState();
 }
 
+enum _FlightSortOrder { newestFirst, oldestFirst }
+
 class _FlightScreenState extends State<FlightScreen> {
   List<Flight> _flights = [];
   late VoidCallback _listener;
+  _FlightSortOrder _sortOrder = _FlightSortOrder.newestFirst;
+
+  void _sortFlights() {
+    _flights.sort((a, b) {
+      final da = DateTime.tryParse(a.date);
+      final db = DateTime.tryParse(b.date);
+      if (da == null || db == null) return 0;
+      return _sortOrder == _FlightSortOrder.newestFirst
+          ? db.compareTo(da)
+          : da.compareTo(db);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _flights = widget.flightsNotifier.value;
+    _flights = List<Flight>.from(widget.flightsNotifier.value);
+    _sortFlights();
     _listener = () {
       setState(() {
-        _flights = widget.flightsNotifier.value;
+        _flights = List<Flight>.from(widget.flightsNotifier.value);
+        _sortFlights();
       });
     };
     widget.flightsNotifier.addListener(_listener);
@@ -52,8 +68,9 @@ class _FlightScreenState extends State<FlightScreen> {
       MaterialPageRoute(builder: (_) => const AddFlightScreen()),
     );
     if (newFlight != null) {
-      final updated = List<Flight>.from(_flights)..insert(0, newFlight);
-      widget.flightsNotifier.value = updated;
+      _flights = List<Flight>.from(_flights)..add(newFlight);
+      _sortFlights();
+      widget.flightsNotifier.value = List<Flight>.from(_flights);
       await widget.onFlightsChanged();
     }
   }
@@ -65,22 +82,21 @@ class _FlightScreenState extends State<FlightScreen> {
       ),
     );
     if (result is Flight) {
-      final list = List<Flight>.from(_flights);
-      list[index] = result;
-      widget.flightsNotifier.value = list;
+      _flights[index] = result;
+      _sortFlights();
+      widget.flightsNotifier.value = List<Flight>.from(_flights);
       await widget.onFlightsChanged();
     } else if (result == 'delete') {
-      final list = List<Flight>.from(_flights)..removeAt(index);
-      widget.flightsNotifier.value = list;
+      _flights = List<Flight>.from(_flights)..removeAt(index);
+      widget.flightsNotifier.value = List<Flight>.from(_flights);
       await widget.onFlightsChanged();
     }
   }
 
   void _toggleFavorite(int index) {
     final flight = _flights[index];
-    final list = List<Flight>.from(_flights);
-    list[index] = flight.copyWith(isFavorite: !flight.isFavorite);
-    widget.flightsNotifier.value = list;
+    _flights[index] = flight.copyWith(isFavorite: !flight.isFavorite);
+    widget.flightsNotifier.value = List<Flight>.from(_flights);
     widget.onFlightsChanged();
   }
 
@@ -94,13 +110,13 @@ class _FlightScreenState extends State<FlightScreen> {
       ),
     );
     if (result is Flight) {
-      final list = List<Flight>.from(_flights);
-      list[index] = result;
-      widget.flightsNotifier.value = list;
+      _flights[index] = result;
+      _sortFlights();
+      widget.flightsNotifier.value = List<Flight>.from(_flights);
       await widget.onFlightsChanged();
     } else if (result == 'delete') {
-      final list = List<Flight>.from(_flights)..removeAt(index);
-      widget.flightsNotifier.value = list;
+      _flights = List<Flight>.from(_flights)..removeAt(index);
+      widget.flightsNotifier.value = List<Flight>.from(_flights);
       await widget.onFlightsChanged();
     }
   }
@@ -111,6 +127,26 @@ class _FlightScreenState extends State<FlightScreen> {
       appBar: SkyBookAppBar(
         title: 'Flights',
         actions: [
+          PopupMenuButton<_FlightSortOrder>(
+            icon: const Icon(Icons.sort),
+            onSelected: (order) {
+              setState(() {
+                _sortOrder = order;
+                _sortFlights();
+              });
+              widget.flightsNotifier.value = List<Flight>.from(_flights);
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: _FlightSortOrder.newestFirst,
+                child: Text('Most Recent'),
+              ),
+              PopupMenuItem(
+                value: _FlightSortOrder.oldestFirst,
+                child: Text('Oldest'),
+              ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: widget.onOpenSettings,
