@@ -8,6 +8,7 @@ import '../data/airport_data.dart';
 import 'add_flight_screen.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/info_row.dart';
+import 'package:share_plus/share_plus.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
@@ -26,6 +27,12 @@ class FlightDetailScreen extends StatelessWidget {
     if (result != null) {
       Navigator.of(context).pop(result);
     }
+  }
+
+  void _share() {
+    final text = 'My flight from '
+        '${flight.origin} to ${flight.destination} on ${flight.date} using SkyBook!';
+    Share.share(text);
   }
 
 
@@ -180,6 +187,10 @@ class FlightDetailScreen extends StatelessWidget {
       appBar: SkyBookAppBar(
         title: 'Flight Details',
         actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: _share,
+          ),
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () => _edit(context),
