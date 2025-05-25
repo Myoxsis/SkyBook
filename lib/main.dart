@@ -34,13 +34,17 @@ class SkyBookApp extends StatefulWidget {
 
 class _SkyBookAppState extends State<SkyBookApp> {
   bool _darkMode = false;
-  final ValueNotifier<List<Flight>> _flightsNotifier = ValueNotifier<List<Flight>>([]);
+  final ValueNotifier<List<Flight>> _flightsNotifier =
+      ValueNotifier<List<Flight>>([]);
   final ValueNotifier<bool> _premiumNotifier = ValueNotifier<bool>(false);
-  final GlobalKey<ScaffoldMessengerState> _messengerKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _messengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<NavigatorState> _navigatorKey =
+      GlobalKey<NavigatorState>();
   final Map<String, DateTime> _unlockedAchievements = {};
 
   void _showAchievementDialog(Achievement achievement) {
-    final context = _messengerKey.currentContext;
+    final context = _navigatorKey.currentContext;
     if (context != null) {
       showDialog(
         context: context,
@@ -115,6 +119,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       scaffoldMessengerKey: _messengerKey,
+      navigatorKey: _navigatorKey,
       title: 'SkyBook',
       theme: ThemeData(
         colorScheme: _lightColorScheme,
