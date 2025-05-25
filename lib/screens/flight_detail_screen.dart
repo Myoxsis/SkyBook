@@ -80,7 +80,9 @@ class FlightDetailScreen extends StatelessWidget {
         options: MapOptions(
           center: center,
           zoom: zoom,
-          interactiveFlags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
+          minZoom: zoom,
+          maxZoom: zoom,
+          interactiveFlags: InteractiveFlag.drag,
         ),
         children: [
           TileLayer(
