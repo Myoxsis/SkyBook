@@ -81,14 +81,14 @@ class FlightDetailScreen extends StatelessWidget {
 
     return SizedBox(
       height: 200,
-      child: FlutterMap(
-        options: MapOptions(
-          center: center,
-          zoom: zoom,
-          minZoom: zoom,
-          maxZoom: zoom,
-          interactiveFlags: InteractiveFlag.drag,
-        ),
+        child: FlutterMap(
+          options: MapOptions(
+            initialCenter: center,
+            initialZoom: zoom,
+            minZoom: zoom,
+            maxZoom: zoom,
+            interactiveFlags: InteractiveFlag.drag,
+          ),
         children: [
           TileLayer(
             urlTemplate:
