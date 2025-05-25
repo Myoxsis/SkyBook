@@ -245,7 +245,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         return TextFormField(
           controller: textEditingController,
           focusNode: fieldFocusNode,
-          inputFormatters: const [
+          inputFormatters: [
             LengthLimitingTextInputFormatter(3),
             UpperCaseTextFormatter(),
           ],
