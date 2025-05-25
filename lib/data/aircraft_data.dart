@@ -27,6 +27,18 @@ const List<Aircraft> aircrafts = [
     fuelBurnPerKm: 5.8,
     classConfig: const {'Economy': 280, 'Business': 40, 'First': 10},
   ),
+  Aircraft(
+    manufacturer: 'Airbus',
+    model: 'A380',
+    fuelBurnPerKm: 11.0,
+    classConfig: const {'Economy': 450, 'Business': 70, 'First': 14},
+  ),
+  Aircraft(
+    manufacturer: 'Airbus',
+    model: 'A220',
+    fuelBurnPerKm: 2.6,
+    classConfig: const {'Economy': 120, 'Business': 12},
+  ),
 
   // Boeing
   Aircraft(
@@ -34,6 +46,12 @@ const List<Aircraft> aircrafts = [
     model: '737',
     fuelBurnPerKm: 3.1,
     classConfig: const {'Economy': 150, 'Business': 12},
+  ),
+  Aircraft(
+    manufacturer: 'Boeing',
+    model: '737 MAX 8',
+    fuelBurnPerKm: 2.8,
+    classConfig: const {'Economy': 160, 'Business': 16},
   ),
   Aircraft(
     manufacturer: 'Boeing',
@@ -84,6 +102,28 @@ const List<Aircraft> aircrafts = [
     model: 'E195',
     fuelBurnPerKm: 2.0,
     classConfig: const {'Economy': 100, 'Business': 8},
+  ),
+
+  // Bombardier
+  Aircraft(
+    manufacturer: 'Bombardier',
+    model: 'CRJ700',
+    fuelBurnPerKm: 1.6,
+    classConfig: const {'Economy': 66, 'Business': 8},
+  ),
+  Aircraft(
+    manufacturer: 'Bombardier',
+    model: 'CRJ900',
+    fuelBurnPerKm: 1.7,
+    classConfig: const {'Economy': 86, 'Business': 8},
+  ),
+
+  // ATR
+  Aircraft(
+    manufacturer: 'ATR',
+    model: '72',
+    fuelBurnPerKm: 1.5,
+    classConfig: const {'Economy': 70, 'Business': 6},
   ),
 
   // Private jets
