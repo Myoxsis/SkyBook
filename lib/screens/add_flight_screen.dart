@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import '../models/flight.dart';
 import '../models/aircraft.dart';
 import '../models/airport.dart';
@@ -33,8 +34,31 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   String _travelClass = 'Economy';
   String _seatLocation = 'Window';
 
+  double? _distanceKm;
+
   Aircraft? _selectedAircraft;
   Airline? _selectedAirline;
+
+  void _computeDistance() {
+    final origin =
+        airportByCode[_originController.text.trim().toUpperCase()];
+    final dest =
+        airportByCode[_destinationController.text.trim().toUpperCase()];
+    if (origin != null && dest != null) {
+      final d = const Distance();
+      final km = d.as(
+          LengthUnit.Kilometer,
+          LatLng(origin.latitude, origin.longitude),
+          LatLng(dest.latitude, dest.longitude));
+      setState(() {
+        _distanceKm = km;
+      });
+    } else {
+      setState(() {
+        _distanceKm = null;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -76,6 +100,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _aircraftController.text = _selectedAircraft!.display;
       _selectedAirline = null;
     }
+    _computeDistance();
   }
 
   Future<void> _pickDate() async {
@@ -155,8 +180,12 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   Widget _buildAirportField(
-      TextEditingController controller, FocusNode focusNode, String label,
-      {Key? key}) {
+      TextEditingController controller,
+      FocusNode focusNode,
+      String label, {
+      Key? key,
+      void Function(String)? onChanged,
+    }) {
     return RawAutocomplete<Airport>(
       key: key,
       textEditingController: controller,
@@ -177,6 +206,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           focusNode: fieldFocusNode,
           decoration: InputDecoration(labelText: label),
           onFieldSubmitted: (_) => onFieldSubmitted(),
+          onChanged: onChanged,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Please enter $label';
@@ -212,6 +242,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       },
       onSelected: (a) {
         controller.text = a.code;
+        if (onChanged != null) onChanged(a.code);
       },
     );
   }
@@ -330,11 +361,24 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 child: Text('Airline: ${_selectedAirline!.name}'),
               ),
             _buildAirportField(
-                _originController, _originFocusNode, 'Origin',
-                key: const ValueKey('origin')),
+              _originController,
+              _originFocusNode,
+              'Origin',
+              key: const ValueKey('origin'),
+              onChanged: (_) => _computeDistance(),
+            ),
             _buildAirportField(
-                _destinationController, _destinationFocusNode, 'Destination',
-                key: const ValueKey('destination')),
+              _destinationController,
+              _destinationFocusNode,
+              'Destination',
+              key: const ValueKey('destination'),
+              onChanged: (_) => _computeDistance(),
+            ),
+            if (_distanceKm != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text('Distance: ${_distanceKm!.round()} km'),
+              ),
             TextFormField(
               controller: _durationController,
               keyboardType: TextInputType.number,
