@@ -164,8 +164,25 @@ class FlightDetailScreen extends StatelessWidget {
       _buildMap(context),
       const SizedBox(height: 16),
       InfoRow(title: 'Date', value: flight.date, icon: Icons.calendar_today),
-      InfoRow(title: 'From', value: flight.origin, icon: Icons.flight_takeoff),
-      InfoRow(title: 'To', value: flight.destination, icon: Icons.flight_land),
+      Row(
+        children: [
+          Expanded(
+            child: InfoRow(
+              title: 'From',
+              value: flight.origin,
+              icon: Icons.flight_takeoff,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: InfoRow(
+              title: 'To',
+              value: flight.destination,
+              icon: Icons.flight_land,
+            ),
+          ),
+        ],
+      ),
       InfoRow(title: 'Aircraft', value: flight.aircraft, icon: Icons.flight),
     ];
 
