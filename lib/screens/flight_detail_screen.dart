@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'dart:math' as math;
 
 import '../utils/map_utils.dart';
 import '../models/flight.dart';
@@ -33,38 +32,9 @@ class FlightDetailScreen extends StatelessWidget {
     final start = LatLng(origin.latitude, origin.longitude);
     final end = LatLng(dest.latitude, dest.longitude);
     final routePoints = MapUtils.arcPoints(start, end);
-
-    double minLat = routePoints.first.latitude;
-    double maxLat = routePoints.first.latitude;
-    double minLon = routePoints.first.longitude;
-    double maxLon = routePoints.first.longitude;
-    for (final p in routePoints) {
-      if (p.latitude < minLat) minLat = p.latitude;
-      if (p.latitude > maxLat) maxLat = p.latitude;
-      if (p.longitude < minLon) minLon = p.longitude;
-      if (p.longitude > maxLon) maxLon = p.longitude;
-    }
-
-    double diffLon = (maxLon - minLon).abs();
-    double centerLon;
-    if (diffLon > 180) {
-      diffLon = 360 - diffLon;
-      centerLon = (minLon + maxLon + 360) / 2;
-      if (centerLon > 180) centerLon -= 360;
-    } else {
-      centerLon = (minLon + maxLon) / 2;
-    }
-
-    final center = LatLng(
-      (minLat + maxLat) / 2,
-      centerLon,
-    );
-
-    final diffLat = (maxLat - minLat).abs();
-    final diff = math.max(diffLat, diffLon);
-    var zoom = (math.log(360 / diff) / math.ln2) + 1;
-    if (zoom.isNaN || zoom.isInfinite) zoom = 3;
-    zoom = zoom.clamp(2.0, 16.0);
+    final view = MapUtils.viewForPoints(routePoints);
+    final center = view.center;
+    final zoom = view.zoom;
 
     final markers = [
       Marker(

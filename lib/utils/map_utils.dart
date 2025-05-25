@@ -47,4 +47,51 @@ class MapUtils {
     }
     return pts;
   }
+
+  /// Data class holding the map [center] and [zoom] level.
+  static MapView viewForPoints(List<LatLng> points,
+      {double minZoom = 2.0, double maxZoom = 16.0}) {
+    if (points.isEmpty) {
+      return MapView(center: const LatLng(0, 0), zoom: 3);
+    }
+
+    double minLat = points.first.latitude;
+    double maxLat = points.first.latitude;
+    double minLon = points.first.longitude;
+    double maxLon = points.first.longitude;
+    for (final p in points) {
+      if (p.latitude < minLat) minLat = p.latitude;
+      if (p.latitude > maxLat) maxLat = p.latitude;
+      if (p.longitude < minLon) minLon = p.longitude;
+      if (p.longitude > maxLon) maxLon = p.longitude;
+    }
+
+    double diffLon = (maxLon - minLon).abs();
+    double centerLon;
+    if (diffLon > 180) {
+      diffLon = 360 - diffLon;
+      centerLon = (minLon + maxLon + 360) / 2;
+      if (centerLon > 180) centerLon -= 360;
+    } else {
+      centerLon = (minLon + maxLon) / 2;
+    }
+
+    final center = LatLng((minLat + maxLat) / 2, centerLon);
+
+    final diffLat = (maxLat - minLat).abs();
+    final diff = math.max(diffLat, diffLon);
+    var zoom = (math.log(360 / diff) / math.ln2) + 1;
+    if (zoom.isNaN || zoom.isInfinite) zoom = 3;
+    zoom = zoom.clamp(minZoom, maxZoom);
+
+    return MapView(center: center, zoom: zoom);
+  }
+}
+
+/// Simple holder for a map's center point and zoom level.
+class MapView {
+  final LatLng center;
+  final double zoom;
+
+  const MapView({required this.center, required this.zoom});
 }
