@@ -37,6 +37,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _aircraftFocusNode = FocusNode();
   String _travelClass = 'Economy';
   String _seatLocation = 'Window';
+  bool _isBusiness = false;
 
   double? _distanceKm;
   double? _carbonKg;
@@ -116,6 +117,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _seatNumberController.text = flight.seatNumber;
       _seatLocation = flight.seatLocation.isNotEmpty ? flight.seatLocation : 'Window';
       _carbonKg = flight.carbonKg > 0 ? flight.carbonKg : null;
+      _isBusiness = flight.isBusiness;
     } else {
       _selectedAircraft = aircrafts.first;
       _aircraftController.text = _selectedAircraft!.display;
@@ -180,6 +182,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       distanceKm: _distanceKm ?? widget.flight?.distanceKm ?? 0,
       carbonKg: _carbonKg ?? widget.flight?.carbonKg ?? 0,
       isFavorite: widget.flight?.isFavorite ?? false,
+      isBusiness: _isBusiness,
     );
     Navigator.of(context).pop(flight);
   }
@@ -516,6 +519,16 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                   });
                 }
               },
+            ),
+            SwitchListTile(
+              title: const Text('Business Trip'),
+              value: _isBusiness,
+              onChanged: (v) {
+                setState(() {
+                  _isBusiness = v;
+                });
+              },
+              subtitle: Text(_isBusiness ? 'Marked as business' : 'Personal trip'),
             ),
           ],
         ),

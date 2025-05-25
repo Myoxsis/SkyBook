@@ -177,6 +177,13 @@ class FlightDetailScreen extends StatelessWidget {
       final seat = [flight.seatNumber, flight.seatLocation].where((e) => e.isNotEmpty).join(' ');
       items.add(InfoRow(title: 'Seat', value: seat, icon: Icons.event_seat));
     }
+    items.add(
+      InfoRow(
+        title: 'Trip Type',
+        value: flight.isBusiness ? 'Business' : 'Personal',
+        icon: Icons.work,
+      ),
+    );
     if (flight.notes.isNotEmpty) {
       items.add(
         Padding(

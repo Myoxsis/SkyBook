@@ -15,6 +15,7 @@ class Flight {
   final double distanceKm;
   final double carbonKg;
   final bool isFavorite;
+  final bool isBusiness;
 
   Flight({
     required this.id,
@@ -33,6 +34,7 @@ class Flight {
     this.distanceKm = 0,
     this.carbonKg = 0,
     this.isFavorite = false,
+    this.isBusiness = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -53,6 +55,7 @@ class Flight {
       'distanceKm': distanceKm,
       'carbonKg': carbonKg,
       'isFavorite': isFavorite,
+      'isBusiness': isBusiness,
     };
   }
 
@@ -73,6 +76,7 @@ class Flight {
     double? distanceKm,
     double? carbonKg,
     bool? isFavorite,
+    bool? isBusiness,
   }) {
     return Flight(
       id: id ?? this.id,
@@ -91,6 +95,7 @@ class Flight {
       distanceKm: distanceKm ?? this.distanceKm,
       carbonKg: carbonKg ?? this.carbonKg,
       isFavorite: isFavorite ?? this.isFavorite,
+      isBusiness: isBusiness ?? this.isBusiness,
     );
   }
 
@@ -112,6 +117,7 @@ class Flight {
       distanceKm: (map['distanceKm'] as num?)?.toDouble() ?? 0,
       carbonKg: (map['carbonKg'] as num?)?.toDouble() ?? 0,
       isFavorite: map['isFavorite'] as bool? ?? false,
+      isBusiness: map['isBusiness'] as bool? ?? false,
     );
   }
 
