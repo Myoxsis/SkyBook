@@ -13,6 +13,7 @@ class Flight {
   final String seatNumber;
   final String seatLocation;
   final double distanceKm;
+  final double carbonKg;
   final bool isFavorite;
 
   Flight({
@@ -30,6 +31,7 @@ class Flight {
     required this.seatNumber,
     required this.seatLocation,
     this.distanceKm = 0,
+    this.carbonKg = 0,
     this.isFavorite = false,
   });
 
@@ -49,6 +51,7 @@ class Flight {
       'seatNumber': seatNumber,
       'seatLocation': seatLocation,
       'distanceKm': distanceKm,
+      'carbonKg': carbonKg,
       'isFavorite': isFavorite,
     };
   }
@@ -69,6 +72,7 @@ class Flight {
       seatNumber: map['seatNumber'] as String? ?? '',
       seatLocation: map['seatLocation'] as String? ?? '',
       distanceKm: (map['distanceKm'] as num?)?.toDouble() ?? 0,
+      carbonKg: (map['carbonKg'] as num?)?.toDouble() ?? 0,
       isFavorite: map['isFavorite'] as bool? ?? false,
     );
   }
