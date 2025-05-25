@@ -390,7 +390,19 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             if (_selectedAirline != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text('Airline: ${_selectedAirline!.name}'),
+                child: Row(
+                  children: [
+                    Image.network(
+                      'https://pics.avs.io/60/60/${_selectedAirline!.code}.png',
+                      width: 32,
+                      height: 32,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.flight, size: 32),
+                    ),
+                    const SizedBox(width: 8),
+                    Text('Airline: ${_selectedAirline!.name}'),
+                  ],
+                ),
               ),
             _buildAirportField(
               _originController,
