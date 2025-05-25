@@ -20,6 +20,7 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
 - View your routes on an interactive map
 - Quickly access Map, Flights, Progress and Status using the bottom navigation bar
 - Custom badge images are included under `assets/badges` for achievements
+- The iOS app icon is generated from `assets/logo.png`
 
 ## Getting Started
 
@@ -32,5 +33,10 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
    ```sh
    flutter run
    ```
+
+To update the iOS app icon after modifying `assets/logo.png`, run:
+```sh
+flutter pub run flutter_launcher_icons:main
+```
 
 Since this repository does not include compiled dependencies, you will need to install them via `flutter pub get` before running the app.
