@@ -61,6 +61,20 @@ const List<Airport> airports = [
       region: 'North America',
       latitude: 25.7959,
       longitude: -80.2870),
+  Airport(
+      code: 'BOS',
+      name: 'Boston Logan',
+      country: 'United States',
+      region: 'North America',
+      latitude: 42.3656,
+      longitude: -71.0096),
+  Airport(
+      code: 'MCO',
+      name: 'Orlando International',
+      country: 'United States',
+      region: 'North America',
+      latitude: 28.4312,
+      longitude: -81.3081),
 
   // Europe
   Airport(
@@ -133,6 +147,20 @@ const List<Airport> airports = [
       region: 'Europe',
       latitude: 55.6181,
       longitude: 12.6560),
+  Airport(
+      code: 'DUB',
+      name: 'Dublin',
+      country: 'Ireland',
+      region: 'Europe',
+      latitude: 53.4213,
+      longitude: -6.2701),
+  Airport(
+      code: 'OSL',
+      name: 'Oslo Gardermoen',
+      country: 'Norway',
+      region: 'Europe',
+      latitude: 60.1976,
+      longitude: 11.1004),
 
   // Asia
   Airport(
@@ -205,6 +233,20 @@ const List<Airport> airports = [
       region: 'Asia',
       latitude: 2.7456,
       longitude: 101.7090),
+  Airport(
+      code: 'NRT',
+      name: 'Tokyo Narita',
+      country: 'Japan',
+      region: 'Asia',
+      latitude: 35.7720,
+      longitude: 140.3929),
+  Airport(
+      code: 'KIX',
+      name: 'Osaka Kansai',
+      country: 'Japan',
+      region: 'Asia',
+      latitude: 34.4347,
+      longitude: 135.2442),
 
   // Middle East
   Airport(
@@ -277,6 +319,20 @@ const List<Airport> airports = [
       region: 'Middle East',
       latitude: 32.0004,
       longitude: 34.8708),
+  Airport(
+      code: 'KWI',
+      name: 'Kuwait',
+      country: 'Kuwait',
+      region: 'Middle East',
+      latitude: 29.2266,
+      longitude: 47.9689),
+  Airport(
+      code: 'BEY',
+      name: 'Beirut Rafic Hariri',
+      country: 'Lebanon',
+      region: 'Middle East',
+      latitude: 33.8209,
+      longitude: 35.4884),
 
   // Oceania
   Airport(
@@ -349,6 +405,20 @@ const List<Airport> airports = [
       region: 'Oceania',
       latitude: -12.4083,
       longitude: 130.8727),
+  Airport(
+      code: 'NAN',
+      name: 'Nadi International',
+      country: 'Fiji',
+      region: 'Oceania',
+      latitude: -17.7554,
+      longitude: 177.4434),
+  Airport(
+      code: 'POM',
+      name: 'Port Moresby Jacksons',
+      country: 'Papua New Guinea',
+      region: 'Oceania',
+      latitude: -9.4434,
+      longitude: 147.2200),
 ];
 
 final Map<String, Airport> airportByCode = {
