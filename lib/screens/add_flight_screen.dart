@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'dart:math' as math;
@@ -10,6 +11,7 @@ import '../data/airport_data.dart';
 import '../data/aircraft_data.dart';
 import '../data/airline_data.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../utils/text_formatters.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -243,6 +245,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         return TextFormField(
           controller: textEditingController,
           focusNode: fieldFocusNode,
+          inputFormatters: const [
+            LengthLimitingTextInputFormatter(3),
+            UpperCaseTextFormatter(),
+          ],
           decoration: InputDecoration(labelText: label),
           onFieldSubmitted: (_) => onFieldSubmitted(),
           onChanged: onChanged,
