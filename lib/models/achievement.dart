@@ -5,7 +5,8 @@ class Achievement {
   final String title;
   final String description;
   final String category;
-  final IconData icon;
+  final IconData? icon;
+  final String? iconAsset;
   final int target;
   final int progress;
   final bool achieved;
@@ -16,11 +17,25 @@ class Achievement {
     required this.title,
     required this.description,
     required this.category,
-    required this.icon,
+    this.icon,
+    this.iconAsset,
     required this.target,
     required this.progress,
     required this.achieved,
     this.unlockedAt,
-  });
+  }) : assert(icon != null || iconAsset != null,
+            'Either icon or iconAsset must be provided');
+
+  Widget buildIcon({Color? color, double? size}) {
+    if (iconAsset != null) {
+      return Image.asset(
+        iconAsset!,
+        width: size,
+        height: size,
+        color: color,
+      );
+    }
+    return Icon(icon, color: color, size: size);
+  }
 }
 
