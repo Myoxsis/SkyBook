@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../widgets/flight_tile.dart';
 import 'add_flight_screen.dart';
-import 'settings_screen.dart';
 import 'flight_detail_screen.dart';
 import '../widgets/skybook_app_bar.dart';
 
@@ -28,12 +27,15 @@ class FlightScreen extends StatefulWidget {
 enum _FlightSortOrder { newestFirst, oldestFirst }
 
 class _FlightScreenState extends State<FlightScreen> {
+  List<Flight> _allFlights = [];
   List<Flight> _flights = [];
+  List<int> _availableYears = [];
+  int? _yearFilter;
   late VoidCallback _listener;
   _FlightSortOrder _sortOrder = _FlightSortOrder.newestFirst;
 
-  void _sortFlights() {
-    _flights.sort((a, b) {
+  void _sortList(List<Flight> list) {
+    list.sort((a, b) {
       final da = DateTime.tryParse(a.date);
       final db = DateTime.tryParse(b.date);
       if (da == null || db == null) return 0;
@@ -43,15 +45,89 @@ class _FlightScreenState extends State<FlightScreen> {
     });
   }
 
+  void _sortFlights() => _sortList(_flights);
+  void _sortAllFlights() => _sortList(_allFlights);
+
+  void _updateYears() {
+    _availableYears = _allFlights
+        .map((f) => DateTime.tryParse(f.date)?.year)
+        .whereType<int>()
+        .toSet()
+        .toList()
+      ..sort((a, b) => b.compareTo(a));
+  }
+
+  void _applyFilters() {
+    _flights = _allFlights.where((f) {
+      if (_yearFilter != null) {
+        final year = DateTime.tryParse(f.date)?.year;
+        return year == _yearFilter;
+      }
+      return true;
+    }).toList();
+    _sortFlights();
+  }
+
+  Widget _buildYearMenu() {
+    return PopupMenuButton<int?>(
+      icon: const Icon(Icons.filter_alt),
+      tooltip: 'Filter by year',
+      onSelected: (year) {
+        setState(() {
+          _yearFilter = year;
+          _applyFilters();
+        });
+      },
+      itemBuilder: (context) {
+        final items = <PopupMenuEntry<int?>>[];
+        items.add(
+          PopupMenuItem<int?>(
+            value: null,
+            child: Row(
+              children: [
+                if (_yearFilter == null) ...[
+                  const Icon(Icons.check, size: 16),
+                  const SizedBox(width: 8),
+                ],
+                const Text('All'),
+              ],
+            ),
+          ),
+        );
+        for (final y in _availableYears) {
+          items.add(
+            PopupMenuItem<int?>(
+              value: y,
+              child: Row(
+                children: [
+                  if (_yearFilter == y) ...[
+                    const Icon(Icons.check, size: 16),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(y.toString()),
+                ],
+              ),
+            ),
+          );
+        }
+        return items;
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    _flights = List<Flight>.from(widget.flightsNotifier.value);
-    _sortFlights();
+    _allFlights = List<Flight>.from(widget.flightsNotifier.value);
+    _sortAllFlights();
+    _updateYears();
+    _applyFilters();
     _listener = () {
       setState(() {
-        _flights = List<Flight>.from(widget.flightsNotifier.value);
-        _sortFlights();
+        _allFlights = List<Flight>.from(widget.flightsNotifier.value);
+        _sortAllFlights();
+        _updateYears();
+        _applyFilters();
       });
     };
     widget.flightsNotifier.addListener(_listener);
@@ -68,9 +144,11 @@ class _FlightScreenState extends State<FlightScreen> {
       MaterialPageRoute(builder: (_) => const AddFlightScreen()),
     );
     if (newFlight != null) {
-      _flights = List<Flight>.from(_flights)..add(newFlight);
-      _sortFlights();
-      widget.flightsNotifier.value = List<Flight>.from(_flights);
+      _allFlights = List<Flight>.from(_allFlights)..add(newFlight);
+      _sortAllFlights();
+      _updateYears();
+      _applyFilters();
+      widget.flightsNotifier.value = List<Flight>.from(_allFlights);
       await widget.onFlightsChanged();
     }
   }
@@ -82,21 +160,34 @@ class _FlightScreenState extends State<FlightScreen> {
       ),
     );
     if (result is Flight) {
+      final originalId = _flights[index].id;
       _flights[index] = result;
-      _sortFlights();
-      widget.flightsNotifier.value = List<Flight>.from(_flights);
+      final allIndex =
+          _allFlights.indexWhere((f) => f.id == originalId);
+      if (allIndex != -1) _allFlights[allIndex] = result;
+      _sortAllFlights();
+      _updateYears();
+      _applyFilters();
+      widget.flightsNotifier.value = List<Flight>.from(_allFlights);
       await widget.onFlightsChanged();
     } else if (result == 'delete') {
+      final originalId = _flights[index].id;
       _flights = List<Flight>.from(_flights)..removeAt(index);
-      widget.flightsNotifier.value = List<Flight>.from(_flights);
+      _allFlights.removeWhere((f) => f.id == originalId);
+      _updateYears();
+      _applyFilters();
+      widget.flightsNotifier.value = List<Flight>.from(_allFlights);
       await widget.onFlightsChanged();
     }
   }
 
   void _toggleFavorite(int index) {
     final flight = _flights[index];
-    _flights[index] = flight.copyWith(isFavorite: !flight.isFavorite);
-    widget.flightsNotifier.value = List<Flight>.from(_flights);
+    final updated = flight.copyWith(isFavorite: !flight.isFavorite);
+    _flights[index] = updated;
+    final allIndex = _allFlights.indexWhere((f) => f.id == flight.id);
+    if (allIndex != -1) _allFlights[allIndex] = updated;
+    widget.flightsNotifier.value = List<Flight>.from(_allFlights);
     widget.onFlightsChanged();
   }
 
@@ -110,13 +201,23 @@ class _FlightScreenState extends State<FlightScreen> {
       ),
     );
     if (result is Flight) {
+      final originalId = _flights[index].id;
       _flights[index] = result;
-      _sortFlights();
-      widget.flightsNotifier.value = List<Flight>.from(_flights);
+      final allIndex =
+          _allFlights.indexWhere((f) => f.id == originalId);
+      if (allIndex != -1) _allFlights[allIndex] = result;
+      _sortAllFlights();
+      _updateYears();
+      _applyFilters();
+      widget.flightsNotifier.value = List<Flight>.from(_allFlights);
       await widget.onFlightsChanged();
     } else if (result == 'delete') {
+      final originalId = _flights[index].id;
       _flights = List<Flight>.from(_flights)..removeAt(index);
-      widget.flightsNotifier.value = List<Flight>.from(_flights);
+      _allFlights.removeWhere((f) => f.id == originalId);
+      _updateYears();
+      _applyFilters();
+      widget.flightsNotifier.value = List<Flight>.from(_allFlights);
       await widget.onFlightsChanged();
     }
   }
@@ -127,14 +228,16 @@ class _FlightScreenState extends State<FlightScreen> {
       appBar: SkyBookAppBar(
         title: 'Flights',
         actions: [
+          _buildYearMenu(),
           PopupMenuButton<_FlightSortOrder>(
             icon: const Icon(Icons.sort),
             onSelected: (order) {
               setState(() {
                 _sortOrder = order;
-                _sortFlights();
+                _sortAllFlights();
+                _applyFilters();
               });
-              widget.flightsNotifier.value = List<Flight>.from(_flights);
+              widget.flightsNotifier.value = List<Flight>.from(_allFlights);
             },
             itemBuilder: (context) => const [
               PopupMenuItem(
