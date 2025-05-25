@@ -124,11 +124,23 @@ class _SkyBookAppState extends State<SkyBookApp> {
       theme: ThemeData(
         colorScheme: _lightColorScheme,
         textTheme: GoogleFonts.robotoTextTheme(),
+        dialogTheme: DialogTheme(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: _lightColorScheme.surfaceVariant,
+        ),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
         colorScheme: _darkColorScheme,
         textTheme: GoogleFonts.robotoTextTheme(ThemeData.dark().textTheme),
+        dialogTheme: DialogTheme(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: _darkColorScheme.surfaceVariant,
+        ),
         useMaterial3: true,
         brightness: Brightness.dark,
       ),

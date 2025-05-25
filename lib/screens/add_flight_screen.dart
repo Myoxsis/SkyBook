@@ -11,6 +11,7 @@ import '../data/airline_data.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../utils/text_formatters.dart';
 import '../utils/carbon_utils.dart';
+import '../widgets/app_dialog.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -190,7 +191,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Future<void> _delete() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => AppDialog(
         title: const Text('Delete Flight'),
         content: const Text('Are you sure you want to delete this flight?'),
         actions: [
