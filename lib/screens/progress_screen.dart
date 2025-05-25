@@ -200,7 +200,7 @@ class _ProgressScreenState extends State<ProgressScreen>
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: Icon(
-                      Icons.emoji_events,
+                      a.icon,
                       color: a.achieved ? Colors.amber : Colors.grey,
                     ),
                   ),
