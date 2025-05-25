@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'dart:math' as math;
 import '../models/flight.dart';
 import '../models/aircraft.dart';
 import '../models/airport.dart';
@@ -36,6 +38,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
 
   double? _distanceKm;
 
+  LatLng? _originLatLng;
+  LatLng? _destinationLatLng;
+
   Aircraft? _selectedAircraft;
   Airline? _selectedAirline;
 
@@ -52,12 +57,45 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           LatLng(dest.latitude, dest.longitude));
       setState(() {
         _distanceKm = km;
+        _originLatLng = LatLng(origin.latitude, origin.longitude);
+        _destinationLatLng = LatLng(dest.latitude, dest.longitude);
       });
     } else {
       setState(() {
         _distanceKm = null;
+        _originLatLng = null;
+        _destinationLatLng = null;
       });
     }
+  }
+
+  List<LatLng> _arcPoints(LatLng start, LatLng end) {
+    const steps = 50;
+    final latDiff = end.latitude - start.latitude;
+    final lonDiff = end.longitude - start.longitude;
+    final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
+    if (distance == 0) {
+      return [start, end];
+    }
+    final perpLat = -lonDiff;
+    final perpLon = latDiff;
+    final norm = math.sqrt(perpLat * perpLat + perpLon * perpLon);
+    if (norm == 0) {
+      return [start, end];
+    }
+    final offsetLat = perpLat / norm;
+    final offsetLon = perpLon / norm;
+    final amp = distance * 0.2;
+
+    final pts = <LatLng>[];
+    for (var i = 0; i <= steps; i++) {
+      final t = i / steps;
+      final curve = math.sin(math.pi * t);
+      final lat = start.latitude + latDiff * t + offsetLat * amp * curve;
+      final lon = start.longitude + lonDiff * t + offsetLon * amp * curve;
+      pts.add(LatLng(lat, lon));
+    }
+    return pts;
   }
 
   @override
@@ -422,6 +460,93 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text('Distance: ${_distanceKm!.round()} km'),
+              ),
+            if (_distanceKm != null)
+              SizedBox(
+                height: 200,
+                child: Builder(
+                  builder: (context) {
+                    final markers = <Marker>[];
+                    if (_originLatLng != null) {
+                      markers.add(
+                        Marker(
+                          point: _originLatLng!,
+                          width: 30,
+                          height: 30,
+                          builder: (_) => Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: const Icon(
+                              Icons.flight_takeoff,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    if (_destinationLatLng != null) {
+                      markers.add(
+                        Marker(
+                          point: _destinationLatLng!,
+                          width: 30,
+                          height: 30,
+                          builder: (_) => Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: const Icon(
+                              Icons.flight_land,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final lines = <Polyline>[];
+                    if (_originLatLng != null && _destinationLatLng != null) {
+                      lines.add(
+                        Polyline(
+                          points: _arcPoints(_originLatLng!, _destinationLatLng!),
+                          color: Theme.of(context).colorScheme.secondary,
+                          strokeWidth: 3,
+                        ),
+                      );
+                    }
+
+                    final center = _originLatLng != null && _destinationLatLng != null
+                        ? LatLng(
+                            (_originLatLng!.latitude + _destinationLatLng!.latitude) / 2,
+                            (_originLatLng!.longitude + _destinationLatLng!.longitude) / 2,
+                          )
+                        : _originLatLng ?? _destinationLatLng ?? LatLng(20, 0);
+
+                    return FlutterMap(
+                      options: MapOptions(
+                        center: center,
+                        zoom: 3,
+                        interactiveFlags: InteractiveFlag.pinchZoom |
+                            InteractiveFlag.drag |
+                            InteractiveFlag.doubleTapZoom,
+                      ),
+                      children: [
+                        TileLayer(
+                          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName: 'com.example.app',
+                        ),
+                        if (lines.isNotEmpty) PolylineLayer(polylines: lines),
+                        if (markers.isNotEmpty) MarkerLayer(markers: markers),
+                      ],
+                    );
+                  },
+                ),
               ),
             TextFormField(
               controller: _durationController,
