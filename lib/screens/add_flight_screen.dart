@@ -12,6 +12,7 @@ import '../data/aircraft_data.dart';
 import '../data/airline_data.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../utils/text_formatters.dart';
+import '../utils/carbon_utils.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -39,6 +40,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   String _seatLocation = 'Window';
 
   double? _distanceKm;
+  double? _carbonKg;
 
   LatLng? _originLatLng;
   LatLng? _destinationLatLng;
@@ -59,12 +61,18 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           LatLng(dest.latitude, dest.longitude));
       setState(() {
         _distanceKm = km;
+        _carbonKg = estimateEmissions(
+          km,
+          _selectedAircraft?.display ?? _aircraftController.text,
+          _travelClass,
+        );
         _originLatLng = LatLng(origin.latitude, origin.longitude);
         _destinationLatLng = LatLng(dest.latitude, dest.longitude);
       });
     } else {
       setState(() {
         _distanceKm = null;
+        _carbonKg = null;
         _originLatLng = null;
         _destinationLatLng = null;
       });
@@ -135,6 +143,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _travelClass = flight.travelClass.isNotEmpty ? flight.travelClass : 'Economy';
       _seatNumberController.text = flight.seatNumber;
       _seatLocation = flight.seatLocation.isNotEmpty ? flight.seatLocation : 'Window';
+      _carbonKg = flight.carbonKg > 0 ? flight.carbonKg : null;
     } else {
       _selectedAircraft = aircrafts.first;
       _aircraftController.text = _selectedAircraft!.display;
@@ -191,6 +200,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       seatNumber: _seatNumberController.text,
       seatLocation: _seatLocation,
       distanceKm: _distanceKm ?? widget.flight?.distanceKm ?? 0,
+      carbonKg: _carbonKg ?? widget.flight?.carbonKg ?? 0,
       isFavorite: widget.flight?.isFavorite ?? false,
     );
     Navigator.of(context).pop(flight);
