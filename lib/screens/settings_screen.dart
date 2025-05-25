@@ -8,12 +8,14 @@ class SettingsScreen extends StatefulWidget {
   final bool darkMode;
   final VoidCallback onToggleTheme;
   final VoidCallback? onClearData;
+  final ValueNotifier<bool> premiumNotifier;
 
   const SettingsScreen({
     super.key,
     required this.darkMode,
     required this.onToggleTheme,
     this.onClearData,
+    required this.premiumNotifier,
   });
 
   @override
@@ -22,13 +24,11 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _developerMode = false;
-  bool _premium = false;
 
   @override
   void initState() {
     super.initState();
     _loadDeveloperMode();
-    _loadPremium();
   }
 
   Future<void> _loadDeveloperMode() async {
@@ -36,15 +36,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) {
       setState(() {
         _developerMode = saved;
-      });
-    }
-  }
-
-  Future<void> _loadPremium() async {
-    final saved = await PremiumStorage.loadPremium();
-    if (mounted) {
-      setState(() {
-        _premium = saved;
       });
     }
   }
@@ -72,14 +63,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             value: widget.darkMode,
             onChanged: (_) => widget.onToggleTheme(),
           ),
-          SwitchListTile(
-            title: const Text('Premium'),
-            value: _premium,
-            onChanged: (val) {
-              setState(() {
-                _premium = val;
-              });
-              PremiumStorage.savePremium(val);
+          ValueListenableBuilder<bool>(
+            valueListenable: widget.premiumNotifier,
+            builder: (context, value, _) {
+              return SwitchListTile(
+                title: const Text('Premium'),
+                value: value,
+                onChanged: (val) {
+                  widget.premiumNotifier.value = val;
+                  PremiumStorage.savePremium(val);
+                },
+              );
             },
           ),
           SwitchListTile(
