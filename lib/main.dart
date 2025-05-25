@@ -39,6 +39,16 @@ class _SkyBookAppState extends State<SkyBookApp> {
   final GlobalKey<ScaffoldMessengerState> _messengerKey = GlobalKey<ScaffoldMessengerState>();
   final Map<String, DateTime> _unlockedAchievements = {};
 
+  void _showAchievementDialog(Achievement achievement) {
+    final context = _messengerKey.currentContext;
+    if (context != null) {
+      showDialog(
+        context: context,
+        builder: (_) => AchievementDialog(achievement: achievement),
+      );
+    }
+  }
+
   void _updateAchievements() {
     final newAchievements =
         calculateAchievements(_flightsNotifier.value, _unlockedAchievements);
@@ -47,14 +57,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
         final now = DateTime.now();
         _unlockedAchievements[a.id] = now;
         AchievementStorage.saveUnlocked(a.id, now);
-
-        final context = _messengerKey.currentContext;
-        if (context != null) {
-          showDialog(
-            context: context,
-            builder: (_) => AchievementDialog(achievement: a),
-          );
-        }
+        _showAchievementDialog(a);
       }
     }
   }
