@@ -25,8 +25,17 @@ class FlightDetailScreen extends StatelessWidget {
 
   List<LatLng> _arcPoints(LatLng start, LatLng end) {
     const steps = 50;
+    var startLon = start.longitude;
+    var endLon = end.longitude;
+    if ((endLon - startLon).abs() > 180) {
+      if (startLon > endLon) {
+        endLon += 360;
+      } else {
+        startLon += 360;
+      }
+    }
     final latDiff = end.latitude - start.latitude;
-    final lonDiff = end.longitude - start.longitude;
+    final lonDiff = endLon - startLon;
     final distance = math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
     if (distance == 0) return [start, end];
     final perpLat = -lonDiff;
@@ -41,7 +50,9 @@ class FlightDetailScreen extends StatelessWidget {
       final t = i / steps;
       final curve = math.sin(math.pi * t);
       final lat = start.latitude + latDiff * t + offsetLat * amp * curve;
-      final lon = start.longitude + lonDiff * t + offsetLon * amp * curve;
+      var lon = startLon + lonDiff * t + offsetLon * amp * curve;
+      if (lon > 180) lon -= 360;
+      if (lon < -180) lon += 360;
       pts.add(LatLng(lat, lon));
     }
     return pts;
@@ -67,13 +78,22 @@ class FlightDetailScreen extends StatelessWidget {
       if (p.longitude > maxLon) maxLon = p.longitude;
     }
 
+    double diffLon = (maxLon - minLon).abs();
+    double centerLon;
+    if (diffLon > 180) {
+      diffLon = 360 - diffLon;
+      centerLon = (minLon + maxLon + 360) / 2;
+      if (centerLon > 180) centerLon -= 360;
+    } else {
+      centerLon = (minLon + maxLon) / 2;
+    }
+
     final center = LatLng(
       (minLat + maxLat) / 2,
-      (minLon + maxLon) / 2,
+      centerLon,
     );
 
     final diffLat = (maxLat - minLat).abs();
-    final diffLon = (maxLon - minLon).abs();
     final diff = math.max(diffLat, diffLon);
     var zoom = (math.log(360 / diff) / math.ln2) + 1;
     if (zoom.isNaN || zoom.isInfinite) zoom = 3;
