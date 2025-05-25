@@ -493,10 +493,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               value: _travelClass,
               decoration: const InputDecoration(labelText: 'Class'),
               items: const [
-                DropdownMenuItem(value: 'Economy', child: Text('Economy')),
-                DropdownMenuItem(value: 'Premium', child: Text('Premium')),
-                DropdownMenuItem(value: 'Business', child: Text('Business')),
-                DropdownMenuItem(value: 'First', child: Text('First')),
+                const DropdownMenuItem(value: 'Economy', child: Text('Economy')),
+                const DropdownMenuItem(value: 'Premium', child: Text('Premium')),
+                const DropdownMenuItem(value: 'Business', child: Text('Business')),
+                const DropdownMenuItem(value: 'First', child: Text('First')),
               ],
               onChanged: (value) {
                 if (value != null) {
@@ -514,9 +514,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               value: _seatLocation,
               decoration: const InputDecoration(labelText: 'Seat Location'),
               items: const [
-                DropdownMenuItem(value: 'Window', child: Text('Window')),
-                DropdownMenuItem(value: 'Middle', child: Text('Middle')),
-                DropdownMenuItem(value: 'Aisle', child: Text('Aisle')),
+                const DropdownMenuItem(value: 'Window', child: Text('Window')),
+                const DropdownMenuItem(value: 'Middle', child: Text('Middle')),
+                const DropdownMenuItem(value: 'Aisle', child: Text('Aisle')),
               ],
               onChanged: (value) {
                 if (value != null) {
