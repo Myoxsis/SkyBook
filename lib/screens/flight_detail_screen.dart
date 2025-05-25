@@ -13,16 +13,19 @@ import 'package:share_plus/share_plus.dart';
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
   final ValueNotifier<bool> premiumNotifier;
+  final List<Flight> flights;
 
   const FlightDetailScreen({
     super.key,
     required this.flight,
     required this.premiumNotifier,
+    required this.flights,
   });
 
   Future<void> _edit(BuildContext context) async {
     final result = await Navigator.of(context).push<dynamic>(
-      MaterialPageRoute(builder: (_) => AddFlightScreen(flight: flight)),
+      MaterialPageRoute(
+          builder: (_) => AddFlightScreen(flight: flight, flights: flights)),
     );
     if (result != null) {
       Navigator.of(context).pop(result);
