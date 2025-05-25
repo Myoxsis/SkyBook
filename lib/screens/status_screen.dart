@@ -6,6 +6,7 @@ import '../data/airport_data.dart';
 import '../widgets/class_pie_chart.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/flight_line_chart.dart';
+import '../models/premium_storage.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -24,11 +25,13 @@ class StatusScreen extends StatefulWidget {
 class _StatusScreenState extends State<StatusScreen> {
   List<Flight> _flights = [];
   late VoidCallback _listener;
+  bool _premium = false;
 
   @override
   void initState() {
     super.initState();
     _flights = widget.flightsNotifier.value;
+    _loadPremium();
     _listener = () {
       setState(() {
         _flights = widget.flightsNotifier.value;
@@ -41,6 +44,15 @@ class _StatusScreenState extends State<StatusScreen> {
   void dispose() {
     widget.flightsNotifier.removeListener(_listener);
     super.dispose();
+  }
+
+  Future<void> _loadPremium() async {
+    final saved = await PremiumStorage.loadPremium();
+    if (mounted) {
+      setState(() {
+        _premium = saved;
+      });
+    }
   }
 
   Future<void> refresh() async {
@@ -170,23 +182,26 @@ class _StatusScreenState extends State<StatusScreen> {
                   label: 'Total duration',
                   value: '${_totalDuration.toStringAsFixed(1)} hrs',
                 ),
-                _StatusTile(
-                  icon: Icons.cloud,
-                  label: 'Total CO₂',
-                  value: '${_totalCarbon.round()} kg',
-                ),
+                if (_premium)
+                  _StatusTile(
+                    icon: Icons.cloud,
+                    label: 'Total CO₂',
+                    value: '${_totalCarbon.round()} kg',
+                  ),
               ],
             ),
-            const SizedBox(height: 24),
-            _buildMonthlyChart(),
-            const SizedBox(height: 24),
-            _buildAircraftChart(),
-            const SizedBox(height: 24),
-            _buildAirlineChart(),
-            const SizedBox(height: 24),
-            _buildCountryChart(),
-            const SizedBox(height: 24),
-            _buildClassChart(),
+            if (_premium) ...[
+              const SizedBox(height: 24),
+              _buildMonthlyChart(),
+              const SizedBox(height: 24),
+              _buildAircraftChart(),
+              const SizedBox(height: 24),
+              _buildAirlineChart(),
+              const SizedBox(height: 24),
+              _buildCountryChart(),
+              const SizedBox(height: 24),
+              _buildClassChart(),
+            ],
           ],
         ),
       ),

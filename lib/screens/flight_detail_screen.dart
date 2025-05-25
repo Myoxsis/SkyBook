@@ -8,6 +8,7 @@ import '../data/airport_data.dart';
 import 'add_flight_screen.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/info_row.dart';
+import '../models/premium_storage.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
@@ -136,10 +137,20 @@ class FlightDetailScreen extends StatelessWidget {
       items.add(InfoRow(title: 'Distance', value: '${flight.distanceKm.round()} km', icon: Icons.straighten));
     }
     if (flight.carbonKg > 0) {
-      items.add(InfoRow(
-          title: 'CO₂ per passenger',
-          value: '${flight.carbonKg.round()} kg',
-          icon: Icons.cloud));
+      items.add(
+        FutureBuilder<bool>(
+          future: PremiumStorage.loadPremium(),
+          builder: (context, snapshot) {
+            final premium = snapshot.data ?? false;
+            if (!premium) return const SizedBox.shrink();
+            return InfoRow(
+              title: 'CO₂ per passenger',
+              value: '${flight.carbonKg.round()} kg',
+              icon: Icons.cloud,
+            );
+          },
+        ),
+      );
     }
     if (flight.travelClass.isNotEmpty) {
       items.add(InfoRow(title: 'Class', value: flight.travelClass, icon: Icons.chair));

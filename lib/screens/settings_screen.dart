@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../models/developer_storage.dart';
+import '../models/premium_storage.dart';
 
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
@@ -21,11 +22,13 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _developerMode = false;
+  bool _premium = false;
 
   @override
   void initState() {
     super.initState();
     _loadDeveloperMode();
+    _loadPremium();
   }
 
   Future<void> _loadDeveloperMode() async {
@@ -33,6 +36,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) {
       setState(() {
         _developerMode = saved;
+      });
+    }
+  }
+
+  Future<void> _loadPremium() async {
+    final saved = await PremiumStorage.loadPremium();
+    if (mounted) {
+      setState(() {
+        _premium = saved;
       });
     }
   }
@@ -59,6 +71,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Dark Mode'),
             value: widget.darkMode,
             onChanged: (_) => widget.onToggleTheme(),
+          ),
+          SwitchListTile(
+            title: const Text('Premium'),
+            value: _premium,
+            onChanged: (val) {
+              setState(() {
+                _premium = val;
+              });
+              PremiumStorage.savePremium(val);
+            },
           ),
           SwitchListTile(
             title: const Text('Developer section'),
