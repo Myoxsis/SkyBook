@@ -3,20 +3,8 @@ import '../models/airport.dart';
 /// List of major airports grouped by geographic region.
 const List<Airport> airports = [
   // North America
-  Airport(
-      code: 'JFK',
-      name: 'New York John F. Kennedy',
-      country: 'United States',
-      region: 'North America',
-      latitude: 40.6413,
-      longitude: -73.7781),
-  Airport(
-      code: 'LAX',
-      name: 'Los Angeles',
-      country: 'United States',
-      region: 'North America',
-      latitude: 33.9416,
-      longitude: -118.4085),
+  Airport(code: 'JFK', name: 'New York John F. Kennedy', country: 'United States', region: 'North America', latitude: 40.6413, longitude: -73.7781),
+  Airport(code: 'LAX', name: 'Los Angeles', country: 'United States', region: 'North America', latitude: 33.9416, longitude: -118.4085),
   Airport(
       code: 'YYZ',
       name: 'Toronto Pearson',
