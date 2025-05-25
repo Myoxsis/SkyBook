@@ -150,6 +150,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       travelClass: _travelClass,
       seatNumber: _seatNumberController.text,
       seatLocation: _seatLocation,
+      distanceKm: _distanceKm ?? widget.flight?.distanceKm ?? 0,
       isFavorite: widget.flight?.isFavorite ?? false,
     );
     Navigator.of(context).pop(flight);

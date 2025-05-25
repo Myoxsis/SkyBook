@@ -26,9 +26,8 @@ Achievement _progress(
 
 List<Achievement> calculateAchievements(List<Flight> flights,
     [Map<String, DateTime> unlocked = const {}]) {
-  final distance = const Distance();
   final totalFlights = flights.length;
-
+  final distance = const Distance();
   double totalKm = 0;
   final airportsVisited = <String>{};
   final countriesVisited = <String>{};
@@ -44,7 +43,9 @@ List<Achievement> calculateAchievements(List<Flight> flights,
       airportsVisited.add(dest.code);
       countriesVisited.add(dest.country);
     }
-    if (origin != null && dest != null) {
+    if (f.distanceKm > 0) {
+      totalKm += f.distanceKm;
+    } else if (origin != null && dest != null) {
       final start = LatLng(origin.latitude, origin.longitude);
       final end = LatLng(dest.latitude, dest.longitude);
       totalKm += distance.as(LengthUnit.Kilometer, start, end);

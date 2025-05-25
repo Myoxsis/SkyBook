@@ -91,6 +91,7 @@ class _FlightScreenState extends State<FlightScreen> {
       travelClass: flight.travelClass,
       seatNumber: flight.seatNumber,
       seatLocation: flight.seatLocation,
+      distanceKm: flight.distanceKm,
       isFavorite: !flight.isFavorite,
     );
     widget.flightsNotifier.value = list;

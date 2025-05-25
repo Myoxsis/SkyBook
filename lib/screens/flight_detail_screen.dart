@@ -42,6 +42,9 @@ class FlightDetailScreen extends StatelessWidget {
     if (flight.duration.isNotEmpty) {
       items.add(_tile('Duration', '${flight.duration}h'));
     }
+    if (flight.distanceKm > 0) {
+      items.add(_tile('Distance', '${flight.distanceKm.round()} km'));
+    }
     if (flight.travelClass.isNotEmpty) {
       items.add(_tile('Class', flight.travelClass));
     }
