@@ -5,6 +5,7 @@ import '../models/flight_storage.dart';
 import '../data/airport_data.dart';
 import '../widgets/class_pie_chart.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../widgets/flight_line_chart.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -121,6 +122,19 @@ class _StatusScreenState extends State<StatusScreen> {
     return counts;
   }
 
+  Map<DateTime, int> get _monthlyFlightCounts {
+    final counts = <DateTime, int>{};
+    for (final f in _flights) {
+      final date = DateTime.tryParse(f.date);
+      if (date != null) {
+        final key = DateTime(date.year, date.month);
+        counts[key] = (counts[key] ?? 0) + 1;
+      }
+    }
+    final keys = counts.keys.toList()..sort();
+    return {for (final k in keys) k: counts[k]!};
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,6 +177,8 @@ class _StatusScreenState extends State<StatusScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 24),
+            _buildMonthlyChart(),
             const SizedBox(height: 24),
             _buildAircraftChart(),
             const SizedBox(height: 24),
@@ -255,6 +271,22 @@ class _StatusScreenState extends State<StatusScreen> {
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         ClassPieChart(counts: _classCount),
+      ],
+    );
+  }
+
+  Widget _buildMonthlyChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Flights per Month',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        FlightLineChart(counts: _monthlyFlightCounts),
       ],
     );
   }
