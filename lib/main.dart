@@ -52,7 +52,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
         if (context != null) {
           showDialog(
             context: context,
-            builder: (_) => AchievementDialog(title: a.title),
+            builder: (_) => AchievementDialog(achievement: a),
           );
         }
       }
