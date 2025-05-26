@@ -38,11 +38,15 @@ class FlightTile extends StatelessWidget {
         url,
         width: 32,
         height: 32,
-        errorBuilder: (context, error, stackTrace) =>
-            const Icon(Icons.flight, size: 32),
+        semanticLabel: 'Airline logo',
+        errorBuilder: (context, error, stackTrace) => const Icon(
+          Icons.flight,
+          size: 32,
+          semanticLabel: 'Flight',
+        ),
       );
     }
-    return const Icon(Icons.flight, size: 32);
+    return const Icon(Icons.flight, size: 32, semanticLabel: 'Flight');
   }
 
   @override
@@ -71,6 +75,9 @@ class FlightTile extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       flight.isFavorite ? Icons.star : Icons.star_border,
+                      semanticLabel: flight.isFavorite
+                          ? 'Unfavorite flight'
+                          : 'Favorite flight',
                     ),
                     onPressed: onToggleFavorite,
                   ),
@@ -107,7 +114,8 @@ class FlightTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.schedule, size: 16),
+                    const Icon(Icons.schedule,
+                        size: 16, semanticLabel: 'Duration'),
                     const SizedBox(width: 4),
                     Text(
                       '${flight.duration}h',
@@ -116,7 +124,8 @@ class FlightTile extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.edit),
+                  icon:
+                      const Icon(Icons.edit, semanticLabel: 'Edit flight'),
                   onPressed: onEdit,
                 ),
               ],

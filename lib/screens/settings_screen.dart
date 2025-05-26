@@ -100,7 +100,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (!premium) return const SizedBox.shrink();
               return ListTile(
                 title: const Text('Import / Export'),
-                trailing: const Icon(Icons.file_upload),
+                trailing: const Icon(Icons.file_upload,
+                    semanticLabel: 'Import or export data'),
                 onTap: _openDataManagement,
               );
             },
@@ -119,7 +120,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ListTile(
               title: const Text('Remove local data'),
               subtitle: const Text('Used for debugging'),
-              trailing: const Icon(Icons.delete),
+              trailing:
+                  const Icon(Icons.delete, semanticLabel: 'Delete data'),
               onTap: _clearData,
             ),
           const Divider(),

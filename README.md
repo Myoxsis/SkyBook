@@ -23,6 +23,8 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
 - Custom badge images are included under `assets/badges` for achievements
 - The iOS app icon is generated from `assets/logo.png`
 - Fonts scale with the device's text size thanks to Flutter's `TextTheme` and `MediaQuery`
+- Icons and progress indicators include semantic labels and all tap targets are at least 48×48 dp
+- Light and dark themes have been tested for contrast and readability
 
 ## Getting Started
 

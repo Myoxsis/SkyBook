@@ -35,9 +35,15 @@ class Achievement {
         width: size,
         height: size,
         color: color,
+        semanticLabel: title,
       );
     }
-    return Icon(icon, color: color, size: size);
+    return Icon(
+      icon,
+      color: color,
+      size: size,
+      semanticLabel: title,
+    );
   }
 }
 

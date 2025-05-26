@@ -46,11 +46,13 @@ class _AchievementDialogState extends State<AchievementDialog>
                     widget.achievement.assetPath!,
                     width: 48,
                     height: 48,
+                    semanticLabel: widget.achievement.title,
                   )
                 : Icon(
                     widget.achievement.icon,
                     color: Theme.of(context).colorScheme.secondary,
                     size: 48,
+                    semanticLabel: widget.achievement.title,
                   ),
           ),
           const SizedBox(width: 16),

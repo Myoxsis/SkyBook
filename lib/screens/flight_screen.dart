@@ -70,7 +70,7 @@ class _FlightScreenState extends State<FlightScreen> {
 
   Widget _buildYearMenu() {
     return PopupMenuButton<int?>(
-      icon: const Icon(Icons.filter_alt),
+      icon: const Icon(Icons.filter_alt, semanticLabel: 'Filter by year'),
       tooltip: 'Filter by year',
       onSelected: (year) {
         setState(() {
@@ -86,7 +86,7 @@ class _FlightScreenState extends State<FlightScreen> {
             child: Row(
               children: [
                 if (_yearFilter == null) ...[
-                  const Icon(Icons.check, size: 16),
+                  const Icon(Icons.check, size: 16, semanticLabel: 'Selected'),
                   const SizedBox(width: 8),
                 ],
                 const Text('All'),
@@ -101,7 +101,7 @@ class _FlightScreenState extends State<FlightScreen> {
               child: Row(
                 children: [
                   if (_yearFilter == y) ...[
-                    const Icon(Icons.check, size: 16),
+                    const Icon(Icons.check, size: 16, semanticLabel: 'Selected'),
                     const SizedBox(width: 8),
                   ],
                   Text(y.toString()),
@@ -235,7 +235,7 @@ class _FlightScreenState extends State<FlightScreen> {
         actions: [
           _buildYearMenu(),
           PopupMenuButton<_FlightSortOrder>(
-            icon: const Icon(Icons.sort),
+            icon: const Icon(Icons.sort, semanticLabel: 'Sort'),
             onSelected: (order) {
               setState(() {
                 _sortOrder = order;
@@ -256,7 +256,8 @@ class _FlightScreenState extends State<FlightScreen> {
             ],
           ),
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon:
+                const Icon(Icons.settings, semanticLabel: 'Open settings'),
             onPressed: widget.onOpenSettings,
           ),
         ],
@@ -265,7 +266,7 @@ class _FlightScreenState extends State<FlightScreen> {
           FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: _addFlight,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, semanticLabel: 'Add flight'),
       ),
       body: ListView.builder(
         itemCount: _flights.length,

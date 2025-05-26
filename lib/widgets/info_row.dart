@@ -17,7 +17,11 @@ class InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final children = <Widget>[];
     if (icon != null) {
-      children.add(Icon(icon, color: Theme.of(context).colorScheme.primary));
+      children.add(Icon(
+        icon,
+        color: Theme.of(context).colorScheme.primary,
+        semanticLabel: title,
+      ));
       children.add(const SizedBox(width: 12));
     }
     children.add(
