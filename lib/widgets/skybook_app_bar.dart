@@ -24,7 +24,12 @@ class SkyBookAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Image.asset('assets/logo_r.png', height: kToolbarHeight - 16),
           const SizedBox(width: 8),
-          Text(title),
+          Expanded(
+            child: Text(
+              title,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
       actions: actions,
