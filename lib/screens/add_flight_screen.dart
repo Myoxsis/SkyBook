@@ -12,6 +12,7 @@ import '../widgets/skybook_app_bar.dart';
 import '../utils/text_formatters.dart';
 import '../utils/carbon_utils.dart';
 import '../widgets/app_dialog.dart';
+import '../constants.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -263,7 +264,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             child: SizedBox(
               height: 200,
               child: ListView.builder(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(AppSpacing.xs),
                 itemCount: options.length,
                 itemBuilder: (context, index) {
                   final Airport option = options.elementAt(index);
@@ -325,7 +326,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             child: SizedBox(
               height: 200,
               child: ListView.builder(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(AppSpacing.xs),
                 itemCount: options.length,
                 itemBuilder: (context, index) {
                   final Aircraft option = options.elementAt(index);
@@ -377,7 +378,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Widget _buildFlightInfoCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -403,7 +404,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             _buildFlightNumberField(),
             if (_selectedAirline != null)
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
                 child: Row(
                   children: [
                     Image.network(
@@ -430,7 +431,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Widget _buildRouteDetailsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -453,7 +454,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             ),
             if (_distanceKm != null)
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
                 child: Text(
                   'Distance: ${_distanceKm!.round()} km',
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -468,7 +469,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Widget _buildTravelDetailsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -546,7 +547,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Widget _buildNotesCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -570,7 +571,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         title: widget.flight == null ? 'Add Flight' : 'Edit Flight',
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Form(
           key: _formKey,
           child: ListView(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/flight.dart';
+import '../constants.dart';
 
 class FlightTile extends StatelessWidget {
   final Flight flight;
@@ -47,7 +48,7 @@ class FlightTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: _colorForClass(context),
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -56,7 +57,7 @@ class FlightTile extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(AppSpacing.xs),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

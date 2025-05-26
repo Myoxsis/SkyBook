@@ -8,6 +8,7 @@ import '../data/airport_data.dart';
 import 'add_flight_screen.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/info_row.dart';
+import '../constants.dart';
 import 'package:share_plus/share_plus.dart';
 
 class FlightDetailScreen extends StatelessWidget {
@@ -62,7 +63,7 @@ class FlightDetailScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
           ),
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(AppSpacing.xxs),
           child: const Icon(Icons.flight_takeoff, size: 16, color: Colors.white),
         ),
       ),
@@ -75,7 +76,7 @@ class FlightDetailScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
           ),
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(AppSpacing.xxs),
           child: const Icon(Icons.flight_land, size: 16, color: Colors.white),
         ),
       ),
@@ -187,7 +188,7 @@ class FlightDetailScreen extends StatelessWidget {
     if (flight.notes.isNotEmpty) {
       items.add(
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.s),
           child: Text(flight.notes),
         ),
       );
@@ -208,7 +209,7 @@ class FlightDetailScreen extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         children: items,
       ),
     );

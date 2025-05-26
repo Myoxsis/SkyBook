@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants.dart';
 
 class InfoRow extends StatelessWidget {
   final String title;
@@ -33,9 +34,9 @@ class InfoRow extends StatelessWidget {
     );
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSpacing.xs + AppSpacing.xxs),
         child: Row(children: children),
       ),
     );

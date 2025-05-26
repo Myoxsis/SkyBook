@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../widgets/skybook_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/app_dialog.dart';
+import '../constants.dart';
 
 class ProgressScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -121,7 +122,7 @@ class _ProgressScreenState extends State<ProgressScreen>
         onRefresh: _reloadFromStorage,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.s),
           children: [
             _buildProgressSection(),
           ],
@@ -152,7 +153,7 @@ class _ProgressScreenState extends State<ProgressScreen>
 
     final summaryCard = Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -180,7 +181,7 @@ class _ProgressScreenState extends State<ProgressScreen>
     final List<Widget> items = [summaryCard, const SizedBox(height: 8)]
       ..addAll(filtered.map(
         (a) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
           child: InkWell(
             onTap: () {
               showDialog(
@@ -205,7 +206,7 @@ class _ProgressScreenState extends State<ProgressScreen>
               child: Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: AppSpacing.xs),
                     child: a.assetPath != null
                         ? Image.asset(
                             a.assetPath!,
@@ -250,7 +251,7 @@ class _ProgressScreenState extends State<ProgressScreen>
                   ),
                   if (a.achieved)
                     const Padding(
-                      padding: EdgeInsets.only(left: 8),
+                      padding: EdgeInsets.only(left: AppSpacing.xs),
                       child: Icon(Icons.check, color: Colors.green),
                     ),
                 ],
