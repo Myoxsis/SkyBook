@@ -54,8 +54,10 @@ class Flight {
       'seatLocation': seatLocation,
       'distanceKm': distanceKm,
       'carbonKg': carbonKg,
-      'isFavorite': isFavorite,
-      'isBusiness': isBusiness,
+      // Sqflite does not support boolean values directly. Store booleans as
+      // integers for compatibility.
+      'isFavorite': isFavorite ? 1 : 0,
+      'isBusiness': isBusiness ? 1 : 0,
     };
   }
 
@@ -116,9 +118,17 @@ class Flight {
       seatLocation: map['seatLocation'] as String? ?? '',
       distanceKm: (map['distanceKm'] as num?)?.toDouble() ?? 0,
       carbonKg: (map['carbonKg'] as num?)?.toDouble() ?? 0,
-      isFavorite: map['isFavorite'] as bool? ?? false,
-      isBusiness: map['isBusiness'] as bool? ?? false,
+      isFavorite: _parseBool(map['isFavorite']),
+      isBusiness: _parseBool(map['isBusiness']),
     );
+  }
+
+  /// Converts various representations to a boolean.
+  static bool _parseBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    if (value is String) return value.toLowerCase() == 'true';
+    return false;
   }
 
   static String _manufacturerFromAircraft(String aircraft) {
