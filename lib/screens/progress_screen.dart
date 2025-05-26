@@ -73,7 +73,7 @@ class _ProgressScreenState extends State<ProgressScreen>
 
   Widget _buildStatusMenu() {
     return PopupMenuButton<String>(
-      icon: const Icon(Icons.filter_list),
+      icon: const Icon(Icons.filter_list, semanticLabel: 'Filter list'),
       tooltip: 'Filter achievements',
       onSelected: (value) {
         setState(() {
@@ -87,7 +87,7 @@ class _ProgressScreenState extends State<ProgressScreen>
             child: Row(
               children: [
                 if (_statusFilter == s) ...[
-                  const Icon(Icons.check, size: 16),
+                  const Icon(Icons.check, size: 16, semanticLabel: 'Selected'),
                   const SizedBox(width: 8),
                 ],
                 Text(s),
@@ -113,7 +113,8 @@ class _ProgressScreenState extends State<ProgressScreen>
         actions: [
           _buildStatusMenu(),
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon:
+                const Icon(Icons.settings, semanticLabel: 'Open settings'),
             onPressed: widget.onOpenSettings,
           ),
         ],
@@ -203,6 +204,8 @@ class _ProgressScreenState extends State<ProgressScreen>
                   ),
                 );
               },
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.s),
               child: Row(
                 children: [
                   Padding(
@@ -217,6 +220,7 @@ class _ProgressScreenState extends State<ProgressScreen>
                         : Icon(
                             a.icon,
                             color: a.achieved ? Colors.amber : Colors.grey,
+                            semanticLabel: a.title,
                           ),
                   ),
                   Expanded(
@@ -252,7 +256,8 @@ class _ProgressScreenState extends State<ProgressScreen>
                   if (a.achieved)
                     const Padding(
                       padding: EdgeInsets.only(left: AppSpacing.xs),
-                      child: Icon(Icons.check, color: Colors.green),
+                      child: Icon(Icons.check,
+                          color: Colors.green, semanticLabel: 'Completed'),
                     ),
                 ],
               ),

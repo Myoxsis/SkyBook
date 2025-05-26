@@ -64,7 +64,12 @@ class FlightDetailScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(AppSpacing.xxs),
-          child: const Icon(Icons.flight_takeoff, size: 16, color: Colors.white),
+          child: const Icon(
+            Icons.flight_takeoff,
+            size: 16,
+            color: Colors.white,
+            semanticLabel: 'Origin',
+          ),
         ),
       ),
       Marker(
@@ -77,7 +82,12 @@ class FlightDetailScreen extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           padding: const EdgeInsets.all(AppSpacing.xxs),
-          child: const Icon(Icons.flight_land, size: 16, color: Colors.white),
+          child: const Icon(
+            Icons.flight_land,
+            size: 16,
+            color: Colors.white,
+            semanticLabel: 'Destination',
+          ),
         ),
       ),
     ];
@@ -199,11 +209,11 @@ class FlightDetailScreen extends StatelessWidget {
         title: 'Flight Details',
         actions: [
           IconButton(
-            icon: const Icon(Icons.share),
+            icon: const Icon(Icons.share, semanticLabel: 'Share flight'),
             onPressed: _share,
           ),
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.edit, semanticLabel: 'Edit flight'),
             onPressed: () => _edit(context),
           ),
         ],

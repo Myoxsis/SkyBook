@@ -308,7 +308,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           focusNode: focusNode,
           decoration: const InputDecoration(
             labelText: 'Aircraft',
-            prefixIcon: Icon(Icons.airplanemode_active),
+            prefixIcon:
+                Icon(Icons.airplanemode_active, semanticLabel: 'Aircraft'),
           ),
           onFieldSubmitted: (_) => onFieldSubmitted(),
           validator: (value) {
@@ -371,7 +372,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       controller: _flightNumberController,
       decoration: const InputDecoration(
         labelText: 'Flight Number',
-        prefixIcon: Icon(Icons.flight),
+        prefixIcon: Icon(Icons.flight, semanticLabel: 'Flight number'),
       ),
       onChanged: _updateAirline,
     );
@@ -390,7 +391,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               readOnly: true,
               decoration: const InputDecoration(
                 labelText: 'Date',
-                suffixIcon: Icon(Icons.calendar_today),
+                suffixIcon:
+                    Icon(Icons.calendar_today, semanticLabel: 'Select date'),
               ),
               onTap: _pickDate,
               validator: (value) {
@@ -411,8 +413,11 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                       'https://pics.avs.io/60/60/${_selectedAirline!.code}.png',
                       width: 32,
                       height: 32,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.flight, size: 32),
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.flight,
+                        size: 32,
+                        semanticLabel: 'Flight',
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(

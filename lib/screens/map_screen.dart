@@ -123,7 +123,12 @@ class _MapScreenState extends State<MapScreen> {
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(AppSpacing.xxs),
-              child: const Icon(Icons.flight, size: 16, color: Colors.white),
+              child: const Icon(
+                Icons.flight,
+                size: 16,
+                color: Colors.white,
+                semanticLabel: 'Flight marker',
+              ),
             ),
           ),
         ),
@@ -155,7 +160,8 @@ class _MapScreenState extends State<MapScreen> {
         title: 'Map',
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon:
+                const Icon(Icons.settings, semanticLabel: 'Open settings'),
             onPressed: widget.onOpenSettings,
           ),
         ],
@@ -184,20 +190,18 @@ class _MapScreenState extends State<MapScreen> {
         children: [
           FloatingActionButton(
             heroTag: 'mapZoomIn',
-            mini: true,
             onPressed: () {
               _controller.move(_center, _zoom + 1);
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add, semanticLabel: 'Zoom in'),
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
             heroTag: 'mapZoomOut',
-            mini: true,
             onPressed: () {
               _controller.move(_center, _zoom - 1);
             },
-            child: const Icon(Icons.remove),
+            child: const Icon(Icons.remove, semanticLabel: 'Zoom out'),
           ),
         ],
       ),

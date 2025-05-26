@@ -180,7 +180,8 @@ class _StatusScreenState extends State<StatusScreen> {
         title: 'Status',
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon:
+                const Icon(Icons.settings, semanticLabel: 'Open settings'),
             onPressed: widget.onOpenSettings,
           ),
         ],
@@ -406,7 +407,12 @@ class _StatusTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-            Icon(icon, size: 32, color: colors.primary),
+            Icon(
+              icon,
+              size: 32,
+              color: colors.primary,
+              semanticLabel: label,
+            ),
             const SizedBox(height: 8),
             Text(
               value,

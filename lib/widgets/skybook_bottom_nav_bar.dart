@@ -22,19 +22,19 @@ class SkyBookBottomNavBar extends StatelessWidget {
       unselectedItemColor: colors.onSurfaceVariant,
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.map),
+          icon: Icon(Icons.map, semanticLabel: 'Map'),
           label: 'Map',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.flight),
+          icon: Icon(Icons.flight, semanticLabel: 'Flights'),
           label: 'Flights',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.emoji_events),
+          icon: Icon(Icons.emoji_events, semanticLabel: 'Progress'),
           label: 'Progress',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.analytics),
+          icon: Icon(Icons.analytics, semanticLabel: 'Status'),
           label: 'Status',
         ),
       ],
