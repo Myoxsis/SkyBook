@@ -18,13 +18,26 @@ import 'data/aircraft_data.dart';
 const Color _brandPrimary = Color(0xFF0A73B1);
 const Color _brandSecondary = Color(0xFFEF6C00);
 
-final ColorScheme _lightColorScheme =
-    ColorScheme.fromSeed(seedColor: _brandPrimary, brightness: Brightness.light)
-        .copyWith(secondary: _brandSecondary);
+// Ensure text on the brand colors meets WCAG AA contrast ratio.
+// Using white text on the primary blue yields a contrast of about 5.12:1.
+// Using black text on the secondary orange yields a contrast of about 6.81:1.
+final ColorScheme _lightColorScheme = ColorScheme.fromSeed(
+  seedColor: _brandPrimary,
+  brightness: Brightness.light,
+).copyWith(
+  secondary: _brandSecondary,
+  onPrimary: Colors.white,
+  onSecondary: Colors.black,
+);
 
-final ColorScheme _darkColorScheme =
-    ColorScheme.fromSeed(seedColor: _brandPrimary, brightness: Brightness.dark)
-        .copyWith(secondary: _brandSecondary);
+final ColorScheme _darkColorScheme = ColorScheme.fromSeed(
+  seedColor: _brandPrimary,
+  brightness: Brightness.dark,
+).copyWith(
+  secondary: _brandSecondary,
+  onPrimary: Colors.white,
+  onSecondary: Colors.black,
+);
 
 void main() {
   runApp(const SkyBookApp());
