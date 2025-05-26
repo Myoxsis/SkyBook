@@ -3,12 +3,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../models/developer_storage.dart';
 import '../models/premium_storage.dart';
+import '../models/flight.dart';
+import 'data_management_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
   final VoidCallback onToggleTheme;
   final VoidCallback? onClearData;
   final ValueNotifier<bool> premiumNotifier;
+  final ValueNotifier<List<Flight>> flightsNotifier;
+  final Future<void> Function() onFlightsChanged;
 
   const SettingsScreen({
     super.key,
@@ -16,6 +20,8 @@ class SettingsScreen extends StatefulWidget {
     required this.onToggleTheme,
     this.onClearData,
     required this.premiumNotifier,
+    required this.flightsNotifier,
+    required this.onFlightsChanged,
   });
 
   @override
@@ -52,6 +58,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  void _openDataManagement() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => DataManagementScreen(
+          flightsNotifier: widget.flightsNotifier,
+          onFlightsChanged: widget.onFlightsChanged,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +90,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   widget.premiumNotifier.value = val;
                   PremiumStorage.savePremium(val);
                 },
+              );
+            },
+          ),
+          ValueListenableBuilder<bool>(
+            valueListenable: widget.premiumNotifier,
+            builder: (context, premium, _) {
+              if (!premium) return const SizedBox.shrink();
+              return ListTile(
+                title: const Text('Import / Export'),
+                trailing: const Icon(Icons.file_upload),
+                onTap: _openDataManagement,
               );
             },
           ),

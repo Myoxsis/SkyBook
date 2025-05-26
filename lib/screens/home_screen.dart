@@ -54,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
           onToggleTheme: widget.onToggleTheme,
           onClearData: _handleDataCleared,
           premiumNotifier: widget.premiumNotifier,
+          flightsNotifier: widget.flightsNotifier,
+          onFlightsChanged: widget.onFlightsChanged,
         ),
       ),
     );
