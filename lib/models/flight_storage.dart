@@ -1,41 +1,12 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+
+import 'app_database.dart';
 
 import 'flight.dart';
 
 class FlightStorage {
-  static Database? _db;
-
   static Future<Database> _openDb() async {
-    if (_db != null) return _db!;
-    final path = join(await getDatabasesPath(), 'skybook.db');
-    _db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-CREATE TABLE flights(
-  id TEXT PRIMARY KEY,
-  date TEXT,
-  aircraft TEXT,
-  manufacturer TEXT,
-  airline TEXT,
-  callsign TEXT,
-  duration TEXT,
-  notes TEXT,
-  origin TEXT,
-  destination TEXT,
-  travelClass TEXT,
-  seatNumber TEXT,
-  seatLocation TEXT,
-  distanceKm REAL,
-  carbonKg REAL,
-  isFavorite INTEGER,
-  isBusiness INTEGER
-)''');
-      },
-    );
-    return _db!;
+    return AppDatabase.open();
   }
 
   static Future<List<Flight>> loadFlights() async {
