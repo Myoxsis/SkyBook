@@ -264,7 +264,7 @@ class _ProgressScreenState extends State<ProgressScreen>
             ),
           ),
         ),
-      );
+      ));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
