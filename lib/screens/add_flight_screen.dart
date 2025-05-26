@@ -38,6 +38,13 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _originFocusNode = FocusNode();
   final _destinationFocusNode = FocusNode();
   final _aircraftFocusNode = FocusNode();
+  final _scrollController = ScrollController();
+
+  final _dateFieldKey = GlobalKey<FormFieldState>();
+  final _aircraftFieldKey = GlobalKey<FormFieldState>();
+  final _originFieldKey = GlobalKey<FormFieldState>();
+  final _destinationFieldKey = GlobalKey<FormFieldState>();
+  final _durationFieldKey = GlobalKey<FormFieldState>();
   String _travelClass = 'Economy';
   String _seatLocation = 'Window';
   bool _isBusiness = false;
@@ -83,6 +90,30 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     }
   }
 
+  void _scrollToFirstError([GlobalKey<FormFieldState>? preferred]) {
+    final keys = [
+      preferred,
+      _dateFieldKey,
+      _aircraftFieldKey,
+      _originFieldKey,
+      _destinationFieldKey,
+      _durationFieldKey,
+    ].whereType<GlobalKey<FormFieldState>>();
+    for (final key in keys) {
+      if (key.currentState?.hasError ?? false || key == preferred) {
+        final context = key.currentContext;
+        if (context != null) {
+          Scrollable.ensureVisible(
+            context,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+        break;
+      }
+    }
+  }
+
 
   @override
   void dispose() {
@@ -97,6 +128,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     _originFocusNode.dispose();
     _destinationFocusNode.dispose();
     _aircraftFocusNode.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -159,12 +191,16 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   void _submit() {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      _scrollToFirstError();
+      return;
+    }
     if (_originController.text.trim().toUpperCase() ==
         _destinationController.text.trim().toUpperCase()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Origin and destination cannot be the same')),
       );
+      _scrollToFirstError(_originFieldKey);
       return;
     }
     _updateAirline(_flightNumberController.text);
@@ -219,6 +255,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       FocusNode focusNode,
       String label, {
       Key? key,
+      GlobalKey<FormFieldState>? fieldKey,
       void Function(String)? onChanged,
     }) {
     return RawAutocomplete<Airport>(
@@ -240,6 +277,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       fieldViewBuilder:
           (context, textEditingController, fieldFocusNode, onFieldSubmitted) {
         return TextFormField(
+          key: fieldKey,
           controller: textEditingController,
           focusNode: fieldFocusNode,
           inputFormatters: [
@@ -304,6 +342,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       fieldViewBuilder:
           (context, textEditingController, focusNode, onFieldSubmitted) {
         return TextFormField(
+          key: _aircraftFieldKey,
           controller: textEditingController,
           focusNode: focusNode,
           decoration: const InputDecoration(
@@ -387,6 +426,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             TextFormField(
+              key: _dateFieldKey,
               controller: _dateController,
               readOnly: true,
               decoration: const InputDecoration(
@@ -447,6 +487,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               _originFocusNode,
               'Origin',
               key: const ValueKey('origin'),
+              fieldKey: _originFieldKey,
               onChanged: (_) => _computeDistance(),
             ),
             _buildAirportField(
@@ -454,6 +495,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               _destinationFocusNode,
               'Destination',
               key: const ValueKey('destination'),
+              fieldKey: _destinationFieldKey,
               onChanged: (_) => _computeDistance(),
             ),
             if (_distanceKm != null)
@@ -480,6 +522,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             TextFormField(
+              key: _durationFieldKey,
               controller: _durationController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Duration (hrs)'),
@@ -577,6 +620,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         child: Form(
           key: _formKey,
           child: ListView(
+            controller: _scrollController,
             children: [
               _buildFlightInfoCard(),
               const SizedBox(height: 8),
