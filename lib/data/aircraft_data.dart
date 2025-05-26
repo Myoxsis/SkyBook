@@ -1,7 +1,8 @@
 import '../models/aircraft.dart';
+import '../models/aircraft_storage.dart';
 
-/// List of common aircraft grouped by manufacturer.
-const List<Aircraft> aircrafts = [
+/// Seed list of common aircraft grouped by manufacturer.
+const List<Aircraft> seedAircrafts = [
   // Airbus
   Aircraft(
     manufacturer: 'Airbus',
@@ -147,6 +148,14 @@ const List<Aircraft> aircrafts = [
   ),
 ];
 
-final Map<String, Aircraft> aircraftByDisplay = {
-  for (final a in aircrafts) a.display: a,
-};
+List<Aircraft> aircrafts = [];
+Map<String, Aircraft> aircraftByDisplay = {};
+
+Future<void> loadAircraftData() async {
+  aircrafts = await AircraftStorage.loadAircrafts();
+  if (aircrafts.isEmpty) {
+    aircrafts = seedAircrafts;
+  }
+  aircraftByDisplay = {for (final a in aircrafts) a.display: a};
+}
+

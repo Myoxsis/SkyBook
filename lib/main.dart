@@ -11,6 +11,9 @@ import 'screens/home_screen.dart';
 import 'screens/add_flight_screen.dart';
 import 'widgets/achievement_dialog.dart';
 import 'models/premium_storage.dart';
+import 'data/airport_data.dart';
+import 'data/airline_data.dart';
+import 'data/aircraft_data.dart';
 
 const Color _brandPrimary = Color(0xFF0A73B1);
 const Color _brandSecondary = Color(0xFFEF6C00);
@@ -108,9 +111,18 @@ class _SkyBookAppState extends State<SkyBookApp> {
     _premiumNotifier.addListener(() {
       _setupQuickActions(_premiumNotifier.value);
     });
-    _loadAchievements().then((_) => _loadFlights());
+    _loadReferenceData()
+        .then((_) => _loadAchievements().then((_) => _loadFlights()));
     _loadTheme();
     _loadPremium();
+  }
+
+  Future<void> _loadReferenceData() async {
+    await Future.wait([
+      loadAirportData(),
+      loadAirlineData(),
+      loadAircraftData(),
+    ]);
   }
 
   Future<void> _loadFlights() async {

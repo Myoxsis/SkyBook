@@ -1,7 +1,8 @@
 import '../models/airport.dart';
+import '../models/airport_storage.dart';
 
-/// List of major airports grouped by geographic region.
-const List<Airport> airports = [
+/// Seed list of major airports grouped by geographic region.
+const List<Airport> seedAirports = [
   // North America
   Airport(code: 'JFK', name: 'New York John F. Kennedy', country: 'United States', region: 'North America', latitude: 40.6413, longitude: -73.7781),
   Airport(code: 'LAX', name: 'Los Angeles', country: 'United States', region: 'North America', latitude: 33.9416, longitude: -118.4085),
@@ -127,9 +128,16 @@ const List<Airport> airports = [
   Airport(code: 'POS', name: 'Port of Spain Piarco', country: 'Trinidad and Tobago', region: 'South America', latitude: 10.5954, longitude: -61.3372),
 ];
 
-final Map<String, Airport> airportByCode = {
-  for (final a in airports) a.code: a,
-};
+List<Airport> airports = [];
+Map<String, Airport> airportByCode = {};
+
+Future<void> loadAirportData() async {
+  airports = await AirportStorage.loadAirports();
+  if (airports.isEmpty) {
+    airports = seedAirports;
+  }
+  airportByCode = {for (final a in airports) a.code: a};
+}
 
 /// Returns airports organized by their region.
 Map<String, List<Airport>> get airportsByRegion {
@@ -139,3 +147,4 @@ Map<String, List<Airport>> get airportsByRegion {
   }
   return map;
 }
+

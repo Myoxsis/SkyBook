@@ -1,6 +1,7 @@
 import '../models/airline.dart';
+import '../models/airline_storage.dart';
 
-const List<Airline> airlines = [
+const List<Airline> seedAirlines = [
   Airline(name: 'Air France', callsign: 'AFR', code: 'AF'),
   Airline(name: 'British Airways', callsign: 'BAW', code: 'BA'),
   Airline(name: 'Emirates', callsign: 'UAE', code: 'EK'),
@@ -55,10 +56,16 @@ const List<Airline> airlines = [
   Airline(name: 'Philippine Airlines', callsign: 'PAL', code: 'PR'),
 ];
 
-final Map<String, Airline> airlineByName = {
-  for (final a in airlines) a.name: a,
-};
+List<Airline> airlines = [];
+Map<String, Airline> airlineByName = {};
+Map<String, Airline> airlineByCode = {};
 
-final Map<String, Airline> airlineByCode = {
-  for (final a in airlines) a.code: a,
-};
+Future<void> loadAirlineData() async {
+  airlines = await AirlineStorage.loadAirlines();
+  if (airlines.isEmpty) {
+    airlines = seedAirlines;
+  }
+  airlineByName = {for (final a in airlines) a.name: a};
+  airlineByCode = {for (final a in airlines) a.code: a};
+}
+
