@@ -14,29 +14,31 @@ import 'models/premium_storage.dart';
 import 'data/airport_data.dart';
 import 'data/airline_data.dart';
 import 'data/aircraft_data.dart';
-
-const Color _brandPrimary = Color(0xFF0A73B1);
-const Color _brandSecondary = Color(0xFFEF6C00);
+import 'theme/colors.dart';
 
 // Ensure text on the brand colors meets WCAG AA contrast ratio.
 // Using white text on the primary blue yields a contrast of about 5.12:1.
 // Using black text on the secondary orange yields a contrast of about 6.81:1.
 final ColorScheme _lightColorScheme = ColorScheme.fromSeed(
-  seedColor: _brandPrimary,
+  seedColor: AppColors.primary,
   brightness: Brightness.light,
 ).copyWith(
-  secondary: _brandSecondary,
+  secondary: AppColors.secondary,
+  tertiary: AppColors.accent,
   onPrimary: Colors.white,
   onSecondary: Colors.black,
+  onTertiary: Colors.white,
 );
 
 final ColorScheme _darkColorScheme = ColorScheme.fromSeed(
-  seedColor: _brandPrimary,
+  seedColor: AppColors.primaryDark,
   brightness: Brightness.dark,
 ).copyWith(
-  secondary: _brandSecondary,
+  secondary: AppColors.secondaryDark,
+  tertiary: AppColors.accentDark,
   onPrimary: Colors.white,
   onSecondary: Colors.black,
+  onTertiary: Colors.black,
 );
 
 void main() {
