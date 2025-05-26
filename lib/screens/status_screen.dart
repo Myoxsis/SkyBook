@@ -6,6 +6,7 @@ import '../data/airport_data.dart';
 import '../widgets/class_pie_chart.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/flight_line_chart.dart';
+import '../widgets/numeric_line_chart.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -149,6 +150,27 @@ class _StatusScreenState extends State<StatusScreen> {
     return {for (final k in keys) k: counts[k]!};
   }
 
+  Map<DateTime, double> get _monthlyAverageDistance {
+    final totals = <DateTime, double>{};
+    final counts = <DateTime, int>{};
+    for (final f in _flights) {
+      final date = DateTime.tryParse(f.date);
+      if (date != null) {
+        final key = DateTime(date.year, date.month);
+        totals[key] = (totals[key] ?? 0) + (f.distanceKm.isNaN ? 0 : f.distanceKm);
+        counts[key] = (counts[key] ?? 0) + 1;
+      }
+    }
+    final keys = totals.keys.toList()..sort();
+    final averages = <DateTime, double>{};
+    for (final k in keys) {
+      final total = totals[k] ?? 0;
+      final count = counts[k] ?? 1;
+      averages[k] = count == 0 ? 0 : total / count;
+    }
+    return averages;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,6 +217,8 @@ class _StatusScreenState extends State<StatusScreen> {
             if (_premium) ...[
               const SizedBox(height: 24),
               _buildMonthlyChart(),
+              const SizedBox(height: 24),
+              _buildAverageDistanceChart(),
               const SizedBox(height: 24),
               _buildAircraftChart(),
               const SizedBox(height: 24),
@@ -304,6 +328,22 @@ class _StatusScreenState extends State<StatusScreen> {
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         FlightLineChart(counts: _monthlyFlightCounts),
+      ],
+    );
+  }
+
+  Widget _buildAverageDistanceChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Avg Distance per Month',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        NumericLineChart(values: _monthlyAverageDistance),
       ],
     );
   }
