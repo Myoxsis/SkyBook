@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quick_actions/quick_actions.dart';
 import 'models/flight.dart';
 import 'models/flight_storage.dart';
 import 'models/theme_storage.dart';
@@ -7,6 +8,7 @@ import 'models/achievement.dart';
 import 'models/achievement_storage.dart';
 import 'utils/achievement_utils.dart';
 import 'screens/home_screen.dart';
+import 'screens/add_flight_screen.dart';
 import 'widgets/achievement_dialog.dart';
 import 'models/premium_storage.dart';
 
@@ -42,6 +44,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
   final GlobalKey<NavigatorState> _navigatorKey =
       GlobalKey<NavigatorState>();
   final Map<String, DateTime> _unlockedAchievements = {};
+  final QuickActions _quickActions = const QuickActions();
 
   void _showAchievementDialog(Achievement achievement) {
     final context = _navigatorKey.currentContext;
@@ -73,9 +76,38 @@ class _SkyBookAppState extends State<SkyBookApp> {
     ThemeStorage.saveDarkMode(_darkMode);
   }
 
+  void _setupQuickActions(bool premium) {
+    if (premium) {
+      _quickActions.setShortcutItems(const [
+        ShortcutItem(type: 'add_flight', localizedTitle: 'Add Flight')
+      ]);
+    } else {
+      _quickActions.clearShortcutItems();
+    }
+  }
+
+  Future<void> _handleQuickAction(String? type) async {
+    if (type == 'add_flight') {
+      final newFlight = await _navigatorKey.currentState?.push<Flight>(
+        MaterialPageRoute(
+          builder: (_) => AddFlightScreen(flights: _flightsNotifier.value),
+        ),
+      );
+      if (newFlight != null) {
+        _flightsNotifier.value = List<Flight>.from(_flightsNotifier.value)
+          ..add(newFlight);
+        await _saveFlights();
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _quickActions.initialize(_handleQuickAction);
+    _premiumNotifier.addListener(() {
+      _setupQuickActions(_premiumNotifier.value);
+    });
     _loadAchievements().then((_) => _loadFlights());
     _loadTheme();
     _loadPremium();
@@ -113,6 +145,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
   Future<void> _loadPremium() async {
     final saved = await PremiumStorage.loadPremium();
     _premiumNotifier.value = saved;
+    _setupQuickActions(saved);
   }
 
   @override
