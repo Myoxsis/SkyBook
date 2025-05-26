@@ -414,7 +414,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                           const Icon(Icons.flight, size: 32),
                     ),
                     const SizedBox(width: 8),
-                    Text('Airline: ${_selectedAirline!.name}'),
+                    Text(
+                      'Airline: ${_selectedAirline!.name}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ],
                 ),
               ),
@@ -451,7 +454,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             if (_distanceKm != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text('Distance: ${_distanceKm!.round()} km'),
+                child: Text(
+                  'Distance: ${_distanceKm!.round()} km',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
           ],
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'models/flight.dart';
 import 'models/flight_storage.dart';
@@ -15,6 +14,7 @@ import 'data/airport_data.dart';
 import 'data/airline_data.dart';
 import 'data/aircraft_data.dart';
 import 'theme/colors.dart';
+import 'theme/text_theme.dart';
 
 // Ensure text on the brand colors meets WCAG AA contrast ratio.
 // Using white text on the primary blue yields a contrast of about 5.12:1.
@@ -183,7 +183,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
       title: 'SkyBook',
       theme: ThemeData(
         colorScheme: _lightColorScheme,
-        textTheme: GoogleFonts.robotoTextTheme(),
+        textTheme: AppTextTheme.light,
         dialogTheme: DialogThemeData(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -194,7 +194,7 @@ class _SkyBookAppState extends State<SkyBookApp> {
       ),
       darkTheme: ThemeData(
         colorScheme: _darkColorScheme,
-        textTheme: GoogleFonts.robotoTextTheme(ThemeData.dark().textTheme),
+        textTheme: AppTextTheme.dark,
         dialogTheme: DialogThemeData(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),

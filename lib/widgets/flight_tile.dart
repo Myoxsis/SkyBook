@@ -114,7 +114,10 @@ class FlightTile extends StatelessWidget {
                   children: [
                     const Icon(Icons.schedule, size: 16),
                     const SizedBox(width: 4),
-                    Text('${flight.duration}h'),
+                    Text(
+                      '${flight.duration}h',
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
                   ],
                 ),
                 IconButton(
