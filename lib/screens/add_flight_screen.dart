@@ -469,7 +469,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               ),
           ],
         ),
-      ),
+      
     );
   }
 
@@ -508,7 +508,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               ),
           ],
         ),
-      ),
+      
     );
   }
 
@@ -586,7 +586,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 
@@ -605,7 +605,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 
