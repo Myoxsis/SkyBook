@@ -1,6 +1,7 @@
 import 'package:home_widget/home_widget.dart';
 
 import '../models/flight.dart';
+import '../models/premium_storage.dart';
 
 /// Simple data holder for aggregated totals shown in the widget.
 class KpiTotals {
@@ -36,6 +37,9 @@ class WidgetService {
 
   /// Writes aggregated flight data to the native widget and triggers a refresh.
   static Future<void> updateKpiWidget(List<Flight> flights) async {
+    final premium = await PremiumStorage.loadPremium();
+    if (!premium) return;
+
     final totals = aggregate(flights);
 
     await HomeWidget.saveWidgetData<int>('totalFlights', totals.flights);
