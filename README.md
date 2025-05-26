@@ -16,6 +16,7 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
 - Enable a developer section with an option to clear local data
 - Developer section preference is saved so your choice is remembered
 - Unlock Premium mode in settings to view CO₂ data and detailed graphs
+- Premium users can quickly add flights via a home screen shortcut
 - Data is stored locally on the device
 - View your routes on an interactive map
 - Quickly access Map, Flights, Progress and Status using the bottom navigation bar
