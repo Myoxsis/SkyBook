@@ -1,21 +1,56 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
 import 'flight.dart';
 
 class FlightStorage {
+  static Database? _db;
+
+  static Future<Database> _openDb() async {
+    if (_db != null) return _db!;
+    final path = join(await getDatabasesPath(), 'skybook.db');
+    _db = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
+CREATE TABLE flights(
+  id TEXT PRIMARY KEY,
+  date TEXT,
+  aircraft TEXT,
+  manufacturer TEXT,
+  airline TEXT,
+  callsign TEXT,
+  duration TEXT,
+  notes TEXT,
+  origin TEXT,
+  destination TEXT,
+  travelClass TEXT,
+  seatNumber TEXT,
+  seatLocation TEXT,
+  distanceKm REAL,
+  carbonKg REAL,
+  isFavorite INTEGER,
+  isBusiness INTEGER
+)''');
+      },
+    );
+    return _db!;
+  }
+
   static Future<List<Flight>> loadFlights() async {
-    final prefs = await SharedPreferences.getInstance();
-    final stored = prefs.getString('flights');
-    if (stored != null) {
-      final List<dynamic> decoded = json.decode(stored);
-      return decoded.map((e) => Flight.fromMap(e)).toList();
-    }
-    return [];
+    final db = await _openDb();
+    final maps = await db.query('flights');
+    return maps.map((e) => Flight.fromMap(e)).toList();
   }
 
   static Future<void> saveFlights(List<Flight> flights) async {
-    final prefs = await SharedPreferences.getInstance();
-    final encoded = json.encode(flights.map((f) => f.toMap()).toList());
-    await prefs.setString('flights', encoded);
+    final db = await _openDb();
+    await db.transaction((txn) async {
+      await txn.delete('flights');
+      for (final flight in flights) {
+        await txn.insert('flights', flight.toMap());
+      }
+    });
   }
 }

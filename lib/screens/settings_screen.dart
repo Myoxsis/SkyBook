@@ -4,6 +4,7 @@ import '../widgets/skybook_app_bar.dart';
 import '../models/developer_storage.dart';
 import '../models/premium_storage.dart';
 import '../models/flight.dart';
+import '../models/flight_storage.dart';
 import 'data_management_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -48,8 +49,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _clearData() async {
     widget.onClearData?.call();
+    await FlightStorage.saveFlights([]);
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('flights');
     await prefs.remove('achievements');
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
