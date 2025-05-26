@@ -35,6 +35,9 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
    ```sh
    flutter pub get
    ```
+   The `home_widget` package is pinned to version `0.5.0`. If this version is
+   upgraded, iOS builds may fail due to the missing
+   `WidgetConfigurationIntent` definition required by newer releases.
 3. Run the app:
    ```sh
    flutter run
