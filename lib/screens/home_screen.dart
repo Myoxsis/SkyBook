@@ -6,6 +6,7 @@ import 'map_screen.dart';
 import 'status_screen.dart';
 import 'progress_screen.dart';
 import 'settings_screen.dart';
+import '../widgets/skybook_bottom_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -98,34 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: pages),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: SkyBookBottomNavBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor:
-            Theme.of(context).colorScheme.onSurfaceVariant,
-        items: [
-          BottomNavigationBarItem(
-            // icon: ImageIcon(const AssetImage('assets/icons/map.png')),
-            icon: const Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            // icon: ImageIcon(const AssetImage('assets/icons/flights.png')),
-            icon: const Icon(Icons.flight),
-            label: 'Flights',
-          ),
-          BottomNavigationBarItem(
-            // icon: ImageIcon(const AssetImage('assets/icons/progress.png')),
-            icon: const Icon(Icons.emoji_events),
-            label: 'Progress',
-          ),
-          BottomNavigationBarItem(
-            // icon: ImageIcon(const AssetImage('assets/icons/status.png')),
-            icon: const Icon(Icons.analytics),
-            label: 'Status',
-          ),
-        ],
       ),
     );
   }

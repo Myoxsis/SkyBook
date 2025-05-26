@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../constants.dart';
+import 'skybook_card.dart';
 
 class FlightTile extends StatelessWidget {
   final Flight flight;
@@ -46,19 +47,12 @@ class FlightTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return SkyBookCard(
       color: _colorForClass(context),
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xs),
-          child: Column(
+      padding: const EdgeInsets.all(AppSpacing.xs),
+      onTap: onTap,
+      child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -126,11 +120,10 @@ class FlightTile extends StatelessWidget {
                   onPressed: onEdit,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
-    ),
     );
   }
 }

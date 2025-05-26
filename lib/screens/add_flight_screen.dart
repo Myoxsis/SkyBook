@@ -9,6 +9,7 @@ import '../data/airport_data.dart';
 import '../data/aircraft_data.dart';
 import '../data/airline_data.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../widgets/skybook_card.dart';
 import '../utils/text_formatters.dart';
 import '../utils/carbon_utils.dart';
 import '../widgets/app_dialog.dart';
@@ -376,10 +377,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     );
   }
   Widget _buildFlightInfoCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
-        child: Column(
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Flight Info',
@@ -429,10 +429,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   Widget _buildRouteDetailsCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
-        child: Column(
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Route Details',
@@ -467,10 +466,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   Widget _buildTravelDetailsCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
-        child: Column(
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Travel Details',
@@ -545,10 +543,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   Widget _buildNotesCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
-        child: Column(
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Notes', style: Theme.of(context).textTheme.titleMedium),

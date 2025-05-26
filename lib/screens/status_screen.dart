@@ -7,6 +7,7 @@ import '../widgets/class_pie_chart.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/flight_line_chart.dart';
 import '../widgets/numeric_line_chart.dart';
+import '../widgets/skybook_card.dart';
 import '../constants.dart';
 
 class StatusScreen extends StatefulWidget {
@@ -400,12 +401,11 @@ class _StatusTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
             Icon(icon, size: 32, color: colors.primary),
             const SizedBox(height: 8),
             Text(
@@ -422,8 +422,7 @@ class _StatusTile extends StatelessWidget {
                   .bodyMedium
                   ?.copyWith(color: colors.onSurface),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
