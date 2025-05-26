@@ -7,6 +7,7 @@ import '../widgets/class_pie_chart.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/flight_line_chart.dart';
 import '../widgets/numeric_line_chart.dart';
+import '../constants.dart';
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -187,7 +188,7 @@ class _StatusScreenState extends State<StatusScreen> {
         onRefresh: refresh,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.s),
           children: [
             GridView.count(
               shrinkWrap: true,
@@ -353,7 +354,7 @@ class _StatusScreenState extends State<StatusScreen> {
     final backgroundColor =
         Theme.of(context).colorScheme.onSurface.withOpacity(0.12);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
       child: Semantics(
         label: '$label: $value',
         child: Row(
@@ -401,7 +402,7 @@ class _StatusTile extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -7,6 +7,7 @@ import '../models/flight.dart';
 import '../models/airport.dart';
 import '../data/airport_data.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../constants.dart';
 
 class MapScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -39,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
       isScrollControlled: true,
       builder: (context) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.s),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +122,7 @@ class _MapScreenState extends State<MapScreen> {
                 color: Theme.of(context).colorScheme.primary,
                 shape: BoxShape.circle,
               ),
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(AppSpacing.xxs),
               child: const Icon(Icons.flight, size: 16, color: Colors.white),
             ),
           ),

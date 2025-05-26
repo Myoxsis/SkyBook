@@ -5,6 +5,7 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../utils/flight_serialization.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../constants.dart';
 
 class DataManagementScreen extends StatefulWidget {
   final ValueNotifier<List<Flight>> flightsNotifier;
@@ -82,7 +83,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
     return Scaffold(
       appBar: const SkyBookAppBar(title: 'Import / Export'),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.s),
         children: [
           ElevatedButton(
             onPressed: _exportJson,
