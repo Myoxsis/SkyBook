@@ -111,5 +111,39 @@ void main() {
       expect(tier25.achieved, isTrue);
       expect(tier50.achieved, isTrue);
     });
+
+    test('extended achievements unlock with large dataset', () {
+      final codes = [
+        'JFK', 'LAX', 'YYZ', 'ATL', 'ORD', 'DFW', 'DEN', 'SFO', 'SEA', 'MIA',
+        'BOS', 'MCO', 'IAH', 'IAD', 'YVR', 'YUL', 'LAS', 'PHL', 'CLT', 'MSP',
+        'CDG', 'LHR', 'FRA', 'AMS', 'MAD', 'IST', 'FCO', 'ZRH', 'CPH', 'DUB',
+        'OSL', 'BRU', 'VIE', 'ATH', 'HEL', 'ARN', 'LIS', 'PRG', 'HND', 'PEK',
+        'PVG', 'HKG', 'ICN', 'BKK', 'DEL', 'BOM', 'SIN', 'KUL', 'NRT', 'KIX',
+        'TPE', 'CGK', 'MNL', 'SGN', 'DPS', 'KMG', 'KTM', 'CMB', 'HAN', 'DAC',
+        'DXB', 'DOH', 'AUH', 'JED', 'RUH', 'MCT', 'BAH', 'AMM', 'CAI', 'TLV',
+        'KWI', 'BEY', 'SYD', 'MEL', 'BNE', 'PER', 'AKL', 'WLG', 'CHC', 'ADL',
+        'CNS', 'DRW', 'NAN', 'POM', 'JNB', 'CPT', 'DUR', 'NBO', 'ADD', 'DAR',
+        'CMN', 'ABJ', 'ACC', 'ALG', 'GRU', 'GIG', 'EZE', 'SCL', 'LIM', 'BOG'
+      ];
+
+      final flights = List.generate(
+        codes.length,
+        (i) => _flight(
+          '${i + 1}',
+          codes[i],
+          codes[(i + 1) % codes.length],
+          4000,
+        ),
+      );
+
+      final achievements = calculateAchievements(flights);
+      final jetSetter = achievements.firstWhere((a) => a.id == 'jetSetter');
+      final explorer = achievements.firstWhere((a) => a.id == 'worldExplorer');
+      final master = achievements.firstWhere((a) => a.id == 'airportMaster');
+
+      expect(jetSetter.achieved, isTrue);
+      expect(explorer.achieved, isTrue);
+      expect(master.achieved, isTrue);
+    });
   });
 }
