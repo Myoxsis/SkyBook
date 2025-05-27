@@ -148,6 +148,16 @@ class _StatusScreenState extends State<StatusScreen> {
     return counts;
   }
 
+  Map<String, int> get _seatLocationCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      if (f.seatLocation.isNotEmpty) {
+        counts[f.seatLocation] = (counts[f.seatLocation] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
   Map<DateTime, int> get _monthlyFlightCounts {
     final counts = <DateTime, int>{};
     for (final f in _flights) {
@@ -241,6 +251,8 @@ class _StatusScreenState extends State<StatusScreen> {
               _buildClassChart(),
               const SizedBox(height: 24),
               _buildTripTypeChart(),
+              const SizedBox(height: 24),
+              _buildSeatLocationChart(),
             ],
           ],
         ),
@@ -342,6 +354,22 @@ class _StatusScreenState extends State<StatusScreen> {
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         ClassPieChart(counts: _tripTypeCount),
+      ],
+    );
+  }
+
+  Widget _buildSeatLocationChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Seat Location Usage',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        ClassPieChart(counts: _seatLocationCount),
       ],
     );
   }
