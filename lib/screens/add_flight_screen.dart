@@ -413,6 +413,7 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         labelText: 'Flight Number',
         prefixIcon: Icon(Icons.flight, semanticLabel: 'Flight number'),
       ),
+      inputFormatters: [UpperCaseTextFormatter()],
       onChanged: _updateAirline,
     );
   }
