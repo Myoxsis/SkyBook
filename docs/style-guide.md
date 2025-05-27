@@ -32,7 +32,7 @@ These tokens are used for padding and layout gaps to keep the interface consiste
 
 ## Typography
 
-Font styles are created in `lib/theme/text_theme.dart` using the Roboto font via Google Fonts. The bold and semi‑bold weights are applied to headings and titles to maintain hierarchy.
+Font styles are created in `lib/theme/text_theme.dart` using the Nunito font via Google Fonts. The bold and semi‑bold weights are applied to headings and titles to maintain hierarchy.
 
 When creating new text styles, start from `AppTextTheme.light` or `AppTextTheme.dark` to ensure proper scaling and accessibility.
 
