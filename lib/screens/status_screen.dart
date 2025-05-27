@@ -159,6 +159,31 @@ class _StatusScreenState extends State<StatusScreen> {
     return counts;
   }
 
+  Map<String, int> get _destinationCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      if (f.destination.isNotEmpty) {
+        counts[f.destination] = (counts[f.destination] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
+  List<MapEntry<String, int>> get _topDestinations {
+    final entries = _destinationCount.entries.toList();
+    entries.sort((a, b) => b.value.compareTo(a.value));
+    return entries.take(3).toList();
+  }
+
+  String get _favoritePlane =>
+      _topAircraft.isNotEmpty ? _topAircraft.first.key : 'N/A';
+
+  String get _favoriteAirline =>
+      _topAirlines.isNotEmpty ? _topAirlines.first.key : 'N/A';
+
+  String get _favoriteDestination =>
+      _topDestinations.isNotEmpty ? _topDestinations.first.key : 'N/A';
+
   Map<DateTime, int> get _monthlyFlightCounts {
     final counts = <DateTime, int>{};
     for (final f in _flights) {
@@ -270,6 +295,31 @@ class _StatusScreenState extends State<StatusScreen> {
                     label: 'Total CO₂',
                     value: '${_totalCarbon.round()} kg',
                   ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 3,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              children: [
+                _StatusTile(
+                  icon: Icons.airplanemode_active,
+                  label: 'Favorite plane',
+                  value: _favoritePlane,
+                ),
+                _StatusTile(
+                  icon: Icons.airlines,
+                  label: 'Favorite airline',
+                  value: _favoriteAirline,
+                ),
+                _StatusTile(
+                  icon: Icons.place,
+                  label: 'Favorite destination',
+                  value: _favoriteDestination,
+                ),
               ],
             ),
             if (_premium) ...[
