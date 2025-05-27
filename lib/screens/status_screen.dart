@@ -9,6 +9,7 @@ import '../widgets/flight_line_chart.dart';
 import '../widgets/numeric_line_chart.dart';
 import '../widgets/skybook_card.dart';
 import '../constants.dart';
+import 'dart:math' as math;
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -192,6 +193,41 @@ class _StatusScreenState extends State<StatusScreen> {
     return averages;
   }
 
+  Map<DateTime, double> get _monthlyCarbonTotals {
+    final totals = <DateTime, double>{};
+    for (final f in _flights) {
+      final date = DateTime.tryParse(f.date);
+      if (date != null) {
+        final key = DateTime(date.year, date.month);
+        final value = f.carbonKg.isNaN ? 0 : f.carbonKg;
+        totals[key] = (totals[key] ?? 0) + value;
+      }
+    }
+    final keys = totals.keys.toList()..sort();
+    return {for (final k in keys) k: totals[k]!};
+  }
+
+  Map<String, int> get _dayOfWeekCount {
+    final counts = {
+      'Mon': 0,
+      'Tue': 0,
+      'Wed': 0,
+      'Thu': 0,
+      'Fri': 0,
+      'Sat': 0,
+      'Sun': 0,
+    };
+    for (final f in _flights) {
+      final date = DateTime.tryParse(f.date);
+      if (date != null) {
+        final day = date.weekday; // 1 = Mon
+        final key = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][day - 1];
+        counts[key] = (counts[key] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,6 +277,10 @@ class _StatusScreenState extends State<StatusScreen> {
               _buildMonthlyChart(),
               const SizedBox(height: 24),
               _buildAverageDistanceChart(),
+              const SizedBox(height: 24),
+              _buildCarbonTrendChart(),
+              const SizedBox(height: 24),
+              _buildDayOfWeekChart(),
               const SizedBox(height: 24),
               _buildAircraftChart(),
               const SizedBox(height: 24),
@@ -402,6 +442,48 @@ class _StatusScreenState extends State<StatusScreen> {
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         NumericLineChart(values: _monthlyAverageDistance),
+      ],
+    );
+  }
+
+  Widget _buildCarbonTrendChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('CO₂ per Month',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        NumericLineChart(values: _monthlyCarbonTotals),
+      ],
+    );
+  }
+
+  Widget _buildDayOfWeekChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final counts = _dayOfWeekCount;
+    final maxCount = counts.values.isNotEmpty
+        ? counts.values.reduce(math.max)
+        : 1;
+    const order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Flights by Day of Week',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        ...order.map((d) {
+          final count = counts[d] ?? 0;
+          final barWidth = count / maxCount;
+          return _buildBarRow(d, count, barWidth);
+        })
       ],
     );
   }
