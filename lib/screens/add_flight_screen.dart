@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/flight.dart';
 import '../models/aircraft.dart';
 import '../models/airport.dart';
@@ -14,6 +15,7 @@ import '../utils/text_formatters.dart';
 import '../utils/carbon_utils.dart';
 import '../widgets/app_dialog.dart';
 import '../constants.dart';
+import '../services/import_service.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
@@ -188,6 +190,72 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         _dateController.text = formatted;
       });
     }
+  }
+
+  Future<void> _scanBoardingPass() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.camera);
+    if (picked == null) return;
+    final flight = await ImportService.scanBoardingPassImage(picked.path);
+    if (flight == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to read boarding pass')),
+      );
+      return;
+    }
+    setState(() {
+      if (flight.date.isNotEmpty) _dateController.text = flight.date;
+      _flightNumberController.text = flight.callsign;
+      _originController.text = flight.origin;
+      _destinationController.text = flight.destination;
+    });
+    _updateAirline(flight.callsign);
+    _computeDistance();
+  }
+
+  Future<void> _importItinerary() async {
+    final text = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        final controller = TextEditingController();
+        return AppDialog(
+          title: const Text('Paste Itinerary'),
+          content: TextField(
+            controller: controller,
+            maxLines: 8,
+            decoration: const InputDecoration(labelText: 'Itinerary text'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(controller.text),
+              child: const Text('Import'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (text == null || text.trim().isEmpty) return;
+    final flight = ImportService.parseItineraryText(text);
+    if (flight == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to parse itinerary')),
+      );
+      return;
+    }
+    setState(() {
+      if (flight.date.isNotEmpty) _dateController.text = flight.date;
+      _flightNumberController.text = flight.callsign;
+      _originController.text = flight.origin;
+      _destinationController.text = flight.destination;
+    });
+    _updateAirline(flight.callsign);
+    _computeDistance();
   }
 
   void _submit() {
@@ -468,9 +536,29 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                   ],
                 ),
               ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _scanBoardingPass,
+                    icon: const Icon(Icons.photo_camera),
+                    label: const Text('Scan Boarding Pass'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _importItinerary,
+                    icon: const Icon(Icons.email),
+                    label: const Text('Import Itinerary'),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
-      
+
     );
   }
 
