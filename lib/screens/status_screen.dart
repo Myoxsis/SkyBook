@@ -204,7 +204,7 @@ class _StatusScreenState extends State<StatusScreen> {
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
+              crossAxisCount: 3,
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
               children: [
@@ -430,29 +430,29 @@ class _StatusTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return SkyBookCard(
-      padding: const EdgeInsets.all(AppSpacing.s),
+      padding: const EdgeInsets.all(AppSpacing.xs),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
             Icon(
               icon,
-              size: 32,
+              size: 24,
               color: colors.primary,
               semanticLabel: label,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
               value,
               style: Theme.of(context)
                   .textTheme
-                  .headlineSmall
+                  .titleMedium
                   ?.copyWith(color: colors.onSurface),
             ),
             Text(
               label,
               style: Theme.of(context)
                   .textTheme
-                  .bodyMedium
+                  .bodySmall
                   ?.copyWith(color: colors.onSurface),
             ),
         ],
