@@ -11,3 +11,9 @@
   1. Open `android/app/src/main/AndroidManifest.xml`.
   2. Add the permission line above within the `<manifest>` tag.
   3. Rebuild and reinstall the app on Android.
+
+
+Add in gradle 
+ android {
+    ndkVersion = "27.0.12077973"
+}
