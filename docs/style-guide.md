@@ -8,9 +8,9 @@ The color palette is defined in `lib/theme/colors.dart`.
 
 | Token | Light | Dark | Description |
 |-------|-------|------|-------------|
-| `primary` | `0xFF0A73B1` | `primaryDark` | Brand blue used for the app bar and primary actions. |
-| `secondary` | `0xFFEF6C00` | `secondaryDark` | Accent orange for highlights and buttons. |
-| `accent` | `0xFF009688` | `accentDark` | Optional accent color used sparingly for emphasis. |
+| `primary` | `0xFF58CC02` | `primaryDark` | Bright green used for major actions. |
+| `secondary` | `0xFFFFC107` | `secondaryDark` | Yellow accent for highlights and buttons. |
+| `accent` | `0xFF34A853` | `accentDark` | Deeper green used sparingly for emphasis. |
 
 Use `primaryLight`, `secondaryLight`, and `accentLight` for subtle variants.
 
@@ -32,7 +32,7 @@ These tokens are used for padding and layout gaps to keep the interface consiste
 
 ## Typography
 
-Font styles are created in `lib/theme/text_theme.dart` using the Roboto font via Google Fonts. The bold and semi‑bold weights are applied to headings and titles to maintain hierarchy.
+Font styles are created in `lib/theme/text_theme.dart` using the Nunito font via Google Fonts. The bold and semi‑bold weights are applied to headings and titles to maintain hierarchy.
 
 When creating new text styles, start from `AppTextTheme.light` or `AppTextTheme.dark` to ensure proper scaling and accessibility.
 
