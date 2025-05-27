@@ -9,7 +9,8 @@ class AppTextTheme {
   static final TextTheme dark = _buildTheme(ThemeData.dark().textTheme);
 
   static TextTheme _buildTheme(TextTheme base) {
-    final textTheme = GoogleFonts.robotoTextTheme(base);
+    // Use a friendlier font to match Duolingo's style
+    final textTheme = GoogleFonts.nunitoTextTheme(base);
     return textTheme.copyWith(
       headlineLarge: textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
       headlineMedium: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
