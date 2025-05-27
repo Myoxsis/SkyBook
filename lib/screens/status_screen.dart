@@ -139,6 +139,15 @@ class _StatusScreenState extends State<StatusScreen> {
     return counts;
   }
 
+  Map<String, int> get _tripTypeCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      final key = f.isBusiness ? 'Business' : 'Personal';
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    return counts;
+  }
+
   Map<DateTime, int> get _monthlyFlightCounts {
     final counts = <DateTime, int>{};
     for (final f in _flights) {
@@ -230,6 +239,8 @@ class _StatusScreenState extends State<StatusScreen> {
               _buildCountryChart(),
               const SizedBox(height: 24),
               _buildClassChart(),
+              const SizedBox(height: 24),
+              _buildTripTypeChart(),
             ],
           ],
         ),
@@ -315,6 +326,22 @@ class _StatusScreenState extends State<StatusScreen> {
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         ClassPieChart(counts: _classCount),
+      ],
+    );
+  }
+
+  Widget _buildTripTypeChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Trip Type Distribution',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        ClassPieChart(counts: _tripTypeCount),
       ],
     );
   }
