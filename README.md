@@ -51,3 +51,37 @@ flutter pub run flutter_launcher_icons:main
 ```
 
 Since this repository does not include compiled dependencies, you will need to install them via `flutter pub get` before running the app.
+
+## Releasing
+
+To publish a production build:
+
+1. Update the `version` field in `pubspec.yaml`.
+2. Fetch packages and rebuild the icon if needed:
+   ```sh
+   flutter pub get
+   flutter pub run flutter_launcher_icons:main
+   ```
+3. Build the binaries:
+   ```sh
+   flutter build apk --release       # Android
+   flutter build ipa --release       # iOS (requires Xcode)
+   ```
+4. Upload the generated files in `build/` to their respective stores.
+
+## Exporting Data
+
+Premium users can export or import flights from **Settings → Import / Export**. Data can be shared in JSON or CSV format using the built‑in share sheet.
+
+## Updating Datasets
+
+Seed datasets for airlines, airports and aircraft live under `lib/data`. They are inserted into the local database when it is created or upgraded. If you edit these lists:
+
+1. Bump the database `version` in `AppDatabase.open()` so `_seed` runs again.
+2. Run the app once to apply the new data.
+
+## Contributing
+
+1. Fork the repository and create a new branch for your change.
+2. Run `flutter pub get` followed by `flutter test` to ensure all tests pass.
+3. Submit a pull request describing your changes.
