@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../utils/achievement_utils.dart';
+import '../models/achievement.dart';
 import 'package:intl/intl.dart';
 import '../widgets/skybook_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
@@ -69,6 +70,48 @@ class _ProgressScreenState extends State<ProgressScreen>
   Future<void> _reloadFromStorage() async {
     final flights = await FlightStorage.loadFlights();
     widget.flightsNotifier.value = flights;
+  }
+
+  List<Achievement> _applyTierFilter(List<Achievement> achievements) {
+    const tierGroups = {
+      'frequentFlyer': [
+        'frequentFlyer10',
+        'frequentFlyer25',
+        'frequentFlyer50',
+        'globeTrotter',
+      ],
+      'distance': [
+        'shortHaul',
+        'aroundWorld',
+        'longHaul',
+      ],
+    };
+
+    String _groupFor(String id) {
+      for (final entry in tierGroups.entries) {
+        if (entry.value.contains(id)) return entry.key;
+      }
+      return id;
+    }
+
+    final Map<String, List<Achievement>> groups = {};
+    for (final a in achievements) {
+      final key = _groupFor(a.id);
+      groups.putIfAbsent(key, () => []).add(a);
+    }
+
+    final allowedIds = <String>{};
+    for (final group in groups.values) {
+      group.sort((a, b) => a.tier.compareTo(b.tier));
+      int maxUnlocked = 0;
+      for (final a in group) {
+        if (a.achieved && a.tier > maxUnlocked) maxUnlocked = a.tier;
+      }
+      final maxTier = (maxUnlocked + 1).clamp(1, group.length);
+      allowedIds.addAll(group.where((a) => a.tier <= maxTier).map((e) => e.id));
+    }
+
+    return achievements.where((a) => allowedIds.contains(a.id)).toList();
   }
 
   Widget _buildStatusMenu() {
@@ -148,9 +191,10 @@ class _ProgressScreenState extends State<ProgressScreen>
           return true;
         })
         .toList();
+    final visible = _applyTierFilter(filtered);
 
-    final unlocked = filtered.where((a) => a.achieved).length;
-    final ratio = filtered.isEmpty ? 0.0 : unlocked / filtered.length;
+    final unlocked = visible.where((a) => a.achieved).length;
+    final ratio = visible.isEmpty ? 0.0 : unlocked / visible.length;
 
     final summaryCard = Card(
       child: Padding(
@@ -158,12 +202,12 @@ class _ProgressScreenState extends State<ProgressScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$unlocked of ${filtered.length} Achievements unlocked',
+            Text('$unlocked of ${visible.length} Achievements unlocked',
                 style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 8),
             Semantics(
               label:
-                  '$unlocked of ${filtered.length} achievements unlocked',
+                  '$unlocked of ${visible.length} achievements unlocked',
               child: LinearProgressIndicator(
                 value: ratio,
                 minHeight: 6,
@@ -180,7 +224,7 @@ class _ProgressScreenState extends State<ProgressScreen>
     );
 
     final List<Widget> items = [summaryCard, const SizedBox(height: 8)]
-      ..addAll(filtered.map(
+      ..addAll(visible.map(
         (a) => Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
           child: InkWell(
