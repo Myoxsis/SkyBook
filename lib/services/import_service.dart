@@ -1,9 +1,10 @@
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+// import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 import '../models/flight.dart';
 
 /// Provides utilities for importing flight details from external sources.
 class ImportService {
+  /*
   /// Runs text recognition on the image at [path] and attempts to parse flight
   /// details from the recognized text. Returns a [Flight] with any discovered
   /// fields or `null` if parsing failed.
@@ -14,6 +15,7 @@ class ImportService {
     recognizer.close();
     return _parse(result.text);
   }
+  */
 
   /// Attempts to parse flight details from plain text, such as an itinerary
   /// email. Returns a [Flight] with any discovered fields or `null` if parsing
