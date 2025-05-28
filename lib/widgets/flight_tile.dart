@@ -79,7 +79,10 @@ class FlightTile extends StatelessWidget {
     final theme = Theme.of(context);
     return SkyBookCard(
       color: _colorForClass(context),
-      margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
+      margin: const EdgeInsets.symmetric(
+        vertical: AppSpacing.xxs,
+        horizontal: AppSpacing.xs,
+      ),
       padding: const EdgeInsets.all(AppSpacing.xxs),
       onTap: onTap,
       child: Column(
@@ -116,36 +119,32 @@ class FlightTile extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    children: const [
-                      Expanded(child: Divider(thickness: 1)),
-                      Icon(Icons.arrow_right_alt, size: 20),
-                      Expanded(child: Divider(thickness: 1)),
+                  child: Column(
+                    children: [
+                      if (flight.airline.isNotEmpty)
+                        Text(
+                          flight.airline,
+                          style: theme.textTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      Row(
+                        children: const [
+                          Icon(Icons.flight, size: 20),
+                          Expanded(child: Divider(thickness: 1)),
+                          Icon(Icons.circle, size: 8),
+                        ],
+                      ),
+                      if (flight.aircraft.isNotEmpty)
+                        Text(
+                          flight.aircraft,
+                          style: theme.textTheme.labelMedium,
+                          textAlign: TextAlign.center,
+                        ),
                     ],
                   ),
                 ),
               ),
               _airportColumn(context, flight.destination),
-            ],
-          ),
-          const SizedBox(height: 4),
-          if (flight.airline.isNotEmpty)
-            Text(
-              flight.airline,
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              const Icon(Icons.flight, size: 16, semanticLabel: 'Aircraft'),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  flight.aircraft,
-                  style: theme.textTheme.labelMedium,
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 4),
