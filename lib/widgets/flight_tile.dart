@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../constants.dart';
+import '../data/airport_data.dart';
 import 'skybook_card.dart';
 
 class FlightTile extends StatelessWidget {
   final Flight flight;
-  final VoidCallback onEdit;
   final VoidCallback onToggleFavorite;
   final VoidCallback? onTap;
 
   const FlightTile({
     super.key,
     required this.flight,
-    required this.onEdit,
     required this.onToggleFavorite,
     this.onTap,
   });
@@ -30,109 +29,86 @@ class FlightTile extends StatelessWidget {
     }
   }
 
-  Widget _buildAirlineLogo() {
-    if (flight.callsign.length >= 2) {
-      final code = flight.callsign.substring(0, 2).toUpperCase();
-      final url = 'https://pics.avs.io/60/60/' + code + '.png';
-      return Image.network(
-        url,
-        width: 32,
-        height: 32,
-        semanticLabel: 'Airline logo',
-        errorBuilder: (context, error, stackTrace) => const Icon(
-          Icons.flight,
-          size: 32,
-          semanticLabel: 'Flight',
-        ),
-      );
-    }
-    return const Icon(Icons.flight, size: 32, semanticLabel: 'Flight');
+  Widget _airportColumn(BuildContext context, String code) {
+    final airport = airportByCode[code];
+    final city = airport?.name ?? '';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(code, style: Theme.of(context).textTheme.titleMedium),
+        if (city.isNotEmpty)
+          Text(city, style: Theme.of(context).textTheme.bodySmall),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SkyBookCard(
       color: _colorForClass(context),
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: const EdgeInsets.all(AppSpacing.xxs),
       onTap: onTap,
       child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      _buildAirlineLogo(),
-                      const SizedBox(width: 8),
-                      Text(
-                        flight.date,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      flight.isFavorite ? Icons.star : Icons.star_border,
-                      semanticLabel: flight.isFavorite
-                          ? 'Unfavorite flight'
-                          : 'Favorite flight',
-                    ),
-                    onPressed: onToggleFavorite,
-                  ),
-                ],
+              Text(
+                flight.date,
+                style: theme.textTheme.bodyLarge,
               ),
-            const SizedBox(height: 6),
-            Center(
-              child: Text(
-                '${flight.origin} → ${flight.destination}',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Center(
-              child: Text(
-                flight.aircraft,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-            if (flight.travelClass.isNotEmpty || 
-                flight.callsign.isNotEmpty ||
-                flight.seatNumber.isNotEmpty ||
-                flight.seatLocation.isNotEmpty) ...[
-              const SizedBox(height: 2),
-              Center(
-                child: Text(
-                  flight.callsign,
-                  style: Theme.of(context).textTheme.bodySmall,
+              IconButton(
+                icon: Icon(
+                  flight.isFavorite ? Icons.star : Icons.star_border,
+                  semanticLabel:
+                      flight.isFavorite ? 'Unfavorite flight' : 'Favorite flight',
                 ),
+                onPressed: onToggleFavorite,
               ),
             ],
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.schedule,
-                        size: 16, semanticLabel: 'Duration'),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${flight.duration}h',
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                  ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _airportColumn(context, flight.origin),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.play_arrow, size: 16),
+                      const SizedBox(width: 4),
+                      const Expanded(child: Divider(thickness: 1)),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.circle, size: 8),
+                    ],
+                  ),
                 ),
-                IconButton(
-                  icon:
-                      const Icon(Icons.edit, semanticLabel: 'Edit flight'),
-                  onPressed: onEdit,
-                ),
-              ],
+              ),
+              _airportColumn(context, flight.destination),
+            ],
+          ),
+          const SizedBox(height: 4),
+          if (flight.airline.isNotEmpty)
+            Text(
+              flight.airline,
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
             ),
-          ],
-        ),
-      
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const Icon(Icons.schedule, size: 16, semanticLabel: 'Duration'),
+              const SizedBox(width: 4),
+              Text('${flight.duration}h', style: theme.textTheme.labelMedium),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

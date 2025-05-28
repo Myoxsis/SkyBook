@@ -154,36 +154,6 @@ class _FlightScreenState extends State<FlightScreen> {
     }
   }
 
-  Future<void> _editFlight(int index) async {
-    final result = await Navigator.of(context).push<dynamic>(
-      MaterialPageRoute(
-        builder: (_) => AddFlightScreen(
-          flight: _flights[index],
-          flights: _allFlights,
-        ),
-      ),
-    );
-    if (result is Flight) {
-      final originalId = _flights[index].id;
-      _flights[index] = result;
-      final allIndex =
-          _allFlights.indexWhere((f) => f.id == originalId);
-      if (allIndex != -1) _allFlights[allIndex] = result;
-      _sortAllFlights();
-      _updateYears();
-      _applyFilters();
-      widget.flightsNotifier.value = List<Flight>.from(_allFlights);
-      await widget.onFlightsChanged();
-    } else if (result == 'delete') {
-      final originalId = _flights[index].id;
-      _flights = List<Flight>.from(_flights)..removeAt(index);
-      _allFlights.removeWhere((f) => f.id == originalId);
-      _updateYears();
-      _applyFilters();
-      widget.flightsNotifier.value = List<Flight>.from(_allFlights);
-      await widget.onFlightsChanged();
-    }
-  }
 
   void _toggleFavorite(int index) {
     final flight = _flights[index];
@@ -273,7 +243,6 @@ class _FlightScreenState extends State<FlightScreen> {
         itemBuilder: (context, index) {
           return FlightTile(
             flight: _flights[index],
-            onEdit: () => _editFlight(index),
             onToggleFavorite: () => _toggleFavorite(index),
             onTap: () => _viewFlight(index),
           );
