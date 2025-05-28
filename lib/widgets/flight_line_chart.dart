@@ -91,7 +91,7 @@ class _LineChartPainter extends CustomPainter {
       );
       tp.layout();
       final labelX = points[i].dx - tp.width / 2;
-      final labelY = math.max(0, points[i].dy - tp.height - 4);
+      final labelY = math.max(0.0, points[i].dy - tp.height - 4);
       tp.paint(canvas, Offset(labelX, labelY));
     }
 
