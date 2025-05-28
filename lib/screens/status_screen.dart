@@ -655,6 +655,7 @@ class _StatusTile extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
+              textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -662,6 +663,7 @@ class _StatusTile extends StatelessWidget {
             ),
             Text(
               label,
+              textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
