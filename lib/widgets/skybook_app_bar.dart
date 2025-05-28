@@ -4,14 +4,12 @@ class SkyBookAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
-  final bool showLogo;
 
   const SkyBookAppBar({
     Key? key,
     required this.title,
     this.actions,
     this.bottom,
-    this.showLogo = true,
   }) : super(key: key);
 
   @override
@@ -24,10 +22,6 @@ class SkyBookAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Row(
         children: [
-          if (showLogo) ...[
-            Image.asset('assets/logo_r.png', height: kToolbarHeight - 16),
-            const SizedBox(width: 8),
-          ],
           Expanded(
             child: Text(
               title,
