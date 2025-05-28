@@ -175,6 +175,23 @@ class _StatusScreenState extends State<StatusScreen> {
     return entries.take(3).toList();
   }
 
+  Map<String, int> get _routeCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      if (f.origin.isNotEmpty && f.destination.isNotEmpty) {
+        final route = '${f.origin} → ${f.destination}';
+        counts[route] = (counts[route] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
+  List<MapEntry<String, int>> get _topRoutes {
+    final entries = _routeCount.entries.toList();
+    entries.sort((a, b) => b.value.compareTo(a.value));
+    return entries.take(3).toList();
+  }
+
   String get _favoritePlane =>
       _topAircraft.isNotEmpty ? _topAircraft.first.key : 'N/A';
 
@@ -338,6 +355,8 @@ class _StatusScreenState extends State<StatusScreen> {
               const SizedBox(height: 24),
               _buildCountryChart(),
               const SizedBox(height: 24),
+              _buildRouteChart(),
+              const SizedBox(height: 24),
               _buildClassChart(),
               const SizedBox(height: 24),
               _buildTripTypeChart(),
@@ -406,6 +425,28 @@ class _StatusScreenState extends State<StatusScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Top Countries',
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+          ...top.map((e) {
+            final barWidth = e.value / maxCount;
+          return _buildBarRow(e.key, e.value, barWidth);
+        })
+      ],
+    );
+  }
+
+  Widget _buildRouteChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+      final top = _topRoutes;
+      final maxCount = top.isNotEmpty ? top.first.value : 1;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Top Routes',
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
           ...top.map((e) {
