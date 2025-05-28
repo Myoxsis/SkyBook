@@ -13,7 +13,7 @@ class AppDatabase {
     final path = join(await getDatabasesPath(), 'skybook.db');
     _db = await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: (db, version) async {
         await _createTables(db);
         await _seed(db);
@@ -27,6 +27,9 @@ class AppDatabase {
           await db.execute('ALTER TABLE flights ADD COLUMN originRating INTEGER DEFAULT 0');
           await db.execute('ALTER TABLE flights ADD COLUMN destinationRating INTEGER DEFAULT 0');
           await db.execute('ALTER TABLE flights ADD COLUMN seatRating INTEGER DEFAULT 0');
+        }
+        if (oldVersion < 4) {
+          await db.execute('ALTER TABLE airports ADD COLUMN city TEXT');
         }
       },
     );
@@ -61,6 +64,7 @@ CREATE TABLE IF NOT EXISTS flights(
 CREATE TABLE IF NOT EXISTS airports(
   code TEXT PRIMARY KEY,
   name TEXT,
+  city TEXT,
   country TEXT,
   region TEXT,
   latitude REAL,

@@ -31,7 +31,7 @@ class FlightTile extends StatelessWidget {
 
   Widget _airportColumn(BuildContext context, String code) {
     final airport = airportByCode[code];
-    final city = airport?.name ?? '';
+    final city = airport?.city ?? '';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
