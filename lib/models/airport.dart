@@ -1,6 +1,7 @@
 class Airport {
   final String code;
   final String name;
+  final String city;
   final String country;
   final String region;
   final double latitude;
@@ -9,6 +10,7 @@ class Airport {
   const Airport({
     required this.code,
     required this.name,
+    required this.city,
     required this.country,
     required this.region,
     required this.latitude,
@@ -21,6 +23,7 @@ class Airport {
     return {
       'code': code,
       'name': name,
+      'city': city,
       'country': country,
       'region': region,
       'latitude': latitude,
@@ -32,6 +35,7 @@ class Airport {
     return Airport(
       code: map['code'] as String,
       name: map['name'] as String,
+      city: map['city'] as String,
       country: map['country'] as String,
       region: map['region'] as String,
       latitude: (map['latitude'] as num).toDouble(),
