@@ -20,6 +20,7 @@ dependencies:
   google_fonts: ^4.0.4
   intl: ^0.18.0
   share_plus: ^6.3.0
+  path_provider: ^2.0.9
   quick_actions: ^1.0.0
   # Pin the version to avoid breaking iOS builds due to the new
   # WidgetConfigurationIntent requirement in v0.8.0+.
