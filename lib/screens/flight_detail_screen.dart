@@ -49,7 +49,9 @@ class FlightDetailScreen extends StatelessWidget {
     final start = LatLng(origin.latitude, origin.longitude);
     final end = LatLng(dest.latitude, dest.longitude);
     final routePoints = MapUtils.arcPoints(start, end);
-    final view = MapUtils.viewForPoints(routePoints);
+    final width = MediaQuery.of(context).size.width - AppSpacing.s * 2;
+    const height = 200.0;
+    final view = MapUtils.viewForPointsInSize(routePoints, width, height);
     final center = view.center;
     final zoom = view.zoom;
 
