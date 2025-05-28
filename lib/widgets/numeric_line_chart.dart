@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 
 /// Line chart widget for numeric data keyed by month.
 class NumericLineChart extends StatelessWidget {
@@ -14,7 +14,7 @@ class NumericLineChart extends StatelessWidget {
     if (values.isEmpty) return const SizedBox.shrink();
     final sortedKeys = values.keys.toList()..sort();
     final data = [for (final k in sortedKeys) values[k]?.toDouble() ?? 0];
-    final labels = [for (final k in sortedKeys) DateFormat.yMMM().format(k)];
+    final labels = [for (final k in sortedKeys) intl.DateFormat.yMMM().format(k)];
     final lineColor = Theme.of(context).colorScheme.primary;
 
     return Column(
