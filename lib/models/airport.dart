@@ -35,7 +35,7 @@ class Airport {
     return Airport(
       code: map['code'] as String,
       name: map['name'] as String,
-      city: map['city'] as String,
+      city: (map['city'] as String?) ?? '',
       country: map['country'] as String,
       region: map['region'] as String,
       latitude: (map['latitude'] as num).toDouble(),
