@@ -16,6 +16,19 @@ class FlightTile extends StatelessWidget {
     this.onTap,
   });
 
+  Color _chipColorForClass(BuildContext context) {
+    switch (flight.travelClass) {
+      case 'Premium':
+        return Colors.indigo;
+      case 'Business':
+        return Colors.teal;
+      case 'First':
+        return Colors.amber;
+      default:
+        return Theme.of(context).colorScheme.primary;
+    }
+  }
+
   Color _colorForClass(BuildContext context) {
     switch (flight.travelClass) {
       case 'Premium':
@@ -35,10 +48,28 @@ class FlightTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(code, style: Theme.of(context).textTheme.titleMedium),
+        Text(code, style: Theme.of(context).textTheme.titleLarge),
         if (city.isNotEmpty)
           Text(city, style: Theme.of(context).textTheme.bodySmall),
       ],
+    );
+  }
+
+  Widget _travelClassChip(BuildContext context) {
+    if (flight.travelClass.isEmpty) return const SizedBox.shrink();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: _chipColorForClass(context),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        flight.travelClass,
+        style: Theme.of(context)
+            .textTheme
+            .labelSmall
+            ?.copyWith(color: Colors.white),
+      ),
     );
   }
 
@@ -60,13 +91,19 @@ class FlightTile extends StatelessWidget {
                 flight.date,
                 style: theme.textTheme.bodyLarge,
               ),
-              IconButton(
-                icon: Icon(
-                  flight.isFavorite ? Icons.star : Icons.star_border,
-                  semanticLabel:
-                      flight.isFavorite ? 'Unfavorite flight' : 'Favorite flight',
-                ),
-                onPressed: onToggleFavorite,
+              Row(
+                children: [
+                  _travelClassChip(context),
+                  IconButton(
+                    icon: Icon(
+                      flight.isFavorite ? Icons.star : Icons.star_border,
+                      semanticLabel: flight.isFavorite
+                          ? 'Unfavorite flight'
+                          : 'Favorite flight',
+                    ),
+                    onPressed: onToggleFavorite,
+                  ),
+                ],
               ),
             ],
           ),
@@ -79,12 +116,10 @@ class FlightTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Row(
-                    children: [
-                      const Icon(Icons.play_arrow, size: 16),
-                      const SizedBox(width: 4),
-                      const Expanded(child: Divider(thickness: 1)),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.circle, size: 8),
+                    children: const [
+                      Expanded(child: Divider(thickness: 1)),
+                      Icon(Icons.arrow_right_alt, size: 20),
+                      Expanded(child: Divider(thickness: 1)),
                     ],
                   ),
                 ),
@@ -99,6 +134,19 @@ class FlightTile extends StatelessWidget {
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const Icon(Icons.flight, size: 16, semanticLabel: 'Aircraft'),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  flight.aircraft,
+                  style: theme.textTheme.labelMedium,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 4),
           Row(
             children: [
