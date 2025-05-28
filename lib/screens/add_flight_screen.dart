@@ -363,9 +363,26 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             LengthLimitingTextInputFormatter(3),
             UpperCaseTextFormatter(),
           ],
-          decoration: InputDecoration(labelText: label),
+          decoration: InputDecoration(
+            labelText: label,
+            suffixIcon: textEditingController.text.isEmpty
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        textEditingController.clear();
+                        if (onChanged != null) onChanged('');
+                      });
+                    },
+                    tooltip: 'Clear $label',
+                  ),
+          ),
           onFieldSubmitted: (_) => onFieldSubmitted(),
-          onChanged: onChanged,
+          onChanged: (v) {
+            setState(() {});
+            if (onChanged != null) onChanged(v);
+          },
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Please enter $label';
@@ -453,12 +470,24 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           key: _aircraftFieldKey,
           controller: textEditingController,
           focusNode: focusNode,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Aircraft',
             prefixIcon:
-                Icon(Icons.airplanemode_active, semanticLabel: 'Aircraft'),
+                const Icon(Icons.airplanemode_active, semanticLabel: 'Aircraft'),
+            suffixIcon: textEditingController.text.isEmpty
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        textEditingController.clear();
+                      });
+                    },
+                    tooltip: 'Clear Aircraft',
+                  ),
           ),
           onFieldSubmitted: (_) => onFieldSubmitted(),
+          onChanged: (_) => setState(() {}),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'Please enter Aircraft';
@@ -517,12 +546,27 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   Widget _buildFlightNumberField() {
     return TextFormField(
       controller: _flightNumberController,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'Flight Number',
-        prefixIcon: Icon(Icons.flight, semanticLabel: 'Flight number'),
+        prefixIcon: const Icon(Icons.flight, semanticLabel: 'Flight number'),
+        suffixIcon: _flightNumberController.text.isEmpty
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  setState(() {
+                    _flightNumberController.clear();
+                    _updateAirline('');
+                  });
+                },
+                tooltip: 'Clear Flight Number',
+              ),
       ),
       inputFormatters: [UpperCaseTextFormatter()],
-      onChanged: _updateAirline,
+      onChanged: (v) {
+        setState(() {});
+        _updateAirline(v);
+      },
     );
   }
   Widget _buildFlightInfoCard() {
@@ -692,7 +736,21 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 Expanded(
                   child: TextField(
                     controller: _seatNumberController,
-                    decoration: const InputDecoration(labelText: 'Seat Number'),
+                    decoration: InputDecoration(
+                      labelText: 'Seat Number',
+                      suffixIcon: _seatNumberController.text.isEmpty
+                          ? null
+                          : IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                setState(() {
+                                  _seatNumberController.clear();
+                                });
+                              },
+                              tooltip: 'Clear Seat Number',
+                            ),
+                    ),
+                    onChanged: (_) => setState(() {}),
                   ),
                 ),
                 const SizedBox(width: 8),
