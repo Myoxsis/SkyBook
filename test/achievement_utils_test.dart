@@ -20,6 +20,9 @@ Flight _flight(String id, String origin, String destination, double distance) {
     seatLocation: '',
     distanceKm: distance,
     carbonKg: 0,
+    originRating: 0,
+    destinationRating: 0,
+    seatRating: 0,
   );
 }
 

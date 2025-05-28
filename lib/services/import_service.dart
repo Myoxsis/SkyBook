@@ -68,6 +68,9 @@ class ImportService {
       travelClass: '',
       seatNumber: '',
       seatLocation: '',
+      originRating: 0,
+      destinationRating: 0,
+      seatRating: 0,
     );
   }
 }
