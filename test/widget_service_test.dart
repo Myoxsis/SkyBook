@@ -19,6 +19,9 @@ Flight _flight(double distance, double carbon) {
     seatLocation: '',
     distanceKm: distance,
     carbonKg: carbon,
+    originRating: 0,
+    destinationRating: 0,
+    seatRating: 0,
   );
 }
 

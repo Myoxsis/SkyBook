@@ -16,6 +16,9 @@ class Flight {
   final double carbonKg;
   final bool isFavorite;
   final bool isBusiness;
+  final int originRating;
+  final int destinationRating;
+  final int seatRating;
 
   Flight({
     required this.id,
@@ -35,6 +38,9 @@ class Flight {
     this.carbonKg = 0,
     this.isFavorite = false,
     this.isBusiness = false,
+    this.originRating = 0,
+    this.destinationRating = 0,
+    this.seatRating = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -58,6 +64,9 @@ class Flight {
       // integers for compatibility.
       'isFavorite': isFavorite ? 1 : 0,
       'isBusiness': isBusiness ? 1 : 0,
+      'originRating': originRating,
+      'destinationRating': destinationRating,
+      'seatRating': seatRating,
     };
   }
 
@@ -79,6 +88,9 @@ class Flight {
     double? carbonKg,
     bool? isFavorite,
     bool? isBusiness,
+    int? originRating,
+    int? destinationRating,
+    int? seatRating,
   }) {
     return Flight(
       id: id ?? this.id,
@@ -98,6 +110,9 @@ class Flight {
       carbonKg: carbonKg ?? this.carbonKg,
       isFavorite: isFavorite ?? this.isFavorite,
       isBusiness: isBusiness ?? this.isBusiness,
+      originRating: originRating ?? this.originRating,
+      destinationRating: destinationRating ?? this.destinationRating,
+      seatRating: seatRating ?? this.seatRating,
     );
   }
 
@@ -120,6 +135,9 @@ class Flight {
       carbonKg: (map['carbonKg'] as num?)?.toDouble() ?? 0,
       isFavorite: _parseBool(map['isFavorite']),
       isBusiness: _parseBool(map['isBusiness']),
+      originRating: (map['originRating'] as num?)?.toInt() ?? 0,
+      destinationRating: (map['destinationRating'] as num?)?.toInt() ?? 0,
+      seatRating: (map['seatRating'] as num?)?.toInt() ?? 0,
     );
   }
 

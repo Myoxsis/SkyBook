@@ -14,6 +14,7 @@ import '../widgets/skybook_card.dart';
 import '../utils/text_formatters.dart';
 import '../utils/carbon_utils.dart';
 import '../widgets/app_dialog.dart';
+import '../widgets/star_rating.dart';
 import '../constants.dart';
 import '../services/import_service.dart';
 
@@ -50,6 +51,10 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   String _travelClass = 'Economy';
   String _seatLocation = 'Window';
   bool _isBusiness = false;
+
+  int _originRating = 0;
+  int _destinationRating = 0;
+  int _seatRating = 0;
 
   double? _distanceKm;
   double? _carbonKg;
@@ -155,6 +160,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       _seatLocation = flight.seatLocation.isNotEmpty ? flight.seatLocation : 'Window';
       _carbonKg = flight.carbonKg > 0 ? flight.carbonKg : null;
       _isBusiness = flight.isBusiness;
+      _originRating = flight.originRating;
+      _destinationRating = flight.destinationRating;
+      _seatRating = flight.seatRating;
     } else {
       _selectedAircraft = aircrafts.first;
       _aircraftController.text = _selectedAircraft!.display;
@@ -290,6 +298,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       carbonKg: _carbonKg ?? widget.flight?.carbonKg ?? 0,
       isFavorite: widget.flight?.isFavorite ?? false,
       isBusiness: _isBusiness,
+      originRating: _originRating,
+      destinationRating: _destinationRating,
+      seatRating: _seatRating,
     );
     Navigator.of(context).pop(flight);
   }
@@ -392,6 +403,35 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
         controller.text = a.code;
         if (onChanged != null) onChanged(a.code);
       },
+    );
+  }
+
+  Widget _buildRatedAirportRow(
+    TextEditingController controller,
+    FocusNode focusNode,
+    String label,
+    int rating,
+    ValueChanged<int> onRatingChanged, {
+    Key? key,
+    GlobalKey<FormFieldState>? fieldKey,
+    void Function(String)? onChanged,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: _buildAirportField(
+            controller,
+            focusNode,
+            label,
+            key: key,
+            fieldKey: fieldKey,
+            onChanged: onChanged,
+          ),
+        ),
+        const SizedBox(width: 8),
+        StarRating(rating: rating, onRatingChanged: onRatingChanged, size: 20),
+      ],
     );
   }
 
@@ -571,18 +611,22 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             Text('Route Details',
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
-            _buildAirportField(
+            _buildRatedAirportRow(
               _originController,
               _originFocusNode,
               'Origin',
+              _originRating,
+              (r) => setState(() => _originRating = r),
               key: const ValueKey('origin'),
               fieldKey: _originFieldKey,
               onChanged: (_) => _computeDistance(),
             ),
-            _buildAirportField(
+            _buildRatedAirportRow(
               _destinationController,
               _destinationFocusNode,
               'Destination',
+              _destinationRating,
+              (r) => setState(() => _destinationRating = r),
               key: const ValueKey('destination'),
               fieldKey: _destinationFieldKey,
               onChanged: (_) => _computeDistance(),
@@ -643,9 +687,21 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 }
               },
             ),
-            TextField(
-              controller: _seatNumberController,
-              decoration: const InputDecoration(labelText: 'Seat Number'),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _seatNumberController,
+                    decoration: const InputDecoration(labelText: 'Seat Number'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                StarRating(
+                  rating: _seatRating,
+                  onRatingChanged: (r) => setState(() => _seatRating = r),
+                  size: 20,
+                ),
+              ],
             ),
             DropdownButtonFormField<String>(
               value: _seatLocation,
