@@ -4,12 +4,14 @@ import '../constants.dart';
 class InfoRow extends StatelessWidget {
   final String title;
   final String value;
+  final String? subtitle;
   final IconData? icon;
 
   const InfoRow({
     super.key,
     required this.title,
     required this.value,
+    this.subtitle,
     this.icon,
   });
 
@@ -32,6 +34,10 @@ class InfoRow extends StatelessWidget {
             Text(title, style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 2),
             Text(value, style: Theme.of(context).textTheme.bodyMedium),
+            if (subtitle != null && subtitle!.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              Text(subtitle!, style: Theme.of(context).textTheme.bodySmall),
+            ],
           ],
         ),
       ),

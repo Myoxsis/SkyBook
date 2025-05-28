@@ -130,6 +130,9 @@ class FlightDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final originAirport = airportByCode[flight.origin];
+    final destAirport = airportByCode[flight.destination];
+
     final items = <Widget>[
       _buildMap(context),
       const SizedBox(height: 16),
@@ -140,6 +143,7 @@ class FlightDetailScreen extends StatelessWidget {
             child: InfoRow(
               title: 'From',
               value: flight.origin,
+              subtitle: originAirport?.city ?? '',
               icon: Icons.flight_takeoff,
             ),
           ),
@@ -148,6 +152,7 @@ class FlightDetailScreen extends StatelessWidget {
             child: InfoRow(
               title: 'To',
               value: flight.destination,
+              subtitle: destAirport?.city ?? '',
               icon: Icons.flight_land,
             ),
           ),
