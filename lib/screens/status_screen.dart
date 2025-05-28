@@ -7,9 +7,9 @@ import '../widgets/class_pie_chart.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/flight_line_chart.dart';
 import '../widgets/numeric_line_chart.dart';
+import '../widgets/day_of_week_bar_chart.dart';
 import '../widgets/skybook_card.dart';
 import '../constants.dart';
-import 'dart:math' as math;
 
 class StatusScreen extends StatefulWidget {
   final VoidCallback onOpenSettings;
@@ -434,20 +434,18 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-      final top = _topCountries;
-      final maxCount = top.isNotEmpty ? top.first.value : 1;
+    final top = _topCountries;
+    final maxCount = top.isNotEmpty ? top.first.value : 1;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Top Countries',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-          ...top.map((e) {
-            final barWidth = e.value / maxCount;
+    return _buildChartTile(
+      title: 'Top Countries',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: top.map((e) {
+          final barWidth = e.value / maxCount;
           return _buildBarRow(e.key, e.value, barWidth);
-        })
-      ],
+        }).toList(),
+      ),
     );
   }
 
@@ -469,14 +467,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Class Distribution',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        ClassPieChart(counts: _classCount),
-      ],
+    return _buildChartTile(
+      title: 'Class Distribution',
+      child: ClassPieChart(counts: _classCount),
     );
   }
 
@@ -485,14 +478,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Trip Type Distribution',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        ClassPieChart(counts: _tripTypeCount),
-      ],
+    return _buildChartTile(
+      title: 'Trip Type Distribution',
+      child: ClassPieChart(counts: _tripTypeCount),
     );
   }
 
@@ -501,14 +489,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Seat Location Usage',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        ClassPieChart(counts: _seatLocationCount),
-      ],
+    return _buildChartTile(
+      title: 'Seat Location Usage',
+      child: ClassPieChart(counts: _seatLocationCount),
     );
   }
 
@@ -553,19 +536,28 @@ class _StatusScreenState extends State<StatusScreen> {
     );
   }
 
+  Widget _buildChartTile({required String title, required Widget child}) {
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          child,
+        ],
+      ),
+    );
+  }
+
   Widget _buildMonthlyChart() {
     if (_flights.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Flights per Month',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        FlightLineChart(counts: _monthlyFlightCounts),
-      ],
+    return _buildChartTile(
+      title: 'Flights per Month',
+      child: FlightLineChart(counts: _monthlyFlightCounts),
     );
   }
 
@@ -574,14 +566,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Avg Distance per Month',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        NumericLineChart(values: _monthlyAverageDistance),
-      ],
+    return _buildChartTile(
+      title: 'Avg Distance per Month',
+      child: NumericLineChart(values: _monthlyAverageDistance),
     );
   }
 
@@ -590,14 +577,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('CO₂ per Month',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        NumericLineChart(values: _monthlyCarbonTotals),
-      ],
+    return _buildChartTile(
+      title: 'CO₂ per Month',
+      child: NumericLineChart(values: _monthlyCarbonTotals),
     );
   }
 
@@ -606,24 +588,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final counts = _dayOfWeekCount;
-    final maxCount = counts.values.isNotEmpty
-        ? counts.values.reduce(math.max)
-        : 1;
-    const order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Flights by Day of Week',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        ...order.map((d) {
-          final count = counts[d] ?? 0;
-          final barWidth = count / maxCount;
-          return _buildBarRow(d, count, barWidth);
-        })
-      ],
+    return _buildChartTile(
+      title: 'Flights by Day of Week',
+      child: DayOfWeekBarChart(counts: _dayOfWeekCount),
     );
   }
 
