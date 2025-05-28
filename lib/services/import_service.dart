@@ -1,27 +1,41 @@
-// import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 import '../models/flight.dart';
 
 /// Provides utilities for importing flight details from external sources.
 class ImportService {
-  /*
-  /// Runs text recognition on the image at [path] and attempts to parse flight
-  /// details from the recognized text. Returns a [Flight] with any discovered
-  /// fields or `null` if parsing failed.
+  /// Scans the image at [path] for a barcode or QR code and attempts to
+  /// extract flight details. Returns a [Flight] with any discovered fields or
+  /// `null` if parsing failed.
   static Future<Flight?> scanBoardingPassImage(String path) async {
     final inputImage = InputImage.fromFilePath(path);
-    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    final result = await recognizer.processImage(inputImage);
-    recognizer.close();
-    return _parse(result.text);
+    final scanner = BarcodeScanner(formats: [
+      BarcodeFormat.qrCode,
+      BarcodeFormat.pdf417,
+    ]);
+    final barcodes = await scanner.processImage(inputImage);
+    scanner.close();
+
+    for (final barcode in barcodes) {
+      final raw = barcode.rawValue;
+      if (raw == null || raw.isEmpty) continue;
+      final flight = parseBarcodeData(raw);
+      if (flight != null) return flight;
+    }
+    return null;
   }
-  */
 
   /// Attempts to parse flight details from plain text, such as an itinerary
   /// email. Returns a [Flight] with any discovered fields or `null` if parsing
   /// failed.
   static Flight? parseItineraryText(String text) {
     return _parse(text);
+  }
+
+  /// Attempts to parse flight information from raw barcode or QR code data.
+  static Flight? parseBarcodeData(String data) {
+    return _parse(data);
   }
 
   /// Extracts a flight number, origin, destination and optional date from

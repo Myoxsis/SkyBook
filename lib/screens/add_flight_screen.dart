@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/flight.dart';
 import '../models/aircraft.dart';
 import '../models/airport.dart';
@@ -192,7 +192,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     }
   }
 
-  /*
   Future<void> _scanBoardingPass() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.camera);
@@ -214,7 +213,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     _updateAirline(flight.callsign);
     _computeDistance();
   }
-  */
 
   Future<void> _importItinerary() async {
     final text = await showDialog<String>(
@@ -541,7 +539,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             const SizedBox(height: 8),
             Row(
               children: [
-                /*
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: _scanBoardingPass,
@@ -550,7 +547,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                */
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: _importItinerary,
