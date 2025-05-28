@@ -4,7 +4,7 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../utils/achievement_utils.dart';
 import '../models/achievement.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import '../widgets/skybook_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/app_dialog.dart';
@@ -275,7 +275,7 @@ class _ProgressScreenState extends State<ProgressScreen>
                             style: Theme.of(context).textTheme.bodyMedium),
                         if (a.unlockedAt != null)
                           Text(
-                            DateFormat.yMMMd().format(a.unlockedAt!),
+                            intl.DateFormat.yMMMd().format(a.unlockedAt!),
                             style: Theme.of(context).textTheme.labelSmall,
                           ),
                         const SizedBox(height: 2),
