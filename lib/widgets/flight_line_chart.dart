@@ -80,6 +80,21 @@ class _LineChartPainter extends CustomPainter {
       canvas.drawCircle(p, 3, dotPaint);
     }
 
+    final textStyle = TextStyle(
+      color: color,
+      fontSize: 10,
+    );
+    for (var i = 0; i < points.length; i++) {
+      final tp = TextPainter(
+        text: TextSpan(text: counts[i].toString(), style: textStyle),
+        textDirection: TextDirection.ltr,
+      );
+      tp.layout();
+      final labelX = points[i].dx - tp.width / 2;
+      final labelY = math.max(0, points[i].dy - tp.height - 4);
+      tp.paint(canvas, Offset(labelX, labelY));
+    }
+
     // Draw baseline
     final basePaint = Paint()
       ..color = color.withOpacity(0.3)
