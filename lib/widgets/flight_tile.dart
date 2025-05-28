@@ -129,7 +129,10 @@ class FlightTile extends StatelessWidget {
                         ),
                       Row(
                         children: const [
-                          Icon(Icons.flight, size: 20),
+                          RotatedBox(
+                            quarterTurns: 1,
+                            child: Icon(Icons.flight, size: 20),
+                          ),
                           Expanded(child: Divider(thickness: 1)),
                           Icon(Icons.circle, size: 8),
                         ],
