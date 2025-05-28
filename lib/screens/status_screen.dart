@@ -94,7 +94,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topAircraft {
     final entries = _aircraftCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(3).toList();
+    return entries.take(5).toList();
   }
 
   Map<String, int> get _airlineCount {
@@ -110,7 +110,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topAirlines {
     final entries = _airlineCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(3).toList();
+    return entries.take(5).toList();
   }
 
   Map<String, int> get _countryCount {
@@ -159,6 +159,25 @@ class _StatusScreenState extends State<StatusScreen> {
     return counts;
   }
 
+  Map<String, int> get _airportCount {
+    final counts = <String, int>{};
+    for (final f in _flights) {
+      if (f.origin.isNotEmpty) {
+        counts[f.origin] = (counts[f.origin] ?? 0) + 1;
+      }
+      if (f.destination.isNotEmpty) {
+        counts[f.destination] = (counts[f.destination] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
+  List<MapEntry<String, int>> get _topAirports {
+    final entries = _airportCount.entries.toList();
+    entries.sort((a, b) => b.value.compareTo(a.value));
+    return entries.take(5).toList();
+  }
+
   Map<String, int> get _destinationCount {
     final counts = <String, int>{};
     for (final f in _flights) {
@@ -172,7 +191,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topDestinations {
     final entries = _destinationCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(3).toList();
+    return entries.take(5).toList();
   }
 
   Map<String, int> get _routeCount {
@@ -189,7 +208,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topRoutes {
     final entries = _routeCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(3).toList();
+    return entries.take(5).toList();
   }
 
   String get _favoritePlane =>
@@ -341,6 +360,14 @@ class _StatusScreenState extends State<StatusScreen> {
             ),
             if (_premium) ...[
               const SizedBox(height: 24),
+              _buildAirportChart(),
+              const SizedBox(height: 24),
+              _buildAirlineChart(),
+              const SizedBox(height: 24),
+              _buildRouteChart(),
+              const SizedBox(height: 24),
+              _buildAircraftChart(),
+              const SizedBox(height: 24),
               _buildMonthlyChart(),
               const SizedBox(height: 24),
               _buildAverageDistanceChart(),
@@ -349,13 +376,7 @@ class _StatusScreenState extends State<StatusScreen> {
               const SizedBox(height: 24),
               _buildDayOfWeekChart(),
               const SizedBox(height: 24),
-              _buildAircraftChart(),
-              const SizedBox(height: 24),
-              _buildAirlineChart(),
-              const SizedBox(height: 24),
               _buildCountryChart(),
-              const SizedBox(height: 24),
-              _buildRouteChart(),
               const SizedBox(height: 24),
               _buildClassChart(),
               const SizedBox(height: 24),
@@ -374,20 +395,24 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-      final top = _topAircraft;
-      final maxCount = top.isNotEmpty ? top.first.value : 1;
+    return _buildTopTile(
+      icon: Icons.airplanemode_active,
+      title: 'Top Aircraft',
+      total: _aircraftCount.length,
+      items: _topAircraft,
+    );
+  }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Top Aircraft',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-          ...top.map((e) {
-            final barWidth = e.value / maxCount;
-            return _buildBarRow(e.key, e.value, barWidth);
-          })
-      ],
+  Widget _buildAirportChart() {
+    if (_flights.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return _buildTopTile(
+      icon: Icons.place,
+      title: 'Top Airports',
+      total: _airportCount.length,
+      items: _topAirports,
     );
   }
 
@@ -396,20 +421,11 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-      final top = _topAirlines;
-      final maxCount = top.isNotEmpty ? top.first.value : 1;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Top Airlines',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-          ...top.map((e) {
-            final barWidth = e.value / maxCount;
-            return _buildBarRow(e.key, e.value, barWidth);
-          })
-      ],
+    return _buildTopTile(
+      icon: Icons.airlines,
+      title: 'Top Airlines',
+      total: _airlineCount.length,
+      items: _topAirlines,
     );
   }
 
@@ -440,20 +456,11 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-      final top = _topRoutes;
-      final maxCount = top.isNotEmpty ? top.first.value : 1;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Top Routes',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-          ...top.map((e) {
-            final barWidth = e.value / maxCount;
-            return _buildBarRow(e.key, e.value, barWidth);
-          })
-      ],
+    return _buildTopTile(
+      icon: Icons.alt_route,
+      title: 'Top Routes',
+      total: _routeCount.length,
+      items: _topRoutes,
     );
   }
 
@@ -502,6 +509,47 @@ class _StatusScreenState extends State<StatusScreen> {
         const SizedBox(height: 8),
         ClassPieChart(counts: _seatLocationCount),
       ],
+    );
+  }
+
+  Widget _buildTopTile({
+    required IconData icon,
+    required String title,
+    required int total,
+    required List<MapEntry<String, int>> items,
+  }) {
+    final maxCount = items.isNotEmpty ? items.first.value : 1;
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.s),
+            child: Column(
+              children: [
+                Icon(icon,
+                    color: Theme.of(context).colorScheme.primary,
+                    semanticLabel: title),
+                const SizedBox(height: 4),
+                Text(title, style: Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(height: 4),
+                Text('total $total',
+                    style: Theme.of(context).textTheme.labelSmall),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: items.map((e) {
+                final fraction = e.value / maxCount;
+                return _buildBarRow(e.key, e.value, fraction);
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -581,8 +629,6 @@ class _StatusScreenState extends State<StatusScreen> {
 
   Widget _buildBarRow(String label, int value, double fraction) {
     final barColor = Theme.of(context).colorScheme.primary;
-    final backgroundColor =
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.12);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
       child: Semantics(
@@ -591,20 +637,18 @@ class _StatusScreenState extends State<StatusScreen> {
           children: [
             SizedBox(width: 100, child: Text(label)),
             Expanded(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 20,
-                    color: backgroundColor,
-                  ),
-                  FractionallySizedBox(
-                    widthFactor: fraction,
-                    child: Container(
-                      height: 20,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: FractionallySizedBox(
+                  widthFactor: fraction,
+                  child: Container(
+                    height: 16,
+                    decoration: BoxDecoration(
                       color: barColor,
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
             const SizedBox(width: 8),
