@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'dart:ui' as ui;
 
 import '../utils/map_utils.dart';
 import '../models/flight.dart';
@@ -29,6 +34,15 @@ class _MapScreenState extends State<MapScreen> {
   final MapController _controller = MapController();
   LatLng _center = LatLng(20, 0);
   double _zoom = 2;
+  final GlobalKey _shareKey = GlobalKey();
+  bool _showTiles = false;
+
+  double get _totalDuration {
+    return _flights.fold(0.0, (prev, f) {
+      final dur = double.tryParse(f.duration) ?? 0;
+      return prev + dur;
+    });
+  }
 
   void _showAirportInfo(Airport airport) {
     final related = _flights
@@ -96,6 +110,27 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
+  Future<void> _share() async {
+    setState(() => _showTiles = true);
+    await Future.delayed(const Duration(milliseconds: 100));
+    final boundary =
+        _shareKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData == null) {
+      setState(() => _showTiles = false);
+      return;
+    }
+    final bytes = byteData.buffer.asUint8List();
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/map_share.png');
+    await file.writeAsBytes(bytes);
+    setState(() => _showTiles = false);
+    await Share.shareXFiles([XFile(file.path)],
+        text:
+            'Check out my flight map with ${_flights.length} flights totaling ${_totalDuration.toStringAsFixed(1)} hours using SkyBook!');
+  }
+
   @override
   Widget build(BuildContext context) {
     final markers = <Marker>[];
@@ -160,30 +195,66 @@ class _MapScreenState extends State<MapScreen> {
         title: 'Map',
         actions: [
           IconButton(
+            icon: const Icon(Icons.share, semanticLabel: 'Share map'),
+            onPressed: _share,
+          ),
+          IconButton(
             icon:
                 const Icon(Icons.settings, semanticLabel: 'Open settings'),
             onPressed: widget.onOpenSettings,
           ),
         ],
       ),
-        body: FlutterMap(
-          mapController: _controller,
-          options: MapOptions(
-            initialCenter: _center,
-            initialZoom: _zoom,
-            onPositionChanged: (pos, _) {
-              _center = pos.center ?? _center;
-              _zoom = pos.zoom ?? _zoom;
-            },
+      body: RepaintBoundary(
+        key: _shareKey,
+        child: Stack(
+          children: [
+            FlutterMap(
+              mapController: _controller,
+              options: MapOptions(
+                initialCenter: _center,
+                initialZoom: _zoom,
+                onPositionChanged: (pos, _) {
+                  _center = pos.center ?? _center;
+                  _zoom = pos.zoom ?? _zoom;
+                },
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                PolylineLayer(polylines: lines),
+                MarkerLayer(markers: markers),
+              ],
+            ),
+            if (_showTiles)
+              Positioned(
+                bottom: AppSpacing.s,
+                left: AppSpacing.s,
+                right: AppSpacing.s,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _StatTile(
+                        icon: Icons.flight,
+                        label: 'Total flights',
+                        value: _flights.length.toString(),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _StatTile(
+                        icon: Icons.schedule,
+                        label: 'Total duration',
+                        value: '${_totalDuration.toStringAsFixed(1)} h',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
-          ),
-          PolylineLayer(polylines: lines),
-          MarkerLayer(markers: markers),
-        ],
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
@@ -202,6 +273,49 @@ class _MapScreenState extends State<MapScreen> {
               _controller.move(_center, _zoom - 1);
             },
             child: const Icon(Icons.remove, semanticLabel: 'Zoom out'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _StatTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return SkyBookCard(
+      padding: const EdgeInsets.all(AppSpacing.xs),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24, color: colors.primary, semanticLabel: label),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: colors.onSurface),
+          ),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: colors.onSurface),
           ),
         ],
       ),
