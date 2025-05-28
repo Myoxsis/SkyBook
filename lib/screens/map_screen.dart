@@ -12,6 +12,7 @@ import '../models/flight.dart';
 import '../models/airport.dart';
 import '../data/airport_data.dart';
 import '../widgets/skybook_app_bar.dart';
+import '../widgets/skybook_card.dart';
 import '../constants.dart';
 
 class MapScreen extends StatefulWidget {
