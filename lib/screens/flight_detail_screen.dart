@@ -8,6 +8,7 @@ import '../data/airport_data.dart';
 import 'add_flight_screen.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/info_row.dart';
+import '../widgets/origin_destination_card.dart';
 import '../constants.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -128,33 +129,13 @@ class FlightDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final originAirport = airportByCode[flight.origin];
-    final destAirport = airportByCode[flight.destination];
-
     final items = <Widget>[
       _buildMap(context),
       const SizedBox(height: 16),
       InfoRow(title: 'Date', value: flight.date, icon: Icons.calendar_today),
-      Row(
-        children: [
-          Expanded(
-            child: InfoRow(
-              title: 'From',
-              value: flight.origin,
-              subtitle: originAirport?.city ?? '',
-              icon: Icons.flight_takeoff,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: InfoRow(
-              title: 'To',
-              value: flight.destination,
-              subtitle: destAirport?.city ?? '',
-              icon: Icons.flight_land,
-            ),
-          ),
-        ],
+      OriginDestinationCard(
+        origin: flight.origin,
+        destination: flight.destination,
       ),
       InfoRow(title: 'Aircraft', value: flight.aircraft, icon: Icons.flight),
     ];
