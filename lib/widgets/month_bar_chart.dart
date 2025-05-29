@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -12,8 +13,11 @@ class MonthBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     if (values.isEmpty) return const SizedBox.shrink();
     final sortedKeys = values.keys.toList()..sort();
-    final maxValue =
-        values.values.isNotEmpty ? values.values.reduce((a, b) => a > b ? a : b).toDouble() : 1.0;
+    final maxValue = values.values.isNotEmpty
+        ? values.values
+            .map((v) => v.toDouble())
+            .reduce((a, b) => math.max(a, b))
+        : 1.0;
     final barColor = Theme.of(context).colorScheme.primary;
 
     return SizedBox(
