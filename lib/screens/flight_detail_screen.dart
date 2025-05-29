@@ -110,9 +110,7 @@ class FlightDetailScreen extends StatelessWidget {
             initialZoom: zoom,
             minZoom: zoom,
             maxZoom: zoom,
-            interactionOptions: const InteractionOptions(
-              flags: InteractiveFlag.drag,
-            ),
+            interactiveFlags: InteractiveFlag.drag,
           ),
         children: [
           TileLayer(
