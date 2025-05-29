@@ -26,12 +26,12 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
 
   void _exportJson() {
     final data = FlightSerialization.toJson(widget.flightsNotifier.value);
-    Share.share(data, subject: 'SkyBook Flights JSON');
+    SharePlus.instance.share(data, subject: 'SkyBook Flights JSON');
   }
 
   void _exportCsv() {
     final data = FlightSerialization.toCsv(widget.flightsNotifier.value);
-    Share.share(data, subject: 'SkyBook Flights CSV');
+    SharePlus.instance.share(data, subject: 'SkyBook Flights CSV');
   }
 
   Future<void> _importJson() async {

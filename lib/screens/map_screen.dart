@@ -146,7 +146,7 @@ class _MapScreenState extends State<MapScreen> {
     final file = await _captureMapImage();
     setState(() => _showTiles = false);
     if (file == null) return;
-    await Share.shareXFiles([XFile(file.path)],
+    await SharePlus.instance.shareXFiles([XFile(file.path)],
         text:
             'Check out my flight map with ${_flights.length} flights totaling ${_totalDuration.toStringAsFixed(1)} hours using SkyBook!');
   }

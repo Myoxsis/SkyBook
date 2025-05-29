@@ -36,7 +36,7 @@ class FlightDetailScreen extends StatelessWidget {
   void _share() {
     final text = 'My flight from '
         '${flight.origin} to ${flight.destination} on ${flight.date} using SkyBook!';
-    Share.share(text);
+    SharePlus.instance.share(text);
   }
 
 
