@@ -80,6 +80,7 @@ class _ProgressScreenState extends State<ProgressScreen>
         'frequentFlyer25',
         'frequentFlyer50',
         'globeTrotter',
+        'frequentFlyer200',
       ],
       'distance': [
         'shortHaul',

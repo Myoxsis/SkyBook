@@ -37,6 +37,8 @@ List<Achievement> calculateAchievements(List<Flight> flights,
   double totalKm = 0;
   final airportsVisited = <String>{};
   final countriesVisited = <String>{};
+  final classesFlown = <String>{};
+  double totalCarbon = 0;
 
   for (final f in flights) {
     final origin = airportByCode[f.origin];
@@ -49,6 +51,12 @@ List<Achievement> calculateAchievements(List<Flight> flights,
       airportsVisited.add(dest.code);
       countriesVisited.add(dest.country);
     }
+    if (f.travelClass.isNotEmpty) {
+      classesFlown.add(f.travelClass);
+    }
+    final carbon = f.carbonKg.isNaN ? 0 : f.carbonKg;
+    totalCarbon += carbon;
+
     if (f.distanceKm > 0) {
       totalKm += f.distanceKm;
     } else if (origin != null && dest != null) {
@@ -118,6 +126,41 @@ List<Achievement> calculateAchievements(List<Flight> flights,
       100,
       tier: 4,
       unlockedAt: unlocked['globeTrotter'],
+    ),
+    _progress(
+      'frequentFlyer200',
+      'Frequent Flyer 200',
+      'Log 200 flights',
+      'Flights',
+      Icons.flight,
+      'assets/badges/plane.png',
+      totalFlights,
+      200,
+      tier: 5,
+      unlockedAt: unlocked['frequentFlyer200'],
+    ),
+    _progress(
+      'classExplorer',
+      'Class Explorer',
+      'Fly in Economy, Premium, Business and First',
+      'Flights',
+      Icons.chair,
+      'assets/badges/plane.png',
+      classesFlown.intersection({'Economy', 'Premium', 'Business', 'First'}).length,
+      4,
+      unlockedAt: unlocked['classExplorer'],
+    ),
+    Achievement(
+      id: 'ecoAware',
+      title: 'Eco Aware',
+      description: 'Fly 20 flights with under 1t CO₂',
+      category: 'Flights',
+      icon: Icons.cloud,
+      assetPath: 'assets/badges/plane.png',
+      target: 20,
+      progress: totalFlights.clamp(0, 20),
+      achieved: totalFlights >= 20 && totalCarbon <= 1000,
+      unlockedAt: unlocked['ecoAware'],
     ),
     _progress(
       'shortHaul',
@@ -226,6 +269,18 @@ List<Achievement> calculateAchievements(List<Flight> flights,
       100,
       tier: 2,
       unlockedAt: unlocked['airportMaster'],
+    ),
+    _progress(
+      'airportConqueror',
+      'Airport Conqueror',
+      'Land at 200 different airports',
+      'Destinations',
+      Icons.local_airport,
+      'assets/badges/trophy.png',
+      airportsVisited.length,
+      200,
+      tier: 3,
+      unlockedAt: unlocked['airportConqueror'],
     ),
   ];
 }
