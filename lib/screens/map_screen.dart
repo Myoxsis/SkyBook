@@ -196,7 +196,7 @@ class _MapScreenState extends State<MapScreen> {
           point: LatLng(airport.latitude, airport.longitude),
           width: 30,
           height: 30,
-          child: GestureDetector(
+          builder: (context) => GestureDetector(
             onTap: () => _showAirportInfo(airport),
             child: Container(
               decoration: BoxDecoration(

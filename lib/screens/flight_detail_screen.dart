@@ -60,7 +60,7 @@ class FlightDetailScreen extends StatelessWidget {
         point: start,
         width: 30,
         height: 30,
-        child: Container(
+        builder: (context) => Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
@@ -78,7 +78,7 @@ class FlightDetailScreen extends StatelessWidget {
         point: end,
         width: 30,
         height: 30,
-        child: Container(
+        builder: (context) => Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
