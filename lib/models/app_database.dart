@@ -13,7 +13,7 @@ class AppDatabase {
     final path = join(await getDatabasesPath(), 'skybook.db');
     _db = await openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: (db, version) async {
         await _createTables(db);
         await _seed(db);
@@ -30,6 +30,17 @@ class AppDatabase {
         }
         if (oldVersion < 4) {
           await db.execute('ALTER TABLE airports ADD COLUMN city TEXT');
+        }
+        if (oldVersion < 5) {
+          // Populate the newly added city column for existing rows
+          for (final a in seedAirports) {
+            await db.update(
+              'airports',
+              {'city': a.city},
+              where: 'code = ?',
+              whereArgs: [a.code],
+            );
+          }
         }
       },
     );
