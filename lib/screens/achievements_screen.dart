@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../models/achievement.dart';
 import '../utils/achievement_utils.dart';
-import '../widgets/achievement_card.dart';
+import '../widgets/achievement_tile.dart';
+import '../widgets/skybook_card.dart';
 import '../theme/achievement_theme.dart';
 import '../constants.dart';
 
@@ -53,24 +54,31 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         title: const Text('Achievements'),
         centerTitle: true,
       ),
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(AppSpacing.s),
-        itemCount: achievements.length,
-        itemBuilder: (context, index) {
-          final a = achievements[index];
-          final theme = achievementTypeThemes[a.category] ??
-              const AchievementTypeTheme(
-                  icon: Icons.emoji_events,
-                  color: Colors.grey,
-                  label: '');
-          return AchievementCard(
-            theme: theme,
-            title: a.title,
-            level: a.tier,
-            progress: a.progress,
-            maxProgress: a.target,
-          );
-        },
+        children: [
+          SkyBookCard(
+            child: GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 3,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              children: [
+                for (final a in achievements)
+                  AchievementTile(
+                    achievement: a,
+                    theme: achievementTypeThemes[a.category] ??
+                        const AchievementTypeTheme(
+                          icon: Icons.emoji_events,
+                          color: Colors.grey,
+                          label: '',
+                        ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
