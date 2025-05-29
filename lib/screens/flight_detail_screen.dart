@@ -11,6 +11,7 @@ import '../widgets/info_row.dart';
 import '../widgets/origin_destination_card.dart';
 import '../constants.dart';
 import 'package:share_plus/share_plus.dart';
+import '../widgets/premium_badge.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
@@ -158,7 +159,9 @@ class FlightDetailScreen extends StatelessWidget {
         ValueListenableBuilder<bool>(
           valueListenable: premiumNotifier,
           builder: (context, premium, _) {
-            if (!premium) return const SizedBox.shrink();
+            if (!premium) {
+              return const PremiumBadge(message: 'CO₂ data');
+            }
             return InfoRow(
               title: 'CO₂ per passenger',
               value: '${flight.carbonKg.round()} kg',
