@@ -8,6 +8,8 @@ import 'package:intl/intl.dart' as intl;
 import '../widgets/skybook_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/app_dialog.dart';
+import '../widgets/skybook_card.dart';
+import '../theme/achievement_theme.dart';
 import '../constants.dart';
 
 class ProgressScreen extends StatefulWidget {
@@ -196,10 +198,8 @@ class _ProgressScreenState extends State<ProgressScreen>
     final unlocked = visible.where((a) => a.achieved).length;
     final ratio = visible.isEmpty ? 0.0 : unlocked / visible.length;
 
-    final summaryCard = Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
-        child: Column(
+    final summaryCard = SkyBookCard(
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('$unlocked of ${visible.length} Achievements unlocked',
@@ -227,84 +227,76 @@ class _ProgressScreenState extends State<ProgressScreen>
       ..addAll(visible.map(
         (a) => Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-          child: InkWell(
+          child: SkyBookCard(
             onTap: () {
               showDialog(
                 context: context,
-                  builder: (context) => AppDialog(
-                    title: Text(a.title),
-                    content: Text(a.description),
-                    actions: [
-                      if (a.achieved)
-                        TextButton(
-                          onPressed: () => Share.share(a.description),
-                          child: const Text('Share'),
-                        ),
+                builder: (context) => AppDialog(
+                  title: Text(a.title),
+                  content: Text(a.description),
+                  actions: [
+                    if (a.achieved)
                       TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('OK'),
+                        onPressed: () => Share.share(a.description),
+                        child: const Text('Share'),
                       ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  child: a.buildIcon(
+                    color: a.achieved
+                        ? (achievementTypeThemes[a.category]?.color ??
+                            Theme.of(context).colorScheme.primary)
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 24,
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(a.title,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      if (a.unlockedAt != null)
+                        Text(
+                          intl.DateFormat.yMMMd().format(a.unlockedAt!),
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      const SizedBox(height: 2),
+                      Semantics(
+                        label:
+                            '${a.title} progress: ${a.progress} of ${a.target}',
+                        child: LinearProgressIndicator(
+                          value: a.progress / a.target,
+                          minHeight: 6,
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.12),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      Text('${a.progress}/${a.target}',
+                          style: Theme.of(context).textTheme.labelSmall),
                     ],
                   ),
-                );
-              },
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.s),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: AppSpacing.xs),
-                    child: a.assetPath != null
-                        ? Image.asset(
-                            a.assetPath!,
-                            width: 24,
-                            height: 24,
-                            color: a.achieved ? Colors.amber : Colors.grey,
-                          )
-                        : Icon(
-                            a.icon,
-                            color: a.achieved ? Colors.amber : Colors.grey,
-                            semanticLabel: a.title,
-                          ),
+                ),
+                if (a.achieved)
+                  const Padding(
+                    padding: EdgeInsets.only(left: AppSpacing.xs),
+                    child: Icon(Icons.check,
+                        color: Colors.green, semanticLabel: 'Completed'),
                   ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(a.title,
-                            style: Theme.of(context).textTheme.bodyMedium),
-                        if (a.unlockedAt != null)
-                          Text(
-                            intl.DateFormat.yMMMd().format(a.unlockedAt!),
-                            style: Theme.of(context).textTheme.labelSmall,
-                          ),
-                        const SizedBox(height: 2),
-                        Semantics(
-                          label:
-                              '${a.title} progress: ${a.progress} of ${a.target}',
-                          child: LinearProgressIndicator(
-                            value: a.progress / a.target,
-                            minHeight: 6,
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.12),
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        Text('${a.progress}/${a.target}',
-                            style: Theme.of(context).textTheme.labelSmall),
-                      ],
-                    ),
-                  ),
-                  if (a.achieved)
-                    const Padding(
-                      padding: EdgeInsets.only(left: AppSpacing.xs),
-                      child: Icon(Icons.check,
-                          color: Colors.green, semanticLabel: 'Completed'),
-                    ),
-                ],
-              ),
+              ],
             ),
           ),
         ),
