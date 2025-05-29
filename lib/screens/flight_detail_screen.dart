@@ -36,7 +36,7 @@ class FlightDetailScreen extends StatelessWidget {
   void _share() {
     final text = 'My flight from '
         '${flight.origin} to ${flight.destination} on ${flight.date} using SkyBook!';
-    SharePlus.instance.share(text);
+    Share.share(text);
   }
 
 
@@ -106,8 +106,8 @@ class FlightDetailScreen extends StatelessWidget {
       height: 200,
         child: FlutterMap(
           options: MapOptions(
-            initialCenter: center,
-            initialZoom: zoom,
+            center: center,
+            zoom: zoom,
             minZoom: zoom,
             maxZoom: zoom,
             interactiveFlags: InteractiveFlag.drag,
