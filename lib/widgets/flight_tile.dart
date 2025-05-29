@@ -5,6 +5,7 @@ import '../data/airport_data.dart';
 import 'skybook_card.dart';
 
 class FlightTile extends StatelessWidget {
+  static const double _airportInfoWidth = 72;
   final Flight flight;
   final VoidCallback onToggleFavorite;
   final VoidCallback? onTap;
@@ -46,13 +47,22 @@ class FlightTile extends StatelessWidget {
   Widget _airportColumn(BuildContext context, String code) {
     final airport = airportByCode[code];
     final city = airport?.city ?? '';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(code, style: Theme.of(context).textTheme.titleLarge),
-        if (city.isNotEmpty)
-          Text(city, style: Theme.of(context).textTheme.bodySmall),
-      ],
+    return SizedBox(
+      width: _airportInfoWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(code, style: Theme.of(context).textTheme.titleLarge),
+          if (city.isNotEmpty)
+            Text(
+              city,
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+        ],
+      ),
     );
   }
 
