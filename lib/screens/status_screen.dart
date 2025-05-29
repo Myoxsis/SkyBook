@@ -92,7 +92,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topAircraft {
     final entries = _aircraftCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(5).toList();
+    return entries.take(3).toList();
   }
 
   Map<String, int> get _airlineCount {
@@ -108,7 +108,7 @@ class _StatusScreenState extends State<StatusScreen> {
   List<MapEntry<String, int>> get _topAirlines {
     final entries = _airlineCount.entries.toList();
     entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(5).toList();
+    return entries.take(3).toList();
   }
 
   Map<String, int> get _countryCount {
@@ -170,11 +170,6 @@ class _StatusScreenState extends State<StatusScreen> {
     return counts;
   }
 
-  List<MapEntry<String, int>> get _topAirports {
-    final entries = _airportCount.entries.toList();
-    entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(5).toList();
-  }
 
   Map<String, int> get _destinationCount {
     final counts = <String, int>{};
@@ -203,11 +198,6 @@ class _StatusScreenState extends State<StatusScreen> {
     return counts;
   }
 
-  List<MapEntry<String, int>> get _topRoutes {
-    final entries = _routeCount.entries.toList();
-    entries.sort((a, b) => b.value.compareTo(a.value));
-    return entries.take(5).toList();
-  }
 
   String get _favoritePlane =>
       _topAircraft.isNotEmpty ? _topAircraft.first.key : 'N/A';
@@ -396,8 +386,7 @@ class _StatusScreenState extends State<StatusScreen> {
     return _buildTopTile(
       icon: Icons.airplanemode_active,
       title: 'Top Aircraft',
-      total: _aircraftCount.length,
-      items: _topAircraft,
+      counts: _aircraftCount,
     );
   }
 
@@ -409,8 +398,7 @@ class _StatusScreenState extends State<StatusScreen> {
     return _buildTopTile(
       icon: Icons.place,
       title: 'Top Airports',
-      total: _airportCount.length,
-      items: _topAirports,
+      counts: _airportCount,
     );
   }
 
@@ -422,8 +410,7 @@ class _StatusScreenState extends State<StatusScreen> {
     return _buildTopTile(
       icon: Icons.airlines,
       title: 'Top Airlines',
-      total: _airlineCount.length,
-      items: _topAirlines,
+      counts: _airlineCount,
     );
   }
 
@@ -432,18 +419,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final top = _topCountries;
-    final maxCount = top.isNotEmpty ? top.first.value : 1;
-
-    return _buildChartTile(
+    return _ExpandableBarListTile(
       title: 'Top Countries',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: top.map((e) {
-          final barWidth = e.value / maxCount;
-          return _buildBarRow(e.key, e.value, barWidth);
-        }).toList(),
-      ),
+      counts: _countryCount,
     );
   }
 
@@ -455,8 +433,7 @@ class _StatusScreenState extends State<StatusScreen> {
     return _buildTopTile(
       icon: Icons.alt_route,
       title: 'Top Routes',
-      total: _routeCount.length,
-      items: _topRoutes,
+      counts: _routeCount,
     );
   }
 
@@ -465,17 +442,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final entries = _classCount.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final maxCount = entries.isNotEmpty ? entries.first.value : 1;
-    return _buildChartTile(
+    return _ExpandableBarListTile(
       title: 'Class Distribution',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: entries
-            .map((e) => _buildBarRow(e.key, e.value, e.value / maxCount))
-            .toList(),
-      ),
+      counts: _classCount,
     );
   }
 
@@ -484,17 +453,9 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final entries = _tripTypeCount.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final maxCount = entries.isNotEmpty ? entries.first.value : 1;
-    return _buildChartTile(
+    return _ExpandableBarListTile(
       title: 'Trip Type Distribution',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: entries
-            .map((e) => _buildBarRow(e.key, e.value, e.value / maxCount))
-            .toList(),
-      ),
+      counts: _tripTypeCount,
     );
   }
 
@@ -503,58 +464,21 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
-    final entries = _seatLocationCount.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final maxCount = entries.isNotEmpty ? entries.first.value : 1;
-    return _buildChartTile(
+    return _ExpandableBarListTile(
       title: 'Seat Location Usage',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: entries
-            .map((e) => _buildBarRow(e.key, e.value, e.value / maxCount))
-            .toList(),
-      ),
+      counts: _seatLocationCount,
     );
   }
 
   Widget _buildTopTile({
     required IconData icon,
     required String title,
-    required int total,
-    required List<MapEntry<String, int>> items,
+    required Map<String, int> counts,
   }) {
-    final maxCount = items.isNotEmpty ? items.first.value : 1;
-    return SkyBookCard(
-      padding: const EdgeInsets.all(AppSpacing.s),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.s),
-            child: Column(
-              children: [
-                Icon(icon,
-                    color: Theme.of(context).colorScheme.primary,
-                    semanticLabel: title),
-                const SizedBox(height: 4),
-                Text(title, style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(height: 4),
-                Text('total $total',
-                    style: Theme.of(context).textTheme.labelSmall),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: items.map((e) {
-                final fraction = e.value / maxCount;
-                return _buildBarRow(e.key, e.value, fraction);
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
+    return _ExpandableBarListTile(
+      icon: icon,
+      title: title,
+      counts: counts,
     );
   }
 
@@ -617,36 +541,40 @@ class _StatusScreenState extends State<StatusScreen> {
   }
 
   Widget _buildBarRow(String label, int value, double fraction) {
-    final barColor = Theme.of(context).colorScheme.primary;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-      child: Semantics(
-        label: '$label: $value',
-        child: Row(
-          children: [
-            SizedBox(width: 100, child: Text(label)),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FractionallySizedBox(
-                  widthFactor: fraction,
-                  child: Container(
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: barColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+    return buildBarRow(context, label, value, fraction);
+  }
+}
+
+Widget buildBarRow(BuildContext context, String label, int value, double fraction) {
+  final barColor = Theme.of(context).colorScheme.primary;
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
+    child: Semantics(
+      label: '$label: $value',
+      child: Row(
+        children: [
+          SizedBox(width: 100, child: Text(label)),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: FractionallySizedBox(
+                widthFactor: fraction,
+                child: Container(
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: barColor,
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
-            Text(value.toString()),
-          ],
-        ),
+          ),
+          const SizedBox(width: 8),
+          Text(value.toString()),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }
 
 class _StatusTile extends StatelessWidget {
@@ -693,6 +621,90 @@ class _StatusTile extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+class _ExpandableBarListTile extends StatefulWidget {
+  final String title;
+  final Map<String, int> counts;
+  final IconData? icon;
+
+  const _ExpandableBarListTile({
+    required this.title,
+    required this.counts,
+    this.icon,
+  });
+
+  @override
+  State<_ExpandableBarListTile> createState() => _ExpandableBarListTileState();
+}
+
+class _ExpandableBarListTileState extends State<_ExpandableBarListTile> {
+  bool _expanded = false;
+
+  void _toggle() {
+    setState(() {
+      _expanded = !_expanded;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = widget.counts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final maxCount = entries.isNotEmpty ? entries.first.value : 1;
+    final display = _expanded ? entries : entries.take(3).toList();
+
+    Widget content;
+    if (widget.icon != null) {
+      content = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.s),
+            child: Column(
+              children: [
+                Icon(widget.icon!,
+                    color: Theme.of(context).colorScheme.primary,
+                    semanticLabel: widget.title),
+                const SizedBox(height: 4),
+                Text(widget.title,
+                    style: Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(height: 4),
+                Text('total ${entries.length}',
+                    style: Theme.of(context).textTheme.labelSmall),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final e in display)
+                  buildBarRow(context, e.key, e.value, e.value / maxCount),
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.title,
+              style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          for (final e in display)
+            buildBarRow(context, e.key, e.value, e.value / maxCount),
+        ],
+      );
+    }
+
+    return SkyBookCard(
+      onTap: _toggle,
+      padding: const EdgeInsets.all(AppSpacing.s),
+      child: content,
     );
   }
 }
