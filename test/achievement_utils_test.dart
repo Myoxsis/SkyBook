@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:skybook/utils/achievement_utils.dart';
 import 'package:skybook/models/flight.dart';
 import 'package:skybook/models/achievement.dart';
+import 'package:skybook/data/airport_data.dart';
 
 Flight _flight(String id, String origin, String destination, double distance) {
   return Flight(
@@ -20,6 +21,31 @@ Flight _flight(String id, String origin, String destination, double distance) {
     seatLocation: '',
     distanceKm: distance,
     carbonKg: 0,
+    originRating: 0,
+    destinationRating: 0,
+    seatRating: 0,
+  );
+}
+
+Flight _flightWithClass(
+    String id, String origin, String destination, double distance,
+    {String travelClass = 'Economy', double carbon = 0}) {
+  return Flight(
+    id: id,
+    date: '2023-01-01',
+    aircraft: 'Boeing 737',
+    manufacturer: 'Boeing',
+    airline: '',
+    callsign: '',
+    duration: '',
+    notes: '',
+    origin: origin,
+    destination: destination,
+    travelClass: travelClass,
+    seatNumber: '',
+    seatLocation: '',
+    distanceKm: distance,
+    carbonKg: carbon,
     originRating: 0,
     destinationRating: 0,
     seatRating: 0,
@@ -115,19 +141,61 @@ void main() {
       expect(tier50.achieved, isTrue);
     });
 
-    test('extended achievements unlock with large dataset', () {
-      final codes = [
-        'JFK', 'LAX', 'YYZ', 'ATL', 'ORD', 'DFW', 'DEN', 'SFO', 'SEA', 'MIA',
-        'BOS', 'MCO', 'IAH', 'IAD', 'YVR', 'YUL', 'LAS', 'PHL', 'CLT', 'MSP',
-        'CDG', 'LHR', 'FRA', 'AMS', 'MAD', 'IST', 'FCO', 'ZRH', 'CPH', 'DUB',
-        'OSL', 'BRU', 'VIE', 'ATH', 'HEL', 'ARN', 'LIS', 'PRG', 'HND', 'PEK',
-        'PVG', 'HKG', 'ICN', 'BKK', 'DEL', 'BOM', 'SIN', 'KUL', 'NRT', 'KIX',
-        'TPE', 'CGK', 'MNL', 'SGN', 'DPS', 'KMG', 'KTM', 'CMB', 'HAN', 'DAC',
-        'DXB', 'DOH', 'AUH', 'JED', 'RUH', 'MCT', 'BAH', 'AMM', 'CAI', 'TLV',
-        'KWI', 'BEY', 'SYD', 'MEL', 'BNE', 'PER', 'AKL', 'WLG', 'CHC', 'ADL',
-        'CNS', 'DRW', 'NAN', 'POM', 'JNB', 'CPT', 'DUR', 'NBO', 'ADD', 'DAR',
-        'CMN', 'ABJ', 'ACC', 'ALG', 'GRU', 'GIG', 'EZE', 'SCL', 'LIM', 'BOG'
+    test('class explorer unlocks with all travel classes', () {
+      final flights = [
+        _flightWithClass('1', 'JFK', 'LAX', 4000, travelClass: 'Economy'),
+        _flightWithClass('2', 'LAX', 'JFK', 4000, travelClass: 'Premium'),
+        _flightWithClass('3', 'JFK', 'LHR', 5500, travelClass: 'Business'),
+        _flightWithClass('4', 'LHR', 'JFK', 5500, travelClass: 'First'),
       ];
+
+      final achievements = calculateAchievements(flights);
+      final classExp = achievements.firstWhere((a) => a.id == 'classExplorer');
+
+      expect(classExp.progress, 4);
+      expect(classExp.achieved, isTrue);
+    });
+
+    test('eco aware unlocked only below carbon threshold', () {
+      final flights = List.generate(
+        20,
+        (i) => _flightWithClass(
+          '${i + 1}',
+          'JFK',
+          'LAX',
+          4000,
+          carbon: 30,
+        ),
+      );
+
+      final achievements = calculateAchievements(flights);
+      final eco = achievements.firstWhere((a) => a.id == 'ecoAware');
+
+      expect(eco.progress, 20);
+      expect(eco.achieved, isTrue);
+    });
+
+    test('eco aware not unlocked if emissions too high', () {
+      final flights = List.generate(
+        20,
+        (i) => _flightWithClass(
+          '${i + 1}',
+          'JFK',
+          'LAX',
+          4000,
+          carbon: 60,
+        ),
+      );
+
+      final achievements = calculateAchievements(flights);
+      final eco = achievements.firstWhere((a) => a.id == 'ecoAware');
+
+      expect(eco.progress, 20);
+      expect(eco.achieved, isFalse);
+    });
+
+    test('extended achievements unlock with large dataset', () {
+      final codes = seedAirports.take(200).map((a) => a.code).toList();
 
       final flights = List.generate(
         codes.length,
@@ -144,11 +212,15 @@ void main() {
       final explorer = achievements.firstWhere((a) => a.id == 'worldExplorer');
       final master = achievements.firstWhere((a) => a.id == 'airportMaster');
       final legend = achievements.firstWhere((a) => a.id == 'skyLegend');
+      final conqueror = achievements.firstWhere((a) => a.id == 'airportConqueror');
+      final flyer200 = achievements.firstWhere((a) => a.id == 'frequentFlyer200');
 
       expect(jetSetter.achieved, isTrue);
       expect(explorer.achieved, isTrue);
       expect(master.achieved, isTrue);
       expect(legend.achieved, isTrue);
+      expect(conqueror.achieved, isTrue);
+      expect(flyer200.achieved, isTrue);
     });
   });
 }
