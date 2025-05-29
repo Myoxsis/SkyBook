@@ -143,10 +143,12 @@ void main() {
       final jetSetter = achievements.firstWhere((a) => a.id == 'jetSetter');
       final explorer = achievements.firstWhere((a) => a.id == 'worldExplorer');
       final master = achievements.firstWhere((a) => a.id == 'airportMaster');
+      final legend = achievements.firstWhere((a) => a.id == 'skyLegend');
 
       expect(jetSetter.achieved, isTrue);
       expect(explorer.achieved, isTrue);
       expect(master.achieved, isTrue);
+      expect(legend.achieved, isTrue);
     });
   });
 }
