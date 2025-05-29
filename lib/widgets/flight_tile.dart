@@ -83,7 +83,7 @@ class FlightTile extends StatelessWidget {
         vertical: AppSpacing.xxs,
         horizontal: AppSpacing.xs,
       ),
-      padding: const EdgeInsets.all(AppSpacing.xxs),
+      padding: const EdgeInsets.all(AppSpacing.xxs / 2),
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,14 +148,6 @@ class FlightTile extends StatelessWidget {
                 ),
               ),
               _airportColumn(context, flight.destination),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              const Icon(Icons.schedule, size: 16, semanticLabel: 'Duration'),
-              const SizedBox(width: 4),
-              Text('${flight.duration}h', style: theme.textTheme.labelMedium),
             ],
           ),
         ],
