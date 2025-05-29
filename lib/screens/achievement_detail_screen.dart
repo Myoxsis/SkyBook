@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../models/achievement.dart';
 import '../theme/achievement_theme.dart';
 import '../constants.dart';
+import 'package:intl/intl.dart' as intl;
 
 class AchievementDetailScreen extends StatelessWidget {
   final Achievement achievement;
@@ -42,9 +43,21 @@ class AchievementDetailScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
+            if (achievement.unlockedAt != null)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.s),
+                child: Text(
+                  'Unlocked on '
+                  '${intl.DateFormat.yMMMd().format(achievement.unlockedAt!)}',
+                  style: Theme.of(context).textTheme.labelMedium,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             const Spacer(),
             ElevatedButton.icon(
-              onPressed: () => Share.share(achievement.description),
+              onPressed: achievement.achieved
+                  ? () => Share.share(achievement.description)
+                  : null,
               icon: const Icon(Icons.share),
               label: const Text('Share'),
             ),

@@ -251,11 +251,8 @@ class _ProgressScreenState extends State<ProgressScreen>
                     children: [
                       Text(a.title,
                           style: Theme.of(context).textTheme.bodyMedium),
-                      if (a.unlockedAt != null)
-                        Text(
-                          intl.DateFormat.yMMMd().format(a.unlockedAt!),
-                          style: Theme.of(context).textTheme.labelSmall,
-                        ),
+                      // Removed unlocked date display. Date will be shown in
+                      // the achievement detail screen only.
                       const SizedBox(height: 2),
                       Semantics(
                         label:
