@@ -13,7 +13,7 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
 - See your top airlines in the Status section
 - Analyze seat location preferences with a dedicated chart in the Status section
 - View total CO₂ emissions per passenger in the Status section
-- Track progress with detailed achievements for flight counts, distance and destinations, including advanced tiers like Jet Setter, World Explorer and Airport Master
+- Track progress with detailed achievements for flight counts, distance and destinations, including advanced tiers like Jet Setter, **Sky Legend**, World Explorer and Airport Master
 - Switch between light and dark themes
 - Theme preference is saved so your choice is remembered
 - Enable a developer section with an option to clear local data
