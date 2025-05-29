@@ -93,7 +93,7 @@ class FlightTile extends StatelessWidget {
         vertical: AppSpacing.xxs,
         horizontal: AppSpacing.xs,
       ),
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: const EdgeInsets.all(AppSpacing.xxs),
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
