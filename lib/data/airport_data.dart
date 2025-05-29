@@ -5,12 +5,12 @@ import '../models/airport_storage.dart';
 const List<Airport> seedAirports = [
   // Africa
 Airport(code: 'CAI', name: 'Cairo International', city: 'Cairo', country: 'Egypt', region: 'Africa', latitude: 30.1219, longitude: 31.4056),
-Airport(code: 'JNB', name: 'O. R. Tambo International', city: 'O. R. Tambo', country: 'South Africa', region: 'Africa', latitude: -26.1337, longitude: 28.2420),
-Airport(code: 'ADD', name: 'Addis Ababa Bole International', city: 'Addis Ababa Bole', country: 'Ethiopia', region: 'Africa', latitude: 8.9779, longitude: 38.7993),
-Airport(code: 'CMN', name: 'Mohammed V International', city: 'Mohammed V', country: 'Morocco', region: 'Africa', latitude: 33.3672, longitude: -7.5898),
+Airport(code: 'JNB', name: 'O. R. Tambo International', city: 'Johannesburg', country: 'South Africa', region: 'Africa', latitude: -26.1337, longitude: 28.2420),
+Airport(code: 'ADD', name: 'Addis Ababa Bole International', city: 'Addis Ababa', country: 'Ethiopia', region: 'Africa', latitude: 8.9779, longitude: 38.7993),
+Airport(code: 'CMN', name: 'Mohammed V International', city: 'Casablanca', country: 'Morocco', region: 'Africa', latitude: 33.3672, longitude: -7.5898),
 Airport(code: 'CPT', name: 'Cape Town International', city: 'Cape Town', country: 'South Africa', region: 'Africa', latitude: -33.9696, longitude: 18.5972),
 Airport(code: 'HRG', name: 'Hurghada International', city: 'Hurghada', country: 'Egypt', region: 'Africa', latitude: 27.1800, longitude: 33.7960),
-Airport(code: 'RAK', name: 'Marrakech Menara', city: 'Marrakech Menara', country: 'Morocco', region: 'Africa', latitude: 31.6069, longitude: -8.0363),
+Airport(code: 'RAK', name: 'Marrakech Menara', city: 'Marrakech', country: 'Morocco', region: 'Africa', latitude: 31.6069, longitude: -8.0363),
 Airport(code: 'ALG', name: 'Houari Boumediene', city: 'Houari Boumediene', country: 'Algeria', region: 'Africa', latitude: 36.6910, longitude: 3.2154),
 Airport(code: 'NBO', name: 'Jomo Kenyatta International', city: 'Jomo Kenyatta', country: 'Kenya', region: 'Africa', latitude: -1.3192, longitude: 36.9275),
 Airport(code: 'TUN', name: 'Tunis–Carthage International', city: 'Tunis', country: 'Tunisia', region: 'Africa', latitude: 36.8510, longitude: 10.2272),
