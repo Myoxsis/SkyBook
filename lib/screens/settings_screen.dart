@@ -6,6 +6,7 @@ import '../models/premium_storage.dart';
 import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import 'data_management_screen.dart';
+import '../widgets/premium_badge.dart';
 
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
@@ -103,6 +104,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 trailing: const Icon(Icons.file_upload,
                     semanticLabel: 'Import or export data'),
                 onTap: _openDataManagement,
+              );
+            },
+          ),
+          ValueListenableBuilder<bool>(
+            valueListenable: widget.premiumNotifier,
+            builder: (context, premium, _) {
+              if (premium) return const SizedBox.shrink();
+              return const Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xs),
+                child: PremiumBadge(message: 'Quick-add shortcut & widget'),
               );
             },
           ),

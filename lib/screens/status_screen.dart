@@ -7,6 +7,7 @@ import '../widgets/month_bar_chart.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/day_of_week_bar_chart.dart';
 import '../widgets/skybook_card.dart';
+import '../widgets/premium_badge.dart';
 import '../constants.dart';
 
 class StatusScreen extends StatefulWidget {
@@ -318,7 +319,9 @@ class _StatusScreenState extends State<StatusScreen> {
                     icon: Icons.cloud,
                     label: 'Total CO₂',
                     value: '${_totalCarbon.round()} kg',
-                  ),
+                  )
+                else
+                  const PremiumBadge(message: 'CO₂ data'),
               ],
             ),
             const SizedBox(height: 16),
@@ -372,6 +375,11 @@ class _StatusScreenState extends State<StatusScreen> {
               const SizedBox(height: 24),
               _buildSeatLocationChart(),
             ],
+            if (!_premium)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
+                child: PremiumBadge(message: 'Detailed charts'),
+              ),
           ],
         ),
       ),
