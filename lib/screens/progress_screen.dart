@@ -6,8 +6,7 @@ import '../utils/achievement_utils.dart';
 import '../models/achievement.dart';
 import 'package:intl/intl.dart' as intl;
 import '../widgets/skybook_app_bar.dart';
-import 'package:share_plus/share_plus.dart';
-import '../widgets/app_dialog.dart';
+import 'achievement_detail_screen.dart';
 import '../widgets/skybook_card.dart';
 import '../theme/achievement_theme.dart';
 import '../constants.dart';
@@ -228,22 +227,9 @@ class _ProgressScreenState extends State<ProgressScreen>
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
           child: SkyBookCard(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => AppDialog(
-                  title: Text(a.title),
-                  content: Text(a.description),
-                  actions: [
-                    if (a.achieved)
-                      TextButton(
-                        onPressed: () => Share.share(a.description),
-                        child: const Text('Share'),
-                      ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('OK'),
-                    ),
-                  ],
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => AchievementDetailScreen(achievement: a),
                 ),
               );
             },
@@ -284,8 +270,6 @@ class _ProgressScreenState extends State<ProgressScreen>
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      Text('${a.progress}/${a.target}',
-                          style: Theme.of(context).textTheme.labelSmall),
                     ],
                   ),
                 ),
