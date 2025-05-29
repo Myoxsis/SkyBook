@@ -54,7 +54,8 @@ class FlightDetailScreen extends StatelessWidget {
     const height = 200.0;
     final view = MapUtils.viewForPointsInSize(routePoints, width, height);
     final center = view.center;
-    final zoom = view.zoom;
+    // Slightly zoom out so the takeoff and landing markers remain fully visible
+    final zoom = (view.zoom - 0.3).clamp(0.0, 16.0);
 
     final markers = [
       Marker(
