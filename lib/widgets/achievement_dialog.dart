@@ -66,7 +66,7 @@ class _AchievementDialogState extends State<AchievementDialog>
       ),
       actions: [
         TextButton(
-          onPressed: () => SharePlus.instance.share(
+          onPressed: () => Share.share(
               'I just unlocked the "${widget.achievement.title}" achievement in SkyBook!'),
           child: const Text('Share'),
         ),

@@ -237,7 +237,7 @@ class _ProgressScreenState extends State<ProgressScreen>
                     actions: [
                       if (a.achieved)
                         TextButton(
-                          onPressed: () => SharePlus.instance.share(a.description),
+                          onPressed: () => Share.share(a.description),
                           child: const Text('Share'),
                         ),
                       TextButton(

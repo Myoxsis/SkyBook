@@ -146,9 +146,11 @@ class _MapScreenState extends State<MapScreen> {
     final file = await _captureMapImage();
     setState(() => _showTiles = false);
     if (file == null) return;
-    await SharePlus.instance.shareXFiles([XFile(file.path)],
-        text:
-            'Check out my flight map with ${_flights.length} flights totaling ${_totalDuration.toStringAsFixed(1)} hours using SkyBook!');
+    await Share.shareXFiles(
+      [XFile(file.path)],
+      text:
+          'Check out my flight map with ${_flights.length} flights totaling ${_totalDuration.toStringAsFixed(1)} hours using SkyBook!',
+    );
   }
 
   Future<void> _onSharePressed() async {
@@ -258,8 +260,8 @@ class _MapScreenState extends State<MapScreen> {
             FlutterMap(
               mapController: _controller,
               options: MapOptions(
-                initialCenter: _center,
-                initialZoom: _zoom,
+                center: _center,
+                zoom: _zoom,
                 onPositionChanged: (pos, _) {
                   _center = pos.center ?? _center;
                   _zoom = pos.zoom ?? _zoom;
