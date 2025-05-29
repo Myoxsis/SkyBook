@@ -10,10 +10,9 @@ class ImportService {
   /// `null` if parsing failed.
   static Future<Flight?> scanBoardingPassImage(String path) async {
     final inputImage = InputImage.fromFilePath(path);
-    final scanner = BarcodeScanner(formats: [
-      BarcodeFormat.qrCode,
-      BarcodeFormat.pdf417,
-    ]);
+    // Scan all supported barcode formats to handle both standard barcodes
+    // and QR codes found on boarding passes.
+    final scanner = BarcodeScanner(formats: BarcodeFormat.values);
     final barcodes = await scanner.processImage(inputImage);
     scanner.close();
 
