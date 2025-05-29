@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import '../data/airport_data.dart';
-import '../widgets/class_pie_chart.dart';
+import '../widgets/month_bar_chart.dart';
 import '../widgets/skybook_app_bar.dart';
-import '../widgets/flight_line_chart.dart';
-import '../widgets/numeric_line_chart.dart';
 import '../widgets/day_of_week_bar_chart.dart';
 import '../widgets/skybook_card.dart';
 import '../constants.dart';
@@ -467,9 +465,17 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
+    final entries = _classCount.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final maxCount = entries.isNotEmpty ? entries.first.value : 1;
     return _buildChartTile(
       title: 'Class Distribution',
-      child: ClassPieChart(counts: _classCount),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: entries
+            .map((e) => _buildBarRow(e.key, e.value, e.value / maxCount))
+            .toList(),
+      ),
     );
   }
 
@@ -478,9 +484,17 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
+    final entries = _tripTypeCount.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final maxCount = entries.isNotEmpty ? entries.first.value : 1;
     return _buildChartTile(
       title: 'Trip Type Distribution',
-      child: ClassPieChart(counts: _tripTypeCount),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: entries
+            .map((e) => _buildBarRow(e.key, e.value, e.value / maxCount))
+            .toList(),
+      ),
     );
   }
 
@@ -489,9 +503,17 @@ class _StatusScreenState extends State<StatusScreen> {
       return const SizedBox.shrink();
     }
 
+    final entries = _seatLocationCount.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final maxCount = entries.isNotEmpty ? entries.first.value : 1;
     return _buildChartTile(
       title: 'Seat Location Usage',
-      child: ClassPieChart(counts: _seatLocationCount),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: entries
+            .map((e) => _buildBarRow(e.key, e.value, e.value / maxCount))
+            .toList(),
+      ),
     );
   }
 
@@ -557,7 +579,7 @@ class _StatusScreenState extends State<StatusScreen> {
 
     return _buildChartTile(
       title: 'Flights per Month',
-      child: FlightLineChart(counts: _monthlyFlightCounts),
+      child: MonthBarChart(values: _monthlyFlightCounts),
     );
   }
 
@@ -568,7 +590,7 @@ class _StatusScreenState extends State<StatusScreen> {
 
     return _buildChartTile(
       title: 'Avg Distance per Month',
-      child: NumericLineChart(values: _monthlyAverageDistance),
+      child: MonthBarChart(values: _monthlyAverageDistance),
     );
   }
 
@@ -579,7 +601,7 @@ class _StatusScreenState extends State<StatusScreen> {
 
     return _buildChartTile(
       title: 'CO₂ per Month',
-      child: NumericLineChart(values: _monthlyCarbonTotals),
+      child: MonthBarChart(values: _monthlyCarbonTotals),
     );
   }
 
