@@ -220,7 +220,6 @@ class _ProgressScreenState extends State<ProgressScreen>
             ),
           ],
         ),
-      ),
     );
 
     final List<Widget> items = [summaryCard, const SizedBox(height: 8)]
