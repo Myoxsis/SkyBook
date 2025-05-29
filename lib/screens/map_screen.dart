@@ -132,11 +132,25 @@ class _MapScreenState extends State<MapScreen> {
     final file = await _captureMapImage();
     setState(() => _showTiles = false);
     if (file == null) return;
-    await GallerySaver.saveImage(file.path);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image saved to gallery')),
-      );
+    try {
+      final result = await GallerySaver.saveImage(file.path);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result == true
+                  ? 'Image saved to gallery'
+                  : 'Failed to save image',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save image')),
+        );
+      }
     }
   }
 
