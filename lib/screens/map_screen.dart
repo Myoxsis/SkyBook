@@ -4,7 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -14,7 +13,6 @@ import '../models/airport.dart';
 import '../data/airport_data.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/skybook_card.dart';
-import '../widgets/app_dialog.dart';
 import '../constants.dart';
 
 class MapScreen extends StatefulWidget {
@@ -126,33 +124,6 @@ class _MapScreenState extends State<MapScreen> {
     return file;
   }
 
-  Future<void> _saveToGallery() async {
-    setState(() => _showTiles = true);
-    await Future.delayed(const Duration(milliseconds: 100));
-    final file = await _captureMapImage();
-    setState(() => _showTiles = false);
-    if (file == null) return;
-    try {
-      final result = await GallerySaver.saveImage(file.path);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              result == true
-                  ? 'Image saved to gallery'
-                  : 'Failed to save image',
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save image')),
-        );
-      }
-    }
-  }
 
   Future<void> _shareMap() async {
     setState(() => _showTiles = true);
@@ -167,31 +138,6 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Future<void> _onSharePressed() async {
-    final option = await showDialog<String>(
-      context: context,
-      builder: (context) => AppDialog(
-        title: const Text('Share Map'),
-        content: const Text('Choose an option'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop('save'),
-            child: const Text('Save to Gallery'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop('share'),
-            child: const Text('Share'),
-          ),
-        ],
-      ),
-    );
-
-    if (option == 'save') {
-      await _saveToGallery();
-    } else if (option == 'share') {
-      await _shareMap();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +204,7 @@ class _MapScreenState extends State<MapScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share, semanticLabel: 'Share map'),
-            onPressed: _onSharePressed,
+            onPressed: _shareMap,
           ),
           IconButton(
             icon:
