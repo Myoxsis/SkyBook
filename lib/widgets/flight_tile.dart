@@ -31,7 +31,8 @@ class FlightTile extends StatelessWidget {
   }
 
   Color _colorForClass(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     switch (flight.travelClass) {
       case 'Premium':
         return isDark ? Colors.indigo.shade700 : Colors.indigo.shade50;
@@ -40,7 +41,7 @@ class FlightTile extends StatelessWidget {
       case 'First':
         return isDark ? Colors.amber.shade700 : Colors.amber.shade50;
       default:
-        return Theme.of(context).cardColor;
+        return isDark ? theme.colorScheme.surfaceVariant : theme.cardColor;
     }
   }
 
