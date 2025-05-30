@@ -21,7 +21,10 @@ class FlightSerialization {
     'distanceKm',
     'carbonKg',
     'isFavorite',
-    'isBusiness'
+    'isBusiness',
+    'originRating',
+    'destinationRating',
+    'seatRating'
   ];
 
   /// Returns a JSON string representing [flights].
@@ -62,7 +65,10 @@ class FlightSerialization {
         f.distanceKm.toString(),
         f.carbonKg.toString(),
         f.isFavorite.toString(),
-        f.isBusiness.toString()
+        f.isBusiness.toString(),
+        f.originRating.toString(),
+        f.destinationRating.toString(),
+        f.seatRating.toString()
       ];
       buffer.writeln(row.join(','));
     }
