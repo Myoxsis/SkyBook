@@ -63,7 +63,7 @@ class FlightDetailScreen extends StatelessWidget {
         point: start,
         width: 30,
         height: 30,
-        builder: (context) => Container(
+        child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
@@ -81,7 +81,7 @@ class FlightDetailScreen extends StatelessWidget {
         point: end,
         width: 30,
         height: 30,
-        builder: (context) => Container(
+        child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
@@ -109,11 +109,13 @@ class FlightDetailScreen extends StatelessWidget {
       height: 200,
         child: FlutterMap(
           options: MapOptions(
-            center: center,
-            zoom: zoom,
+            initialCenter: center,
+            initialZoom: zoom,
             minZoom: zoom,
             maxZoom: zoom,
-            interactiveFlags: InteractiveFlag.drag,
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.drag,
+            ),
           ),
         children: [
           TileLayer(
