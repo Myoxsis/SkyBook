@@ -200,6 +200,27 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     }
   }
 
+  Future<void> _pickDuration() async {
+    final current = double.tryParse(_durationController.text) ?? 0;
+    final hours = current.floor().clamp(0, 23);
+    final minutes = ((current - hours) * 60).round().clamp(0, 59);
+
+    final picked = await showTimePicker(
+      context: context,
+      helpText: 'Select Duration',
+      initialTime: TimeOfDay(hour: hours, minute: minutes),
+    );
+
+    if (picked != null) {
+      final value = picked.hour + picked.minute / 60.0;
+        var text = value.toStringAsFixed(2);
+        text = text.replaceFirst(RegExp(r"0+$"), "").replaceFirst(RegExp(r"\.$"), "");
+      setState(() {
+        _durationController.text = text;
+      });
+    }
+  }
+
   Future<void> _scanBoardingPass() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.camera);
@@ -701,8 +722,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
             TextFormField(
               key: _durationFieldKey,
               controller: _durationController,
-              keyboardType: TextInputType.number,
+              readOnly: true,
               decoration: const InputDecoration(labelText: 'Duration (hrs)'),
+              onTap: _pickDuration,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter duration';
