@@ -80,4 +80,54 @@ void main() {
         '${intl.DateFormat.yMMMd().format(date)}';
     expect(find.text(expected), findsOneWidget);
   });
+
+  testWidgets('icon grey when achievement locked', (tester) async {
+    const achievement = Achievement(
+      id: 'test',
+      title: 'Test',
+      description: 'desc',
+      category: 'Test',
+      icon: Icons.star,
+      target: 1,
+      progress: 0,
+      achieved: false,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AchievementDetailScreen(achievement: achievement),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(AchievementDetailScreen));
+    final icon = tester.widget<Icon>(find.byIcon(Icons.star));
+    expect(icon.color, Theme.of(context).colorScheme.onSurfaceVariant);
+  });
+
+  testWidgets('icon colored when achievement unlocked', (tester) async {
+    const achievement = Achievement(
+      id: 'test',
+      title: 'Test',
+      description: 'desc',
+      category: 'Test',
+      icon: Icons.star,
+      target: 1,
+      progress: 1,
+      achieved: true,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AchievementDetailScreen(achievement: achievement),
+        ),
+      ),
+    );
+
+    final context = tester.element(find.byType(AchievementDetailScreen));
+    final icon = tester.widget<Icon>(find.byIcon(Icons.star));
+    expect(icon.color, Theme.of(context).colorScheme.primary);
+  });
 }
