@@ -44,6 +44,8 @@ SkyBook is a simple flight logbook mobile app built with Flutter. It lets you re
    ```sh
    bash scripts/patch_gallery_saver.sh
    ```
+   or manually add : namespace "com.example.gallery_saver" in Android section in build.gradle from gallery_saver Flutter plugin
+   
    Ensure the `home_widget` package is kept at version `0.5.0` in
    `pubspec.yaml`. If this version is upgraded, iOS builds may fail due to the
    missing `WidgetConfigurationIntent` definition required by newer releases.
