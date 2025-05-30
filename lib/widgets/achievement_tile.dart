@@ -34,13 +34,20 @@ class AchievementTile extends StatelessWidget {
             size: 24,
           ),
           const SizedBox(height: 4),
-          Text(
-            '${achievement.progress}/${achievement.target}',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: colors.onSurface),
-            textAlign: TextAlign.center,
+          Semantics(
+            label: 'Progress: ${achievement.progress} of ${achievement.target}',
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: achievement.target == 0
+                    ? 0
+                    : achievement.progress / achievement.target,
+                minHeight: 6,
+                backgroundColor:
+                    Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
+                color: theme.color,
+              ),
+            ),
           ),
           Text(
             achievement.title,
