@@ -38,6 +38,10 @@ List<Achievement> calculateAchievements(List<Flight> flights,
   final airportsVisited = <String>{};
   final countriesVisited = <String>{};
   final classesFlown = <String>{};
+  final aircraftFlown = <String>{};
+  final airlinesFlown = <String>{};
+  int seatReviews = 0;
+  int businessTrips = 0;
   double totalCarbon = 0;
 
   for (final f in flights) {
@@ -54,6 +58,10 @@ List<Achievement> calculateAchievements(List<Flight> flights,
     if (f.travelClass.isNotEmpty) {
       classesFlown.add(f.travelClass);
     }
+    aircraftFlown.add(f.aircraft);
+    if (f.airline.isNotEmpty) airlinesFlown.add(f.airline);
+    if (f.seatRating > 0) seatReviews++;
+    if (f.isBusiness) businessTrips++;
     final carbon = f.carbonKg.isNaN ? 0 : f.carbonKg;
     totalCarbon += carbon;
 
@@ -281,6 +289,50 @@ List<Achievement> calculateAchievements(List<Flight> flights,
       200,
       tier: 3,
       unlockedAt: unlocked['airportConqueror'],
+    ),
+    _progress(
+      'fleetFamiliar',
+      'Fleet Familiar',
+      'Fly 5 different aircraft models',
+      'Flights',
+      Icons.airplanemode_active,
+      'assets/badges/plane.png',
+      aircraftFlown.length,
+      5,
+      unlockedAt: unlocked['fleetFamiliar'],
+    ),
+    _progress(
+      'airlineHopper',
+      'Airline Hopper',
+      'Fly with 5 different airlines',
+      'Flights',
+      Icons.airlines,
+      'assets/badges/plane.png',
+      airlinesFlown.length,
+      5,
+      unlockedAt: unlocked['airlineHopper'],
+    ),
+    _progress(
+      'seatCritic',
+      'Seat Critic',
+      'Rate seats on 10 flights',
+      'Flights',
+      Icons.event_seat,
+      'assets/badges/plane.png',
+      seatReviews,
+      10,
+      unlockedAt: unlocked['seatCritic'],
+    ),
+    _progress(
+      'businessPro',
+      'Business Pro',
+      'Log 10 business trips',
+      'Flights',
+      Icons.business_center,
+      'assets/badges/plane.png',
+      businessTrips,
+      10,
+      unlockedAt: unlocked['businessPro'],
     ),
   ];
 }

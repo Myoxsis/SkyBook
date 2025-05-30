@@ -52,6 +52,40 @@ Flight _flightWithClass(
   );
 }
 
+Flight _customFlight(
+  String id,
+  String origin,
+  String destination,
+  double distance, {
+  String aircraft = 'Boeing 737',
+  String manufacturer = 'Boeing',
+  String airline = '',
+  int seatRating = 0,
+  bool isBusiness = false,
+}) {
+  return Flight(
+    id: id,
+    date: '2023-01-01',
+    aircraft: aircraft,
+    manufacturer: manufacturer,
+    airline: airline,
+    callsign: '',
+    duration: '',
+    notes: '',
+    origin: origin,
+    destination: destination,
+    travelClass: '',
+    seatNumber: '',
+    seatLocation: '',
+    distanceKm: distance,
+    carbonKg: 0,
+    isBusiness: isBusiness,
+    seatRating: seatRating,
+    originRating: 0,
+    destinationRating: 0,
+  );
+}
+
 void main() {
   group('calculateAchievements', () {
     test('no flights yields zero progress', () {
@@ -221,6 +255,77 @@ void main() {
       expect(legend.achieved, isTrue);
       expect(conqueror.achieved, isTrue);
       expect(flyer200.achieved, isTrue);
+    });
+
+    test('fleet familiar counts unique aircraft', () {
+      final flights = [
+        _customFlight('1', 'JFK', 'LAX', 4000, aircraft: 'A320', manufacturer: 'Airbus'),
+        _customFlight('2', 'LAX', 'JFK', 4000, aircraft: '737', manufacturer: 'Boeing'),
+        _customFlight('3', 'JFK', 'LAX', 4000, aircraft: 'A330', manufacturer: 'Airbus'),
+      ];
+
+      final achievements = calculateAchievements(flights);
+      final fleet = achievements.firstWhere((a) => a.id == 'fleetFamiliar');
+
+      expect(fleet.progress, 3);
+      expect(fleet.achieved, isFalse);
+    });
+
+    test('airline hopper unlocks with five airlines', () {
+      final flights = List.generate(
+        5,
+        (i) => _customFlight(
+          '${i + 1}',
+          'JFK',
+          'LAX',
+          4000,
+          airline: 'Airline ${i + 1}',
+        ),
+      );
+
+      final achievements = calculateAchievements(flights);
+      final hopper = achievements.firstWhere((a) => a.id == 'airlineHopper');
+
+      expect(hopper.progress, 5);
+      expect(hopper.achieved, isTrue);
+    });
+
+    test('seat critic counts rated flights', () {
+      final flights = List.generate(
+        10,
+        (i) => _customFlight(
+          '${i + 1}',
+          'JFK',
+          'LAX',
+          4000,
+          seatRating: 4,
+        ),
+      );
+
+      final achievements = calculateAchievements(flights);
+      final critic = achievements.firstWhere((a) => a.id == 'seatCritic');
+
+      expect(critic.progress, 10);
+      expect(critic.achieved, isTrue);
+    });
+
+    test('business pro unlocks with business trips', () {
+      final flights = List.generate(
+        10,
+        (i) => _customFlight(
+          '${i + 1}',
+          'JFK',
+          'LAX',
+          4000,
+          isBusiness: true,
+        ),
+      );
+
+      final achievements = calculateAchievements(flights);
+      final pro = achievements.firstWhere((a) => a.id == 'businessPro');
+
+      expect(pro.progress, 10);
+      expect(pro.achieved, isTrue);
     });
   });
 }
