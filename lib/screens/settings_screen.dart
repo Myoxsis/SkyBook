@@ -7,6 +7,7 @@ import '../models/flight.dart';
 import '../models/flight_storage.dart';
 import 'data_management_screen.dart';
 import '../widgets/premium_badge.dart';
+import '../constants.dart';
 
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
