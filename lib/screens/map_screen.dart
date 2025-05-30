@@ -158,7 +158,7 @@ class _MapScreenState extends State<MapScreen> {
           point: LatLng(airport.latitude, airport.longitude),
           width: 30,
           height: 30,
-          builder: (context) => GestureDetector(
+          child: GestureDetector(
             onTap: () => _showAirportInfo(airport),
             child: Container(
               decoration: BoxDecoration(
@@ -220,12 +220,15 @@ class _MapScreenState extends State<MapScreen> {
             FlutterMap(
               mapController: _controller,
               options: MapOptions(
-                center: _center,
-                zoom: _zoom,
+                initialCenter: _center,
+                initialZoom: _zoom,
                 onPositionChanged: (pos, _) {
                   _center = pos.center ?? _center;
                   _zoom = pos.zoom ?? _zoom;
                 },
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.drag,
+                ),
               ),
               children: [
                 TileLayer(
