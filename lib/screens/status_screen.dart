@@ -349,9 +349,11 @@ class _StatusScreenState extends State<StatusScreen> {
                 ),
               ],
             ),
-            if (_premium) ...[
+            if (_flights.isNotEmpty) ...[
               const SizedBox(height: 24),
               _buildAirportChart(),
+            ],
+            if (_premium) ...[
               const SizedBox(height: 24),
               _buildAirlineChart(),
               const SizedBox(height: 24),
