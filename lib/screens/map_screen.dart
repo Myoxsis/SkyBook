@@ -227,7 +227,7 @@ class _MapScreenState extends State<MapScreen> {
                   _zoom = pos.zoom ?? _zoom;
                 },
                 interactionOptions: const InteractionOptions(
-                  flags: InteractiveFlag.drag,
+                  flags: InteractiveFlag.drag | InteractiveFlag.pinchZoom,
                 ),
               ),
               children: [
