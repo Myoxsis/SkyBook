@@ -56,6 +56,33 @@ class AchievementDetailScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
+            const SizedBox(height: AppSpacing.m),
+            Semantics(
+              label:
+                  'Progress: ${achievement.progress} of ${achievement.target}',
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: achievement.target == 0
+                          ? 0
+                          : achievement.progress / achievement.target,
+                      minHeight: 6,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.12),
+                      color: theme?.color ??
+                          Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text('${achievement.progress}/${achievement.target}',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ],
+              ),
+            ),
             const Spacer(),
             ElevatedButton.icon(
               onPressed: achievement.achieved
