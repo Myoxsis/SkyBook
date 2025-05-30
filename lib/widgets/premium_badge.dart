@@ -30,12 +30,16 @@ class PremiumBadge extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.s),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(Icons.lock, color: colors.primary),
           const SizedBox(width: AppSpacing.xs),
-          Text(
-            message,
-            style: Theme.of(context).textTheme.bodyMedium,
+          Expanded(
+            child: Text(
+              message,
+              style: Theme.of(context).textTheme.bodyMedium,
+              overflow: TextOverflow.visible,
+            ),
           ),
         ],
       ),
