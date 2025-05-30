@@ -9,11 +9,13 @@ import 'skybook_card.dart';
 class AchievementTile extends StatelessWidget {
   final Achievement achievement;
   final AchievementTypeTheme theme;
+  final VoidCallback? onTap;
 
   const AchievementTile({
     super.key,
     required this.achievement,
     required this.theme,
+    this.onTap,
   });
 
   @override
@@ -21,6 +23,7 @@ class AchievementTile extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return SkyBookCard(
       padding: const EdgeInsets.all(AppSpacing.xs),
+      onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -7,6 +7,7 @@ import '../models/achievement.dart';
 import 'package:intl/intl.dart' as intl;
 import '../widgets/skybook_app_bar.dart';
 import 'achievement_detail_screen.dart';
+import '../widgets/achievement_tile.dart';
 import '../widgets/skybook_card.dart';
 import '../theme/achievement_theme.dart';
 import '../constants.dart';
@@ -222,73 +223,43 @@ class _ProgressScreenState extends State<ProgressScreen>
         ),
     );
 
-    final List<Widget> items = [summaryCard, const SizedBox(height: 8)]
-      ..addAll(visible.map(
-        (a) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-          child: SkyBookCard(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => AchievementDetailScreen(achievement: a),
-                ),
-              );
-            },
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: AppSpacing.xs),
-                  child: a.buildIcon(
-                    color: a.achieved
-                        ? (achievementTypeThemes[a.category]?.color ??
-                            Theme.of(context).colorScheme.primary)
-                        : Theme.of(context).colorScheme.onSurfaceVariant,
-                    size: 24,
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(a.title,
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      // Removed unlocked date display. Date will be shown in
-                      // the achievement detail screen only.
-                      const SizedBox(height: 2),
-                      Semantics(
-                        label:
-                            '${a.title} progress: ${a.progress} of ${a.target}',
-                        child: LinearProgressIndicator(
-                          value: a.progress / a.target,
-                          minHeight: 6,
-                          backgroundColor: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.12),
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (a.achieved)
-                  const Padding(
-                    padding: EdgeInsets.only(left: AppSpacing.xs),
-                    child: Icon(Icons.check,
-                        color: Colors.green, semanticLabel: 'Completed'),
-                  ),
-              ],
-            ),
-          ),
+    final tiles = [
+      for (final a in visible)
+        AchievementTile(
+          achievement: a,
+          theme: achievementTypeThemes[a.category] ??
+              const AchievementTypeTheme(
+                icon: Icons.emoji_events,
+                color: Colors.grey,
+                label: '',
+              ),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => AchievementDetailScreen(achievement: a),
+              ),
+            );
+          },
         ),
-      ));
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Progress', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        ...items,
+        summaryCard,
+        const SizedBox(height: 8),
+        SkyBookCard(
+          child: GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 3,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            children: tiles,
+          ),
+        ),
       ],
     );
   }
