@@ -27,7 +27,10 @@ class AchievementDetailScreen extends StatelessWidget {
           children: [
             Center(
               child: achievement.buildIcon(
-                color: theme?.color ?? Theme.of(context).colorScheme.primary,
+                color: achievement.achieved
+                    ? (theme?.color ??
+                        Theme.of(context).colorScheme.primary)
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 size: 64,
               ),
             ),
