@@ -13,6 +13,7 @@ import '../models/airport.dart';
 import '../data/airport_data.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/skybook_card.dart';
+import '../utils/cached_tile_provider.dart';
 import '../constants.dart';
 
 class MapScreen extends StatefulWidget {
@@ -234,6 +235,7 @@ class _MapScreenState extends State<MapScreen> {
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.app',
+                  tileProvider: const CachedTileProvider(),
                 ),
                 PolylineLayer(polylines: lines),
                 MarkerLayer(markers: markers),
