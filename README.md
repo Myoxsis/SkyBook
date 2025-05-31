@@ -1,6 +1,6 @@
 # SkyBook
 
-SkyBook is a simple flight logbook mobile app built with Flutter. It lets you record flights and keep notes about each one. Data is stored offline in a local SQLite database using the `sqflite` package.
+SkyBook is a lightweight flight logbook built with Flutter. Record your flights and notes, track stats and achievements, all stored offline in a local SQLite database via the `sqflite` package.
 
 ## Features
 
