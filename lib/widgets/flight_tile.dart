@@ -139,13 +139,18 @@ class FlightTile extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       Row(
-                        children: const [
-                          RotatedBox(
+                        children: [
+                          const RotatedBox(
                             quarterTurns: 1,
                             child: Icon(Icons.flight, size: 20),
                           ),
-                          Expanded(child: Divider(thickness: 1)),
-                          Icon(Icons.circle, size: 8),
+                          Expanded(
+                            child: Divider(
+                              thickness: 1,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          ),
+                          const Icon(Icons.circle, size: 8),
                         ],
                       ),
                       if (flight.aircraft.isNotEmpty)
