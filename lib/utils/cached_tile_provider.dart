@@ -5,11 +5,16 @@ import 'package:flutter_map/flutter_map.dart';
 /// A [TileProvider] that caches tiles to disk so previously viewed
 /// areas remain available offline.
 class CachedTileProvider extends TileProvider {
-  const CachedTileProvider();
+  CachedTileProvider();
 
   @override
   ImageProvider getImage(TileCoordinates coordinates, TileLayer tileLayer) {
-    var url = tileLayer.urlTemplate
+    final template = tileLayer.urlTemplate;
+    if (template == null) {
+      throw ArgumentError('TileLayer.urlTemplate cannot be null');
+    }
+
+    var url = template
         .replaceFirst('{x}', '${coordinates.x}')
         .replaceFirst('{y}', '${coordinates.y}')
         .replaceFirst('{z}', '${coordinates.z}');
