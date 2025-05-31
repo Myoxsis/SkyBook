@@ -16,6 +16,7 @@ import '../widgets/origin_destination_card.dart';
 import '../constants.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/premium_badge.dart';
+import '../utils/cached_tile_provider.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
@@ -153,6 +154,7 @@ class FlightDetailScreen extends StatelessWidget {
                 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
             subdomains: const ['a', 'b', 'c', 'd'],
             userAgentPackageName: 'com.example.app',
+            tileProvider: const CachedTileProvider(),
           ),
           PolylineLayer(polylines: lines),
           MarkerLayer(markers: markers),
