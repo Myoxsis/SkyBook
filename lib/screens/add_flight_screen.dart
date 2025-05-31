@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +14,7 @@ import '../widgets/skybook_app_bar.dart';
 import '../widgets/skybook_card.dart';
 import '../utils/text_formatters.dart';
 import '../utils/carbon_utils.dart';
+import '../utils/duration_utils.dart';
 import '../widgets/app_dialog.dart';
 import '../widgets/star_rating.dart';
 import '../widgets/premium_badge.dart';
@@ -172,7 +174,8 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       if (flight.callsign.length >= 2) {
         _selectedAirline = airlineByCode[flight.callsign.substring(0, 2).toUpperCase()];
       }
-      _durationController.text = flight.duration;
+      _durationController.text =
+          formatDuration(parseDuration(flight.duration));
       _notesController.text = flight.notes;
       _originController.text = flight.origin;
       _destinationController.text = flight.destination;
@@ -222,22 +225,36 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   }
 
   Future<void> _pickDuration() async {
-    final current = double.tryParse(_durationController.text) ?? 0;
-    final hours = current.floor().clamp(0, 23);
-    final minutes = ((current - hours) * 60).round().clamp(0, 59);
-
-    final picked = await showTimePicker(
+    final current = parseDuration(_durationController.text);
+    Duration temp = current;
+    final picked = await showModalBottomSheet<Duration>(
       context: context,
-      helpText: 'Select Duration',
-      initialTime: TimeOfDay(hour: hours, minute: minutes),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 200,
+                child: CupertinoTimerPicker(
+                  mode: CupertinoTimerPickerMode.hm,
+                  initialTimerDuration: current,
+                  onTimerDurationChanged: (d) => temp = d,
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, temp),
+                child: const Text('Done'),
+              ),
+            ],
+          ),
+        );
+      },
     );
 
     if (picked != null) {
-      final value = picked.hour + picked.minute / 60.0;
-        var text = value.toStringAsFixed(2);
-        text = text.replaceFirst(RegExp(r"0+$"), "").replaceFirst(RegExp(r"\.$"), "");
       setState(() {
-        _durationController.text = text;
+        _durationController.text = formatDuration(picked);
       });
     }
   }
@@ -772,14 +789,14 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
               key: _durationFieldKey,
               controller: _durationController,
               readOnly: true,
-              decoration: const InputDecoration(labelText: 'Duration (hrs)'),
+              decoration: const InputDecoration(labelText: 'Duration'),
               onTap: _pickDuration,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter duration';
                 }
-                final d = double.tryParse(value);
-                if (d == null || d <= 0) {
+                final d = parseDuration(value);
+                if (d == Duration.zero) {
                   return 'Enter a valid duration';
                 }
                 return null;

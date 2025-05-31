@@ -17,6 +17,7 @@ import '../constants.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/premium_badge.dart';
 import '../utils/cached_tile_provider.dart';
+import '../utils/duration_utils.dart';
 
 class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
@@ -184,7 +185,13 @@ class FlightDetailScreen extends StatelessWidget {
       items.add(InfoRow(title: 'Flight No.', value: flight.callsign, icon: Icons.confirmation_number));
     }
     if (flight.duration.isNotEmpty) {
-      items.add(InfoRow(title: 'Duration', value: '${flight.duration}h', icon: Icons.schedule));
+      items.add(
+        InfoRow(
+          title: 'Duration',
+          value: formatDuration(parseDuration(flight.duration)),
+          icon: Icons.schedule,
+        ),
+      );
     }
     if (flight.distanceKm > 0) {
       items.add(InfoRow(title: 'Distance', value: '${flight.distanceKm.round()} km', icon: Icons.straighten));

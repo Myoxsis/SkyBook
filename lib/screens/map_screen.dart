@@ -14,6 +14,7 @@ import '../data/airport_data.dart';
 import '../widgets/skybook_app_bar.dart';
 import '../widgets/skybook_card.dart';
 import '../utils/cached_tile_provider.dart';
+import '../utils/duration_utils.dart';
 import '../constants.dart';
 
 class MapScreen extends StatefulWidget {
@@ -41,7 +42,7 @@ class _MapScreenState extends State<MapScreen> {
 
   double get _totalDuration {
     return _flights.fold(0.0, (prev, f) {
-      final dur = double.tryParse(f.duration) ?? 0;
+      final dur = parseDurationHours(f.duration);
       return prev + dur;
     });
   }
