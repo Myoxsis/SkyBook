@@ -142,7 +142,11 @@ class _FlightScreenState extends State<FlightScreen> {
   Future<void> _addFlight() async {
     final newFlight = await Navigator.of(context).push<Flight>(
       MaterialPageRoute(
-          builder: (_) => AddFlightScreen(flights: _allFlights)),
+        builder: (_) => AddFlightScreen(
+          flights: _allFlights,
+          premiumNotifier: widget.premiumNotifier,
+        ),
+      ),
     );
     if (newFlight != null) {
       _allFlights = List<Flight>.from(_allFlights)..add(newFlight);

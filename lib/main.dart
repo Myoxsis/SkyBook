@@ -108,7 +108,10 @@ class _SkyBookAppState extends State<SkyBookApp> {
     if (type == 'add_flight') {
       final newFlight = await _navigatorKey.currentState?.push<Flight>(
         MaterialPageRoute(
-          builder: (_) => AddFlightScreen(flights: _flightsNotifier.value),
+          builder: (_) => AddFlightScreen(
+            flights: _flightsNotifier.value,
+            premiumNotifier: _premiumNotifier,
+          ),
         ),
       );
       if (newFlight != null) {

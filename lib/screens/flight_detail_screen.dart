@@ -28,7 +28,12 @@ class FlightDetailScreen extends StatelessWidget {
   Future<void> _edit(BuildContext context) async {
     final result = await Navigator.of(context).push<dynamic>(
       MaterialPageRoute(
-          builder: (_) => AddFlightScreen(flight: flight, flights: flights)),
+        builder: (_) => AddFlightScreen(
+          flight: flight,
+          flights: flights,
+          premiumNotifier: premiumNotifier,
+        ),
+      ),
     );
     if (result != null) {
       Navigator.of(context).pop(result);
