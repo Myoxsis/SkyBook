@@ -711,10 +711,23 @@ class _ExpandableBarListTileState extends State<_ExpandableBarListTile> {
       );
     }
 
+    final arrowIcon = Icon(
+      _expanded ? Icons.expand_less : Icons.expand_more,
+      size: 16,
+      color: Theme.of(context).colorScheme.onSurface,
+    );
+
     return SkyBookCard(
       onTap: _toggle,
       padding: const EdgeInsets.all(AppSpacing.s),
-      child: content,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: content),
+          const SizedBox(width: 4),
+          arrowIcon,
+        ],
+      ),
     );
   }
 }
