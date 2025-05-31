@@ -421,7 +421,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
           controller: textEditingController,
           focusNode: fieldFocusNode,
           inputFormatters: [
-            LengthLimitingTextInputFormatter(3),
             UpperCaseTextFormatter(),
           ],
           decoration: InputDecoration(
