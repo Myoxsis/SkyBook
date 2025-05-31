@@ -65,6 +65,11 @@ const List<Airline> seedAirlines = [
   Airline(name: 'Virgin Australia', callsign: 'VOZ', code: 'VA'),
   Airline(name: 'Hawaiian Airlines', callsign: 'HAL', code: 'HA'),
   Airline(name: 'Copa Airlines', callsign: 'CMP', code: 'CM'),
+  Airline(name: 'Austrian Airlines', callsign: 'AUA', code: 'OS'),
+  Airline(name: 'Sun Country Airlines', callsign: 'SCX', code: 'SY'),
+  Airline(name: 'Norwegian Air Shuttle', callsign: 'NAX', code: 'DY'),
+  Airline(name: 'Air Tahiti Nui', callsign: 'THT', code: 'TN'),
+  Airline(name: 'IndiGo', callsign: 'IGO', code: '6E'),
 ];
 
 List<Airline> airlines = [];
