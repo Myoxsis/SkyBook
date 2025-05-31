@@ -154,7 +154,7 @@ class FlightDetailScreen extends StatelessWidget {
                 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
             subdomains: const ['a', 'b', 'c', 'd'],
             userAgentPackageName: 'com.example.app',
-            tileProvider: const CachedTileProvider(),
+            tileProvider: CachedTileProvider(),
           ),
           PolylineLayer(polylines: lines),
           MarkerLayer(markers: markers),

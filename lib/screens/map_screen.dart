@@ -235,7 +235,7 @@ class _MapScreenState extends State<MapScreen> {
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.app',
-                  tileProvider: const CachedTileProvider(),
+                  tileProvider: CachedTileProvider(),
                 ),
                 PolylineLayer(polylines: lines),
                 MarkerLayer(markers: markers),
