@@ -15,14 +15,22 @@ import '../utils/text_formatters.dart';
 import '../utils/carbon_utils.dart';
 import '../widgets/app_dialog.dart';
 import '../widgets/star_rating.dart';
+import '../widgets/premium_badge.dart';
 import '../constants.dart';
 import '../services/import_service.dart';
+import '../services/wallet_service.dart';
 
 class AddFlightScreen extends StatefulWidget {
   final Flight? flight;
   final List<Flight> flights;
+  final ValueNotifier<bool> premiumNotifier;
 
-  const AddFlightScreen({super.key, this.flight, required this.flights});
+  const AddFlightScreen({
+    super.key,
+    this.flight,
+    required this.flights,
+    required this.premiumNotifier,
+  });
 
   @override
   State<AddFlightScreen> createState() => _AddFlightScreenState();
@@ -42,6 +50,9 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
   final _destinationFocusNode = FocusNode();
   final _aircraftFocusNode = FocusNode();
   final _scrollController = ScrollController();
+
+  bool _premium = false;
+  late VoidCallback _premiumListener;
 
   final _dateFieldKey = GlobalKey<FormFieldState>();
   final _aircraftFieldKey = GlobalKey<FormFieldState>();
@@ -136,12 +147,22 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     _destinationFocusNode.dispose();
     _aircraftFocusNode.dispose();
     _scrollController.dispose();
+    widget.premiumNotifier.removeListener(_premiumListener);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _premium = widget.premiumNotifier.value;
+    _premiumListener = () {
+      if (mounted) {
+        setState(() {
+          _premium = widget.premiumNotifier.value;
+        });
+      }
+    };
+    widget.premiumNotifier.addListener(_premiumListener);
     final flight = widget.flight;
     if (flight != null) {
       _dateController.text = flight.date;
@@ -274,6 +295,25 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
     if (flight == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Unable to parse itinerary')),
+      );
+      return;
+    }
+    setState(() {
+      if (flight.date.isNotEmpty) _dateController.text = flight.date;
+      _flightNumberController.text = flight.callsign;
+      _originController.text = flight.origin;
+      _destinationController.text = flight.destination;
+    });
+    _updateAirline(flight.callsign);
+    _computeDistance();
+  }
+
+  Future<void> _importFromWallet() async {
+    final flight = await WalletService.importFromWallet();
+    if (flight == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No boarding pass found')),
       );
       return;
     }
@@ -661,6 +701,16 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+            if (_premium)
+              ElevatedButton.icon(
+                onPressed: _importFromWallet,
+                icon:
+                    const Icon(Icons.account_balance_wallet, semanticLabel: 'Wallet'),
+                label: const Text('Import from Wallet'),
+              )
+            else
+              const PremiumBadge(message: 'Wallet import'),
           ],
         ),
 
