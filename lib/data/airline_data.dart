@@ -18,6 +18,8 @@ const List<Airline> seedAirlines = [
   Airline(name: 'Spirit Airlines', callsign: 'NKS', code: 'NK'),
   Airline(name: 'Frontier Airlines', callsign: 'FFT', code: 'F9'),
   Airline(name: 'WestJet', callsign: 'WJA', code: 'WS'),
+  Airline(name: 'Air Transat', callsign: 'TSC', code: 'TS'),
+  Airline(name: 'Allegiant Air', callsign: 'AAY', code: 'G4'),
   // Europe
   Airline(name: 'KLM', callsign: 'KLM', code: 'KL'),
   Airline(name: 'Swiss', callsign: 'SWR', code: 'LX'),
@@ -39,6 +41,9 @@ const List<Airline> seedAirlines = [
   Airline(name: 'LATAM Airlines', callsign: 'LAN', code: 'LA'),
   Airline(name: 'Aerol\u00edneas Argentinas', callsign: 'ARG', code: 'AR'),
   Airline(name: 'Aerom\u00e9xico', callsign: 'AMX', code: 'AM'),
+  Airline(name: 'Avianca', callsign: 'AVA', code: 'AV'),
+  Airline(name: 'Gol', callsign: 'GLO', code: 'G3'),
+  Airline(name: 'Azul', callsign: 'AZU', code: 'AD'),
   // Middle East
   Airline(name: 'Saudia', callsign: 'SVA', code: 'SV'),
   // Africa
@@ -49,11 +54,16 @@ const List<Airline> seedAirlines = [
   Airline(name: 'Iberia', callsign: 'IBE', code: 'IB'),
   Airline(name: 'Finnair', callsign: 'FIN', code: 'AY'),
   Airline(name: 'Scandinavian Airlines', callsign: 'SAS', code: 'SK'),
+  Airline(name: 'Air Europa', callsign: 'AEA', code: 'UX'),
+  Airline(name: 'Wizz Air', callsign: 'WZZ', code: 'W6'),
   // Asia (additional)
   Airline(name: 'Air China', callsign: 'CCA', code: 'CA'),
   Airline(name: 'Korean Air', callsign: 'KAL', code: 'KE'),
   Airline(name: 'AirAsia', callsign: 'AXM', code: 'AK'),
   Airline(name: 'Philippine Airlines', callsign: 'PAL', code: 'PR'),
+  Airline(name: 'Japan Airlines', callsign: 'JAL', code: 'JL'),
+  Airline(name: 'China Airlines', callsign: 'CAL', code: 'CI'),
+  Airline(name: 'Jetstar Airways', callsign: 'JST', code: 'JQ'),
   // Additional Airlines
   Airline(name: 'Vietnam Airlines', callsign: 'HVN', code: 'VN'),
   Airline(name: 'Thai Airways', callsign: 'THA', code: 'TG'),
