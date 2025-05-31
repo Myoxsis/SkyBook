@@ -23,7 +23,7 @@ class FlightDetailScreen extends StatelessWidget {
   final List<Flight> flights;
   final GlobalKey _shareKey = GlobalKey();
 
-  const FlightDetailScreen({
+  FlightDetailScreen({
     super.key,
     required this.flight,
     required this.premiumNotifier,
