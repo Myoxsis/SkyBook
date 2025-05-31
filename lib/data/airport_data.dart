@@ -109,6 +109,7 @@ Airport(code: 'HAK', name: 'Haikou Meilan International', city: 'Haikou', countr
 Airport(code: 'FUK', name: 'Fukuoka Airport', city: 'Fukuoka', country: 'Japan', region: 'Asia', latitude: 33.5859, longitude: 130.4507),
 Airport(code: 'DAD', name: 'Da Nang International', city: 'Da Nang', country: 'Vietnam', region: 'Asia', latitude: 16.0439, longitude: 108.1990),
 Airport(code: 'KWE', name: 'Guiyang Longdongbao International', city: 'Guiyang', country: 'China', region: 'Asia', latitude: 26.5385, longitude: 106.8000),
+Airport(code: 'SYD', name: 'Sydney Kingsford Smith', city: 'Sydney', country: 'Australia', region: 'Asia', latitude: -33.9399, longitude: 151.1753),
 
 
 // South America
