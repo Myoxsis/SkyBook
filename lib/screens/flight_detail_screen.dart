@@ -167,11 +167,11 @@ class FlightDetailScreen extends StatelessWidget {
     final items = <Widget>[
       _buildMap(context),
       const SizedBox(height: 16),
-      InfoRow(title: 'Date', value: flight.date, icon: Icons.calendar_today),
       OriginDestinationCard(
         origin: flight.origin,
         destination: flight.destination,
       ),
+      InfoRow(title: 'Date', value: flight.date, icon: Icons.calendar_today),
       InfoRow(title: 'Aircraft', value: flight.aircraft, icon: Icons.flight),
     ];
 
