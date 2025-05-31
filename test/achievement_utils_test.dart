@@ -243,6 +243,7 @@ void main() {
 
       final achievements = calculateAchievements(flights);
       final jetSetter = achievements.firstWhere((a) => a.id == 'jetSetter');
+      final moon = achievements.firstWhere((a) => a.id == 'toTheMoon');
       final explorer = achievements.firstWhere((a) => a.id == 'worldExplorer');
       final master = achievements.firstWhere((a) => a.id == 'airportMaster');
       final legend = achievements.firstWhere((a) => a.id == 'skyLegend');
@@ -250,6 +251,7 @@ void main() {
       final flyer200 = achievements.firstWhere((a) => a.id == 'frequentFlyer200');
 
       expect(jetSetter.achieved, isTrue);
+      expect(moon.achieved, isTrue);
       expect(explorer.achieved, isTrue);
       expect(master.achieved, isTrue);
       expect(legend.achieved, isTrue);
