@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:ui' as ui;
+import 'dart:io';
 
 import '../utils/map_utils.dart';
 import '../models/flight.dart';
@@ -17,6 +21,7 @@ class FlightDetailScreen extends StatelessWidget {
   final Flight flight;
   final ValueNotifier<bool> premiumNotifier;
   final List<Flight> flights;
+  final GlobalKey _shareKey = GlobalKey();
 
   const FlightDetailScreen({
     super.key,
@@ -40,10 +45,28 @@ class FlightDetailScreen extends StatelessWidget {
     }
   }
 
-  void _share() {
+  Future<File?> _captureMapImage() async {
+    final boundary =
+        _shareKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData == null) return null;
+    final bytes = byteData.buffer.asUint8List();
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/flight_share.png');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  Future<void> _share() async {
+    final file = await _captureMapImage();
     final text = 'My flight from '
         '${flight.origin} to ${flight.destination} on ${flight.date} using SkyBook!';
-    Share.share(text);
+    if (file != null) {
+      await Share.shareXFiles([XFile(file.path)], text: text);
+    } else {
+      await Share.share(text);
+    }
   }
 
 
@@ -112,6 +135,8 @@ class FlightDetailScreen extends StatelessWidget {
 
     return SizedBox(
       height: 200,
+      child: RepaintBoundary(
+        key: _shareKey,
         child: FlutterMap(
           options: MapOptions(
             initialCenter: center,
@@ -132,6 +157,7 @@ class FlightDetailScreen extends StatelessWidget {
           PolylineLayer(polylines: lines),
           MarkerLayer(markers: markers),
         ],
+      ),
       ),
     );
   }
