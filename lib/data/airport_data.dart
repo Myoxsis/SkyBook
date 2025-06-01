@@ -108,8 +108,21 @@ Airport(code: 'CGO', name: 'Zhengzhou Xinzheng International', city: 'Zhengzhou'
 Airport(code: 'HAK', name: 'Haikou Meilan International', city: 'Haikou', country: 'China', region: 'Asia', latitude: 19.9349, longitude: 110.4583),
 Airport(code: 'FUK', name: 'Fukuoka Airport', city: 'Fukuoka', country: 'Japan', region: 'Asia', latitude: 33.5859, longitude: 130.4507),
 Airport(code: 'DAD', name: 'Da Nang International', city: 'Da Nang', country: 'Vietnam', region: 'Asia', latitude: 16.0439, longitude: 108.1990),
-Airport(code: 'KWE', name: 'Guiyang Longdongbao International', city: 'Guiyang', country: 'China', region: 'Asia', latitude: 26.5385, longitude: 106.8000),
-Airport(code: 'SYD', name: 'Sydney Kingsford Smith', city: 'Sydney', country: 'Australia', region: 'Asia', latitude: -33.9399, longitude: 151.1753),
+  Airport(code: 'KWE', name: 'Guiyang Longdongbao International', city: 'Guiyang', country: 'China', region: 'Asia', latitude: 26.5385, longitude: 106.8000),
+  Airport(code: 'SYD', name: 'Sydney Kingsford Smith', city: 'Sydney', country: 'Australia', region: 'Asia', latitude: -33.9399, longitude: 151.1753),
+
+  // Additional international airports
+  Airport(code: 'MEL', name: 'Melbourne Airport', city: 'Melbourne', country: 'Australia', region: 'Asia', latitude: -37.6733, longitude: 144.8433),
+  Airport(code: 'BNE', name: 'Brisbane Airport', city: 'Brisbane', country: 'Australia', region: 'Asia', latitude: -27.3842, longitude: 153.1175),
+  Airport(code: 'PER', name: 'Perth Airport', city: 'Perth', country: 'Australia', region: 'Asia', latitude: -31.9403, longitude: 115.9672),
+  Airport(code: 'AKL', name: 'Auckland Airport', city: 'Auckland', country: 'New Zealand', region: 'Asia', latitude: -37.0082, longitude: 174.7850),
+  Airport(code: 'WLG', name: 'Wellington International', city: 'Wellington', country: 'New Zealand', region: 'Asia', latitude: -41.3272, longitude: 174.8056),
+  Airport(code: 'CHC', name: 'Christchurch International', city: 'Christchurch', country: 'New Zealand', region: 'Asia', latitude: -43.4894, longitude: 172.5322),
+  Airport(code: 'KHI', name: 'Jinnah International', city: 'Karachi', country: 'Pakistan', region: 'Asia', latitude: 24.9065, longitude: 67.1608),
+  Airport(code: 'ISB', name: 'Islamabad International', city: 'Islamabad', country: 'Pakistan', region: 'Asia', latitude: 33.5607, longitude: 72.8516),
+  Airport(code: 'KTM', name: 'Tribhuvan International', city: 'Kathmandu', country: 'Nepal', region: 'Asia', latitude: 27.6973, longitude: 85.3591),
+  Airport(code: 'PNH', name: 'Phnom Penh International', city: 'Phnom Penh', country: 'Cambodia', region: 'Asia', latitude: 11.5466, longitude: 104.8440),
+  Airport(code: 'NAN', name: 'Nadi International', city: 'Nadi', country: 'Fiji', region: 'Asia', latitude: -17.7554, longitude: 177.4434),
 
 
 // South America
